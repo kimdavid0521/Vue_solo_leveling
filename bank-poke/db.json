@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "id": 2,
+      "id": 1,
       "username": "dks",
       "nickname": "asdasd",
       "email": "SDas@naver.com",
@@ -77,6 +77,13 @@
       ]
     }
   ],
-  "category": ["dsjkfsdjm", "jsdfjks"],
-  "bank": ["kb", "ibk", "asdas"]
+  "category": [
+    { "id": 1, "name": "dsjkfsdjm" },
+    { "id": 2, "name": "jsdfjks" }
+  ],
+  "bank": [
+    { "id": 1, "name": "kb" },
+    { "id": 2, "name": "ibk" },
+    { "id": 3, "name": "asdas" }
+  ]
 }
