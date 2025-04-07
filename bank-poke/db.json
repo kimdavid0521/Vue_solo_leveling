@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "username": "dks",
       "nickname": "asdasd",
       "email": "SDas@naver.com",
@@ -62,7 +62,11 @@
         {
           "id": 1,
           "master_user_id": 1,
-          "members_id": [2, 3, 4],
+          "members_id": [
+            2,
+            3,
+            4
+          ],
           "total_balance": 3082894,
           "history": [
             {
@@ -75,15 +79,49 @@
           ]
         }
       ]
+    },
+    {
+      "id": "0d0c",
+      "username": "ㅁㄴㅇ",
+      "nickname": "ㅁㄴㅇ",
+      "email": "ㅁㄴㅇ@naver.com",
+      "password": "a",
+      "isPremium": false,
+      "card": [],
+      "account": [],
+      "setting": {
+        "currency": "kr",
+        "weekStart": "Monday",
+        "monthStart": 1,
+        "budget": 0
+      },
+      "transactions": [],
+      "fixCost": [],
+      "together_bank": []
     }
   ],
   "category": [
-    { "id": 1, "name": "dsjkfsdjm" },
-    { "id": 2, "name": "jsdfjks" }
+    {
+      "id": "1",
+      "name": "dsjkfsdjm"
+    },
+    {
+      "id": "2",
+      "name": "jsdfjks"
+    }
   ],
   "bank": [
-    { "id": 1, "name": "kb" },
-    { "id": 2, "name": "ibk" },
-    { "id": 3, "name": "asdas" }
+    {
+      "id": "1",
+      "name": "kb"
+    },
+    {
+      "id": "2",
+      "name": "ibk"
+    },
+    {
+      "id": "3",
+      "name": "asdas"
+    }
   ]
 }

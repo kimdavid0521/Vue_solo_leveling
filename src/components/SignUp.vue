@@ -58,7 +58,6 @@
           </div>
         </div>
       </div>
-
       <div class="mb-3 mt-3">
         <label for="password" class="form-label">비밀번호</label>
         <input
@@ -102,13 +101,13 @@
 <script setup>
 import { ref } from 'vue';
 
+const emit = defineEmits(['back']);
 const username = ref('');
 const nickname = ref('');
 const email = ref('');
 const emailDomain = ref('');
 const password = ref('');
 const passwordCheck = ref('');
-const emit = defineEmits(['back']);
 
 const signUp = async () => {
   if (password.value !== passwordCheck.value) {
@@ -116,7 +115,13 @@ const signUp = async () => {
     return;
   }
 
-  if (!email.value || !username.value || !nickname.value || !password.value) {
+  if (
+    !email.value ||
+    !username.value ||
+    !nickname.value ||
+    !password.value ||
+    !emailDomain.value
+  ) {
     alert('모든 필드를 입력해주세요.');
     return;
   }
@@ -184,7 +189,7 @@ const signUp = async () => {
 
 form {
   width: 100%;
-  max-width: 400px; /* 폼 너비 제한 */
+  max-width: 400px;
   padding: 2rem;
   background-color: white;
   border-radius: 8px;
@@ -193,6 +198,4 @@ form {
 
 input.form-control:focus {
   outline: none;
-  box-shadow: none;
-}
-</style>
+  bo

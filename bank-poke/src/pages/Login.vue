@@ -67,6 +67,7 @@
 
 <script setup>
 import ForgotPassword from '@/components/ForgotPassword.vue';
+import Signup from '@/components/SignUp.vue';
 import { ref } from 'vue';
 
 const showForgotPassword = ref(false);
