@@ -6,29 +6,51 @@
       "nickname": "asdasd",
       "email": "SDas@naver.com",
       "password": "wqqsqa",
-      "card": [
-        {
-          "id": 1,
-          "name": "Sda",
-          "minus_balance": 32423,
-          "sales_achievements": 34234
-        }
-      ],
-      "account": [
-        {
-          "id": 1,
-          "name": "kb",
-          "type": "은행",
-          "group": "카드",
-          "balance": 34234
-        }
-      ],
+      "asset_group": {
+        "card": [
+          {
+            "id": 1,
+            "name": "Sda",
+            "minus_balance": 32423,
+            "sales_achievements": 34234,
+            "dueDate": "2025-05-01",
+            "isCheck": true
+          }
+        ],
+        "account": [
+          {
+            "id": 1,
+            "name": "kb",
+            "balance": 34234
+          }
+        ],
+        "etc": [
+          {
+            "id": 1,
+            "name": "custom",
+            "balance": 1000000
+          }
+        ]
+      },
       "setting": [
         {
           "currency": "kr",
           "weekStart": "Monday",
           "monthStart": 1,
-          "budget": 3804298
+          "monthlyBudget": {
+            "Jan": 200000,
+            "Feb": 200000,
+            "Mar": 200000,
+            "Apr": 200000,
+            "May": 200000,
+            "Jun": 200000,
+            "Jul": 200000,
+            "Aug": 200000,
+            "Sep": 200000,
+            "Oct": 200000,
+            "Nov": 200000,
+            "Dec": 200000
+          }
         }
       ],
       "isPremium": false,
@@ -36,28 +58,31 @@
         "id": 2,
         "name": "sdasd",
         "date": "230-231023",
+        "time": "13:30",
         "category": "dsd",
         "sub_category": "dsd",
         "assetId": 1,
         "type": "income",
         "amount": 123,
         "memo": "sdsds",
-        "addTotal": false
+        "addTotal": false,
+        "asset_type": "card"
       },
       "fixCost": [
         {
           "id": 1,
-          "startDate": "2913-2131-2131",
-          "name": "asds",
-          "memo": "sadas",
-          "category": "sda",
-          "sub_category": "dsadas",
+          "startDate": "2025-03-10",
+          "name": "넷플릭스",
+          "memo": "넷플릭스 결제",
+          "category": "넷플릭스",
+          "sub_category": "넷플릭스 결제",
           "amount": 1232,
-          "interval": "sad",
-          "endDate": "2143-32423-234",
-          "type": "income"
+          "interval": "month",
+          "endDate": "2026-04-09",
+          "type": "expense"
         }
       ],
+
       "together_bank": [
         {
           "id": 1,
@@ -74,9 +99,58 @@
             }
           ]
         }
-      ]
+      ],
+      "category": {
+        "expense": [
+          {
+            "id": 1,
+            "main_category": "식비",
+            "sub_categories": ["외식", "마트", "카페", "배달"]
+          },
+          {
+            "id": 2,
+            "main_category": "교통비",
+            "sub_categories": ["버스", "지하철", "택시", "기타"]
+          },
+          {
+            "id": 3,
+            "main_category": "주거/통신",
+            "sub_categories": ["월세", "관리비", "인터넷", "휴대폰"]
+          },
+          {
+            "id": 4,
+            "main_category": "생활",
+            "sub_categories": ["세탁", "청소", "생필품"]
+          },
+          {
+            "id": 5,
+            "main_category": "기타",
+            "sub_categories": ["기타 지출"]
+          }
+        ],
+        "income": [
+          {
+            "id": 1,
+            "main_category": "급여",
+            "sub_categories": ["월급", "상여금"]
+          },
+          {
+            "id": 2,
+            "main_category": "용돈",
+            "sub_categories": ["부모님", "친척", "기타"]
+          },
+          {
+            "id": 3,
+            "main_category": "투자수익",
+            "sub_categories": ["주식", "코인", "이자"]
+          },
+          {
+            "id": 4,
+            "main_category": "기타",
+            "sub_categories": ["환급", "기타 수입"]
+          }
+        ]
+      }
     }
-  ],
-  "category": ["dsjkfsdjm", "jsdfjks"],
-  "bank": ["kb", "ibk", "asdas"]
+  ]
 }
