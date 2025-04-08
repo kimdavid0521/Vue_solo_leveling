@@ -61,6 +61,10 @@ const router = createRouter({
           path: 'premium',
           component: () => import('../pages/Premium.vue'), // 프리미엄 설정
         },
+        {
+          path: 'cancle-account',
+          component: () => import('../pages/CancleAccount.vue'), // 회원 탈퇴
+        },
       ],
     },
 

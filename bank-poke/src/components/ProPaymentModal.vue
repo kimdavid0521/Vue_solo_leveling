@@ -1,17 +1,12 @@
 <template>
-  <div class="modal fade" id="paymentModal" tabindex="-1">
+  <div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div
         class="modal-content border border-dark shadow-sm bg-white text-white rounded-4"
       >
         <div class="modal-header border-0 text-dark fw-bold">
           <h3 class="modal-title fw-bold">변경 사항 확인</h3>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            @click="closeModal"
-          ></button>
+          <button type="button" class="btn-close" @click="closeModal"></button>
         </div>
 
         <div class="modal-body">
@@ -67,7 +62,7 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/auth';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { Modal } from 'bootstrap';
 
 const authStore = useAuthStore();
@@ -76,25 +71,32 @@ let modalInstance = null;
 
 onMounted(() => {
   const modalElement = document.getElementById('paymentModal');
-  modalInstance = new Modal(modalElement);
+  modalInstance = new Modal(modalElement, {
+    backdrop: true,
+    keyboard: true,
+  });
+
+  // 모달이 닫힐 때 cleanup
+  modalElement.addEventListener('hidden.bs.modal', cleanup);
 });
+
+onUnmounted(() => {
+  cleanup();
+});
+
+const cleanup = () => {
+  document.body.classList.remove('modal-open');
+  const backdrops = document.querySelectorAll('.modal-backdrop');
+  backdrops.forEach((backdrop) => backdrop.remove());
+
+  // 스크롤 관련 스타일 제거
+  document.body.style.overflow = '';
+  document.body.style.paddingRight = '';
+};
 
 const closeModal = () => {
   if (modalInstance) {
     modalInstance.hide();
-    // 모달이 완전히 닫힌 후 배경 제거
-    const modalElement = document.getElementById('paymentModal');
-    modalElement.addEventListener(
-      'hidden.bs.modal',
-      () => {
-        document.body.classList.remove('modal-open');
-        const backdrop = document.querySelector('.modal-backdrop');
-        if (backdrop) {
-          backdrop.remove();
-        }
-      },
-      { once: true }
-    );
   }
 };
 
@@ -108,8 +110,6 @@ const confirmPayment = async () => {
 
     authStore.setUser({ ...authStore.user, isPremium: true });
     done.value = true;
-
-    // 모달 닫기
     closeModal();
   } catch (error) {
     console.error(error);

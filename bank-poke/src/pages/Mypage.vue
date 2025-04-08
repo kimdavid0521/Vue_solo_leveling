@@ -15,7 +15,7 @@
           >
         </li>
         <li class="nav-item">
-          <RouterLink class="nav-link" to="/mypage/other-settings"
+          <RouterLink class="nav-link" to="/mypage/cancle-account"
             >회원 탈퇴</RouterLink
           >
         </li>

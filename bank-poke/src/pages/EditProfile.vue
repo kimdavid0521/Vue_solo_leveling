@@ -2,7 +2,13 @@
   <div>
     <h4 class="fw-bold mb-4">회원정보 수정</h4>
     <div v-if="!authenticated">
-      <input type="password" v-model="password" class="form-control" />
+      <label class="form-label">현재 비밀번호</label>
+      <input
+        type="password"
+        v-model="password"
+        class="form-control"
+        placeholder="현재 비밀번호 입력"
+      />
       <button class="btn btn-primary mt-2" @click="verifyPassword">확인</button>
     </div>
     <div v-else>
@@ -50,7 +56,6 @@
 <script setup>
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
-import { auto } from '@popperjs/core';
 
 const authStore = useAuthStore();
 

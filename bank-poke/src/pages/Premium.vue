@@ -1,10 +1,6 @@
 <template>
   <div class="container">
     <div class="container my-5 text-dark">
-      <div>
-        {{ authStore.user.id }}
-        {{ authStore.user.isPremium }}
-      </div>
       <h2 class="text-center fw-bold mb-4">플랜 업그레이드</h2>
 
       <!-- 플랜 카드 -->
@@ -75,7 +71,6 @@ import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import ProPaymentModal from '@/components/ProPaymentModal.vue';
 const authStore = useAuthStore();
-const router = useRouter();
 
 const registerFree = () => {
   authStore.setUser({ ...authStore.user, isPremium: false });
