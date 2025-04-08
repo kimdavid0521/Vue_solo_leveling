@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "id": 2,
+      "id": "1",
       "username": "dks",
       "nickname": "asdasd",
       "email": "SDas@naver.com",
@@ -75,8 +75,68 @@
           ]
         }
       ]
+    },
+    {
+      "id": "3469",
+      "username": "sad",
+      "nickname": "sadsad",
+      "email": "sadsa@naver.com",
+      "password": "asd",
+      "isPremium": false,
+      "card": [],
+      "account": [],
+      "setting": {
+        "currency": "kr",
+        "weekStart": "Monday",
+        "monthStart": 1,
+        "budget": 0
+      },
+      "transactions": [],
+      "fixCost": [],
+      "together_bank": []
+    },
+    {
+      "id": "6ce4",
+      "username": "123",
+      "nickname": "123",
+      "email": "123@naver.com",
+      "password": "123",
+      "isPremium": false,
+      "card": [],
+      "account": [],
+      "setting": {
+        "currency": "kr",
+        "weekStart": "Monday",
+        "monthStart": 1,
+        "budget": 0
+      },
+      "transactions": [],
+      "fixCost": [],
+      "together_bank": []
     }
   ],
-  "category": ["dsjkfsdjm", "jsdfjks"],
-  "bank": ["kb", "ibk", "asdas"]
+  "category": [
+    {
+      "id": "1",
+      "name": "dsjkfsdjm"
+    },
+    {
+      "id": "2",
+      "name": "jsdfjks"
+    }
+  ],
+  "bank": [
+    {
+      "id": "1",
+      "name": "kb"
+    },
+    {
+      "id": "2",
+      "name": "ibk"
+    },
+    {
+      "id": "3",
+      "name": "asdas"
+    }
+  ]
 }
