@@ -8,8 +8,9 @@
           <h3 class="modal-title fw-bold">변경 사항 확인</h3>
           <button
             type="button"
-            class="btn-close btn-close-white"
+            class="btn-close"
             data-bs-dismiss="modal"
+            @click="closeModal"
           ></button>
         </div>
 
@@ -47,7 +48,7 @@
           <button
             type="button"
             class="btn btn-outline-dark"
-            data-bs-dismiss="modal"
+            @click="closeModal"
           >
             취소
           </button>
@@ -66,10 +67,36 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/auth';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { Modal } from 'bootstrap';
 
 const authStore = useAuthStore();
 const done = ref(false);
+let modalInstance = null;
+
+onMounted(() => {
+  const modalElement = document.getElementById('paymentModal');
+  modalInstance = new Modal(modalElement);
+});
+
+const closeModal = () => {
+  if (modalInstance) {
+    modalInstance.hide();
+    // 모달이 완전히 닫힌 후 배경 제거
+    const modalElement = document.getElementById('paymentModal');
+    modalElement.addEventListener(
+      'hidden.bs.modal',
+      () => {
+        document.body.classList.remove('modal-open');
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+          backdrop.remove();
+        }
+      },
+      { once: true }
+    );
+  }
+};
 
 const confirmPayment = async () => {
   try {
@@ -81,7 +108,11 @@ const confirmPayment = async () => {
 
     authStore.setUser({ ...authStore.user, isPremium: true });
     done.value = true;
+
+    // 모달 닫기
+    closeModal();
   } catch (error) {
+    console.error(error);
     alert('결제 오류가 발생했습니다.');
   }
 };

@@ -17,8 +17,17 @@
           <h2 class="fw-bold">
             0원 <small class="text-muted fs-6">/월</small>
           </h2>
-          <button class="btn btn-outline-secondary w-100 mb-3" disabled>
-            나의 현재 플랜
+          <button
+            class="btn w-100 mb-3"
+            :class="
+              authStore.user?.isPremium
+                ? 'btn-outline-dark'
+                : 'btn-outline-secondary'
+            "
+            :disabled="!authStore.user || !authStore.user.isPremium"
+            @click="registerFree"
+          >
+            {{ authStore.user?.isPremium ? 'Free 이용하기' : '나의 현재 플랜' }}
           </button>
           <ul class="list-unstyled">
             <li>✔️ 통계 자료 제공</li>
@@ -36,11 +45,15 @@
             1,000원 <small class="text-muted fs-6">/월</small>
           </h2>
           <button
-            class="btn btn-dark w-100 mb-3"
+            class="btn w-100 mb-3"
+            :class="
+              authStore.user?.isPremium ? 'btn-outline-secondary' : 'btn-dark'
+            "
+            :disabled="authStore.user?.isPremium"
             data-bs-toggle="modal"
             data-bs-target="#paymentModal"
           >
-            Pro 이용하기
+            {{ authStore.user?.isPremium ? '나의 현재 플랜' : 'Pro 이용하기' }}
           </button>
           <ul class="list-unstyled">
             <li>✔️ 통계 자료 및 그래프 제공</li>
@@ -62,6 +75,11 @@ import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import ProPaymentModal from '@/components/ProPaymentModal.vue';
 const authStore = useAuthStore();
+const router = useRouter();
+
+const registerFree = () => {
+  authStore.setUser({ ...authStore.user, isPremium: false });
+};
 </script>
 
 <style scoped>
