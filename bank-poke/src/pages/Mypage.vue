@@ -15,6 +15,11 @@
           >
         </li>
         <li class="nav-item">
+          <RouterLink class="nav-link" to="/mypage/budget"
+            >예산 설정</RouterLink
+          >
+        </li>
+        <li class="nav-item">
           <RouterLink class="nav-link" to="/mypage/cancle-account"
             >회원 탈퇴</RouterLink
           >

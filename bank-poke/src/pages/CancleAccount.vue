@@ -1,9 +1,5 @@
 <template>
   <div>
-    {{ authStore.user.id }}
-    {{ authStore.user.isPremium }}
-  </div>
-  <div>
     <h4 class="fw-bold mb-4">회원탈퇴</h4>
     <div v-if="!authenticated">
       <label class="form-label">현재 비밀번호</label>
