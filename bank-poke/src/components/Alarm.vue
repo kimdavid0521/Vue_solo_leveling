@@ -42,46 +42,43 @@
 import { ref, computed, watchEffect } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 
+// 1. 상태 선언 정리
 const authStore = useAuthStore();
-
-// 월 소비금 (추후 변경 예정)
-const monthConsumption = ref(900000);
-// 월 예산
+const alarm = ref([]);
+const monthConsumption = ref(100000);
 const budget = ref(authStore.user?.setting?.budget ?? 0);
 
-// 읽지 않은 알림 개수
+// 알림 관련 상태
 const unreadCount = computed(
   () => alarm.value.filter((item) => !item.read).length
 );
+// 알림 목록 출력
+const unreadAlarms = computed(() =>
+  alarm.value
+    .map((item, i) => ({ ...item, index: i }))
+    .filter((item) => !item.read)
+);
+
 // 알림 읽음 처리
 const markAsRead = (index) => {
   alarm.value[index].read = true;
 };
 
-// 읽지 않은 알림 목록
-const unreadAlarms = computed(() =>
-  alarm.value
-    .map((item, i) => ({ ...item, index: i })) // index 유지
-    .filter((item) => !item.read)
-);
-
-// 알림 데이터
-const alarm = ref([]);
-// 월 소비금이 예산을 초과했을 때 알림 표시 여부
+// 내부 플래그 선언
 const hasBudgetAlarm = ref(false);
-// 월 소비금이 예산을 90% 초과했을 때 알림 표시 여부
 const hasBudget90Alert = ref(false);
+const cardAlertKeys = ref(new Set());
+const fixCostAlertKeys = ref(new Set());
 
-// 월 소비금이 예산 알림 추가
+// 2. 예산 알림
 watchEffect(() => {
   const consumption = monthConsumption.value;
   const totalBudget = budget.value;
 
-  if (totalBudget <= 0) return; // 예산이 없으면 계산 안 함
+  if (totalBudget <= 0) return;
 
   const ratio = consumption / totalBudget;
 
-  // 1. 90% 초과 알림
   if (ratio >= 0.9 && !hasBudget90Alert.value) {
     alarm.value.push({
       message: '⚠ 예산의 90%를 사용했습니다!',
@@ -90,7 +87,6 @@ watchEffect(() => {
     hasBudget90Alert.value = true;
   }
 
-  // 2. 100% 초과 알림
   if (consumption > totalBudget && !hasBudgetAlarm.value) {
     alarm.value.push({
       message: '📢 월 소비금이 예산을 초과했습니다!',
@@ -100,39 +96,39 @@ watchEffect(() => {
   }
 });
 
-// 카드 목록
+// 3. 카드 결제 예정일 알림
 const cardList = ref(authStore.user?.card ?? []);
-// 카드 결제 예정일 알림 표시 여부
-const hasCardDueAlert = ref(false);
 
-// 카드 결제 예정일 알림 추가
 watchEffect(() => {
-  if (hasCardDueAlert.value) return;
-
   const today = new Date();
 
   cardList.value.forEach((card) => {
-    const due = new Date(card.dueDate);
-    const diff = (due - today) / (1000 * 60 * 60 * 24);
+    if (!card.dueDate) return;
 
-    if (diff <= 3 && diff >= 0 && !hasCardDueAlert.value) {
+    const due = new Date(card.dueDate);
+    due.setHours(0, 0, 0, 0);
+    const diff = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+    const key = `card-${card.name}-${card.dueDate}`;
+
+    if (diff <= 3 && diff >= 0 && !cardAlertKeys.value.has(key)) {
       alarm.value.push({
-        message: `💳 ${card.name} 결제일이 ${Math.ceil(diff)}일 남았습니다!`,
+        message: `💳 ${card.name} 결제일이 ${diff}일 남았습니다!`,
         read: false,
       });
-      hasCardDueAlert.value = true;
+      cardAlertKeys.value.add(key);
     }
   });
 });
 
-// 고정지출 목록
+// 4. 고정지출 알림 
+// 구간 계산 함수
 const fixedCostList = computed(() => authStore.user?.fixCost ?? []);
-const fixCostAlertSet = ref(new Set());
 
-// 고정지출 다음 결제일 계산
 function getNextDueDate(startDate, interval) {
   const now = new Date();
   const base = new Date(startDate);
+
+  if (isNaN(base.getTime())) return null;
 
   while (base <= now) {
     switch (interval) {
@@ -157,24 +153,26 @@ function getNextDueDate(startDate, interval) {
   return base;
 }
 
+// 고정지출 알림 처리
 watchEffect(() => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+
   fixedCostList.value.forEach((item) => {
     if (item.type !== 'expense' || !item.startDate || !item.interval) return;
+
     const nextDue = getNextDueDate(item.startDate, item.interval);
-    console.log(nextDue);
     if (!nextDue) return;
 
     const diff = Math.ceil((nextDue - today) / (1000 * 60 * 60 * 24));
-    const key = `${item.name}-${nextDue.toISOString().slice(0, 10)}`;
+    const key = `fixcost-${item.name}-${nextDue.toISOString().slice(0, 10)}`;
 
-    if (diff <= 3 && diff >= 0 && !fixCostAlertSet.value.has(key)) {
+    if (diff <= 3 && diff >= 0 && !fixCostAlertKeys.value.has(key)) {
       alarm.value.push({
         message: `🏠 고정지출(${item.name})이 ${diff}일 후 출금됩니다!`,
         read: false,
       });
-      fixCostAlertSet.value.add(key);
+      fixCostAlertKeys.value.add(key);
     }
   });
 });
