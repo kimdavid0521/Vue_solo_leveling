@@ -23,17 +23,14 @@
       </button>
       <ul class="dropdown-menu">
         <li
-          v-for="(item, index) in alarm"
-          :key="index"
-          @click="markAsRead(index)"
+          v-for="item in unreadAlarms"
+          :key="item.index"
+          @click="markAsRead(item.index)"
         >
-          <a
-            class="dropdown-item"
-            :class="{ 'text-muted': item.read }"
-            href="#"
-          >
-            {{ item.message }}
-          </a>
+          <a class="dropdown-item" href="#">{{ item.message }}</a>
+        </li>
+        <li v-if="unreadAlarms.length === 0" class="dropdown-item text-muted">
+          읽지 않은 알림이 없습니다
         </li>
       </ul>
     </div>
@@ -47,7 +44,7 @@ import { useAuthStore } from '@/stores/auth';
 const authStore = useAuthStore();
 
 // 월 소비금 (추후 변경 예정)
-const monthConsumption = ref(13000000);
+const monthConsumption = ref(900000);
 // 월 예산
 const budget = ref(authStore.user?.setting?.budget ?? 0);
 
@@ -60,14 +57,39 @@ const markAsRead = (index) => {
   alarm.value[index].read = true;
 };
 
+// 읽지 않은 알림 목록
+const unreadAlarms = computed(() =>
+  alarm.value
+    .map((item, i) => ({ ...item, index: i })) // index 유지
+    .filter((item) => !item.read)
+);
+
 // 알림 데이터
 const alarm = ref([]);
 // 월 소비금이 예산을 초과했을 때 알림 표시 여부
 const hasBudgetAlarm = ref(false);
+// 월 소비금이 예산을 90% 초과했을 때 알림 표시 여부
+const hasBudget90Alert = ref(false);
 
 watchEffect(() => {
-  // 월 소비금이 예산을 초과했을 때 알림 추가
-  if (monthConsumption.value > budget.value && !hasBudgetAlarm.value) {
+  const consumption = monthConsumption.value;
+  const totalBudget = budget.value;
+
+  if (totalBudget <= 0) return; // 예산이 없으면 계산 안 함
+
+  const ratio = consumption / totalBudget;
+
+  // 1. 90% 초과 알림
+  if (ratio >= 0.9 && !hasBudget90Alert.value) {
+    alarm.value.push({
+      message: '⚠ 예산의 90%를 사용했습니다!',
+      read: false,
+    });
+    hasBudget90Alert.value = true;
+  }
+
+  // 2. 100% 초과 알림
+  if (consumption > totalBudget && !hasBudgetAlarm.value) {
     alarm.value.push({
       message: '📢 월 소비금이 예산을 초과했습니다!',
       read: false,
@@ -75,9 +97,6 @@ watchEffect(() => {
     hasBudgetAlarm.value = true;
   }
 });
-if (alarm.value.length === 0) {
-  console.log('알림 없음');
-}
 
 // 카드 목록
 const cardList = ref(authStore.user?.card ?? []); // 카드 배열
