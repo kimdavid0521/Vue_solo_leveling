@@ -6,6 +6,7 @@
       </div>
       <div class="mb-3 mt-3">
         <div class="row">
+          <!-- 이름 -->
           <div class="col">
             <label for="username" class="form-label">이름</label>
             <input
@@ -17,6 +18,7 @@
               required
             />
           </div>
+          <!-- 닉네임 -->
           <div class="col">
             <label for="nickname" class="form-label">닉네임</label>
             <input
@@ -30,6 +32,7 @@
           </div>
         </div>
       </div>
+      <!-- 이메일 -->
       <div class="mb-3 mt-3">
         <div class="row align-items-end">
           <div class="col-6">
@@ -58,7 +61,7 @@
           </div>
         </div>
       </div>
-
+      <!-- 비밀번호 -->
       <div class="mb-3 mt-3">
         <label for="password" class="form-label">비밀번호</label>
         <input
@@ -70,6 +73,7 @@
           required
         />
       </div>
+      <!-- 비밀번호 확인 -->
       <div class="mb-3 mt-3">
         <label for="password" class="form-label">비밀번호 확인</label>
         <input
@@ -81,11 +85,13 @@
           required
         />
       </div>
+      <!-- 회원가입 버튼 -->
       <div class="d-grid">
         <button type="submit" class="btn btn-light btn-block text-secondary">
           회원가입
         </button>
       </div>
+      <!-- 로그인으로 돌아가기 -->
       <div class="text-center">
         <button
           type="button"
@@ -111,11 +117,13 @@ const passwordCheck = ref('');
 const emit = defineEmits(['back']);
 
 const signUp = async () => {
+  // 비밀번호 더블 체크
   if (password.value !== passwordCheck.value) {
     alert('비밀번호가 일치하지 않습니다.');
     return;
   }
 
+  // 모든 필드 입력 체크
   if (!email.value || !username.value || !nickname.value || !password.value) {
     alert('모든 필드를 입력해주세요.');
     return;
@@ -123,6 +131,19 @@ const signUp = async () => {
 
   try {
     const fullEmail = `${email.value}@${emailDomain.value}`;
+
+    // 중복 이메일 체크
+    const response = await fetch('/api/users');
+    const users = await response.json();
+    const found = users.find(
+      (user) => user.email.toLowerCase() === fullEmail.toLowerCase()
+    );
+    if (found) {
+      alert('이미 존재하는 이메일입니다.');
+      return;
+    }
+
+    // 중복이 없으면 회원가입 진행
     const userData = {
       username: username.value,
       nickname: nickname.value,
@@ -142,6 +163,7 @@ const signUp = async () => {
       together_bank: [],
     };
 
+    // 회원가입 요청
     const res = await fetch('/api/users', {
       method: 'POST',
       headers: {
@@ -150,6 +172,7 @@ const signUp = async () => {
       body: JSON.stringify(userData),
     });
 
+    // 회원가입 성공
     if (res.ok) {
       alert('회원가입이 완료되었습니다.');
       emit('back');
@@ -157,6 +180,7 @@ const signUp = async () => {
       throw new Error('회원가입 실패');
     }
   } catch (error) {
+    // 회원가입 실패
     console.error(error);
     alert('회원가입 중 오류가 발생했습니다.');
   }
