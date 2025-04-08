@@ -161,6 +161,7 @@ const signUp = async () => {
       transactions: [],
       fixCost: [],
       together_bank: [],
+      category: ['식비'],
     };
 
     // 회원가입 요청

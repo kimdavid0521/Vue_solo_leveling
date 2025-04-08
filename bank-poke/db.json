@@ -104,15 +104,15 @@
       "fixCost": [
         {
           "id": 1,
-          "startDate": "2025-04-01",
-          "name": "asds",
-          "memo": "sadas",
-          "category": "sda",
-          "sub_category": "dsadas",
+          "startDate": "2025-03-10",
+          "name": "넷플릭스",
+          "memo": "넷플릭스 결제",
+          "category": "넷플릭스",
+          "sub_category": "넷플릭스 결제",
           "amount": 1232,
-          "interval": "sad",
-          "endDate": "2025-04-09",
-          "type": "income"
+          "interval": "yearly",
+          "endDate": "2026-04-09",
+          "type": "expense"
         }
       ],
       "together_bank": []

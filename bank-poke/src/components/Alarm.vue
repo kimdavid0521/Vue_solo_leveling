@@ -127,24 +127,54 @@ watchEffect(() => {
 
 // 고정지출 목록
 const fixedCostList = computed(() => authStore.user?.fixCost ?? []);
-const fixCostAlertSet = ref(new Set()); // ✅ 중요
+const fixCostAlertSet = ref(new Set());
+
+// 고정지출 다음 결제일 계산
+function getNextDueDate(startDate, interval) {
+  const now = new Date();
+  const base = new Date(startDate);
+
+  while (base <= now) {
+    switch (interval) {
+      case 'daily':
+        base.setDate(base.getDate() + 1);
+        break;
+      case 'weekly':
+        base.setDate(base.getDate() + 7);
+        break;
+      case 'monthly':
+        base.setMonth(base.getMonth() + 1);
+        break;
+      case 'yearly':
+        base.setFullYear(base.getFullYear() + 1);
+        break;
+      default:
+        return null;
+    }
+  }
+
+  base.setHours(0, 0, 0, 0);
+  return base;
+}
 
 watchEffect(() => {
   const today = new Date();
-  today.setHours(0, 0, 0, 0); // 시간을 00:00:00으로 설정
-
+  today.setHours(0, 0, 0, 0);
   fixedCostList.value.forEach((item) => {
-    if (!item.startDate) return;
-    const end = new Date(item.endDate);
-    end.setHours(0, 0, 0, 0);
-    const diff = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
+    if (item.type !== 'expense' || !item.startDate || !item.interval) return;
+    const nextDue = getNextDueDate(item.startDate, item.interval);
+    console.log(nextDue);
+    if (!nextDue) return;
 
-    if (diff <= 3 && diff >= 0 && !fixCostAlertSet.value.has(item.name)) {
+    const diff = Math.ceil((nextDue - today) / (1000 * 60 * 60 * 24));
+    const key = `${item.name}-${nextDue.toISOString().slice(0, 10)}`;
+
+    if (diff <= 3 && diff >= 0 && !fixCostAlertSet.value.has(key)) {
       alarm.value.push({
-        message: `🏠 고정지출(${item.name})이 곧 출금됩니다!`,
+        message: `🏠 고정지출(${item.name})이 ${diff}일 후 출금됩니다!`,
         read: false,
       });
-      fixCostAlertSet.value.add(item.name);
+      fixCostAlertSet.value.add(key);
     }
   });
 });
