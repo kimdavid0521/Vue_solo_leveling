@@ -45,8 +45,28 @@ import { useAuthStore } from '@/stores/auth';
 // 1. 상태 선언 정리
 const authStore = useAuthStore();
 const alarm = ref([]);
-const monthConsumption = ref(100000);
-const budget = ref(authStore.user?.setting?.budget ?? 0);
+const monthConsumption = ref(10000000);
+// 현재 월을 영어 약어 (Jan ~ Dec)로 가져오기
+const monthNames = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+const currentMonth = monthNames[new Date().getMonth()];
+
+// 예산 가져오기 (기본값 0)
+const budget = ref(
+  authStore.user?.setting?.[0]?.monthlyBudget?.[currentMonth] ?? 0
+);
 
 // 알림 관련 상태
 const unreadCount = computed(
@@ -120,7 +140,7 @@ watchEffect(() => {
   });
 });
 
-// 4. 고정지출 알림 
+// 4. 고정지출 알림
 // 구간 계산 함수
 const fixedCostList = computed(() => authStore.user?.fixCost ?? []);
 
