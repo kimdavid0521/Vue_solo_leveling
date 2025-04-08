@@ -12,6 +12,6 @@
 import { useAuthStore } from '@/stores/auth';
 import Alarm from '@/components/Alarm.vue';
 
+// 로그인한 유저 정보 가져오기
 const authStore = useAuthStore();
-console.log('로그인한 유저 ID:', authStore.user?.id); // 콘솔 출력
 </script>

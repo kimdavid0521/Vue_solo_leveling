@@ -11,7 +11,8 @@
           "id": 1,
           "name": "Sda",
           "minus_balance": 32423,
-          "sales_achievements": 34234
+          "sales_achievements": 34234,
+          "dueDate": "2025-05-01"
         }
       ],
       "account": [
@@ -77,38 +78,27 @@
       ]
     },
     {
-      "id": "3469",
-      "username": "sad",
-      "nickname": "sadsad",
-      "email": "sadsa@naver.com",
-      "password": "asd",
-      "isPremium": false,
-      "card": [],
-      "account": [],
-      "setting": {
-        "currency": "kr",
-        "weekStart": "Monday",
-        "monthStart": 1,
-        "budget": 0
-      },
-      "transactions": [],
-      "fixCost": [],
-      "together_bank": []
-    },
-    {
       "id": "6ce4",
       "username": "123",
       "nickname": "123",
       "email": "123@naver.com",
       "password": "123",
       "isPremium": false,
-      "card": [],
+      "card": [
+        {
+          "id": 1,
+          "name": "Sda",
+          "minus_balance": 32423,
+          "sales_achievements": 34234,
+          "dueDate": "2025-04-13"
+        }
+      ],
       "account": [],
       "setting": {
         "currency": "kr",
         "weekStart": "Monday",
         "monthStart": 1,
-        "budget": 0
+        "budget": 1000000
       },
       "transactions": [],
       "fixCost": [],
