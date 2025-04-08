@@ -77,20 +77,24 @@ import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 const authStore = useAuthStore();
 const router = useRouter();
+
 // 로그아웃
 const logout = () => {
   router.push('/');
 };
 
+// 마이페이지 이동
 const myPage = () => {
   router.push('/mypage');
 };
 </script>
 
 <style>
+/* 드롭다운 아이템 너비 */
 .dropdown-item {
   width: 250px;
 }
+/* 드롭다운 토글 버튼 */
 .dropdown-toggle {
   background-color: transparent;
   border: none;

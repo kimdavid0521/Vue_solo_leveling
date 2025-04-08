@@ -9,9 +9,6 @@
 -->
 <template>
   <div class="container">
-    <p>월 소비금: {{ monthConsumption.toLocaleString() }}원</p>
-    <p>월 예산: {{ budget.toLocaleString() }}원</p>
-
     <div class="dropdown">
       <button class="btn position-relative" data-bs-toggle="dropdown">
         <i class="fa-solid fa-bell fs-4"></i>
