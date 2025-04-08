@@ -52,6 +52,16 @@ const router = createRouter({
       path: '/mypage',
       name: 'mypage',
       component: () => import('../pages/Mypage.vue'),
+      children: [
+        {
+          path: 'edit-profile',
+          component: () => import('../pages/EditProfile.vue'), // 비밀번호 인증
+        },
+        {
+          path: 'premium',
+          component: () => import('../pages/Premium.vue'), // 프리미엄 설정
+        },
+      ],
     },
 
     // 설정 페이지
