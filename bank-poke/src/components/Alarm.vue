@@ -5,6 +5,7 @@
     알림 기능
     1. 월 소비금이 예산을 초과했을 때 알림 추가
     2. 카드 결제 예정일이 3일 남았을 때 알림 추가
+    3. 고정지출이 3일 남았을 때 알림 추가
 -->
 <template>
   <div class="container">
@@ -71,6 +72,7 @@ const hasBudgetAlarm = ref(false);
 // 월 소비금이 예산을 90% 초과했을 때 알림 표시 여부
 const hasBudget90Alert = ref(false);
 
+// 월 소비금이 예산 알림 추가
 watchEffect(() => {
   const consumption = monthConsumption.value;
   const totalBudget = budget.value;
@@ -99,7 +101,7 @@ watchEffect(() => {
 });
 
 // 카드 목록
-const cardList = ref(authStore.user?.card ?? []); // 카드 배열
+const cardList = ref(authStore.user?.card ?? []);
 // 카드 결제 예정일 알림 표시 여부
 const hasCardDueAlert = ref(false);
 
@@ -113,12 +115,36 @@ watchEffect(() => {
     const due = new Date(card.dueDate);
     const diff = (due - today) / (1000 * 60 * 60 * 24);
 
-    if (diff <= 3 && diff >= 0) {
+    if (diff <= 3 && diff >= 0 && !hasCardDueAlert.value) {
       alarm.value.push({
         message: `💳 ${card.name} 결제일이 ${Math.ceil(diff)}일 남았습니다!`,
         read: false,
       });
       hasCardDueAlert.value = true;
+    }
+  });
+});
+
+// 고정지출 목록
+const fixedCostList = computed(() => authStore.user?.fixCost ?? []);
+const fixCostAlertSet = ref(new Set()); // ✅ 중요
+
+watchEffect(() => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // 시간을 00:00:00으로 설정
+
+  fixedCostList.value.forEach((item) => {
+    if (!item.startDate) return;
+    const end = new Date(item.endDate);
+    end.setHours(0, 0, 0, 0);
+    const diff = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
+
+    if (diff <= 3 && diff >= 0 && !fixCostAlertSet.value.has(item.name)) {
+      alarm.value.push({
+        message: `🏠 고정지출(${item.name})이 곧 출금됩니다!`,
+        read: false,
+      });
+      fixCostAlertSet.value.add(item.name);
     }
   });
 });

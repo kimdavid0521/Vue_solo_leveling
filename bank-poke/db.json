@@ -90,7 +90,7 @@
           "name": "Sda",
           "minus_balance": 32423,
           "sales_achievements": 34234,
-          "dueDate": "2025-04-09"
+          "dueDate": "2025-04-9"
         }
       ],
       "account": [],
@@ -101,7 +101,20 @@
         "budget": 500000
       },
       "transactions": [],
-      "fixCost": [],
+      "fixCost": [
+        {
+          "id": 1,
+          "startDate": "2025-04-01",
+          "name": "asds",
+          "memo": "sadas",
+          "category": "sda",
+          "sub_category": "dsadas",
+          "amount": 1232,
+          "interval": "sad",
+          "endDate": "2025-04-09",
+          "type": "income"
+        }
+      ],
       "together_bank": []
     }
   ],
