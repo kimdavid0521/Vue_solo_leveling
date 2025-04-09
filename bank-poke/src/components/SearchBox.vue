@@ -1,6 +1,7 @@
 <template>
   <div class="d-flex gap-1">
     <div class="d-flex gap-1">
+      <!-- 자산 필터링 -->
       <div class="dropdown">
         <button
           class="btn btn-sm rounded-4 custom-btn text-nowrap dropdown-toggle"
@@ -9,6 +10,7 @@
           자산
         </button>
       </div>
+      <!-- 분류 필터링 -->
       <div class="dropdown">
         <button
           class="btn btn-sm rounded-4 custom-btn text-nowrap dropdown-toggle"
@@ -17,6 +19,7 @@
           분류
         </button>
       </div>
+      <!-- 금액 필터링 -->
       <div class="dropdown">
         <button
           class="btn btn-sm rounded-4 custom-btn text-nowrap dropdown-toggle"
@@ -24,6 +27,7 @@
         >
           {{ state.moneyFilter }}
         </button>
+        <!-- 금액 입력창 -->
         <div class="dropdown-menu p-3" style="width: 300px">
           <div class="d-flex align-items-center mb-3 gap-2">
             <input
@@ -59,6 +63,7 @@
         </div>
       </div>
     </div>
+    <!-- 내용 또는 메모 입력창 -->
     <div class="input-group rounded border">
       <span class="input-group-text bg-white border-0">
         <i class="fas fa-search text-muted"></i>
@@ -67,8 +72,11 @@
         type="text"
         class="form-control border-0"
         placeholder="내용 또는 메모"
+        v-model="state.searchText"
+        @keyup.enter="inputContent($event.target.value)"
       />
     </div>
+    <!-- 초기화 버튼 -->
     <div>
       <button
         class="btn btn-sm btn-danger rounded-3 text-nowrap"
@@ -87,10 +95,12 @@ const state = reactive({
   moneyFilter: '금액',
   minMoney: null,
   maxMoney: null,
+  searchText: '',
 });
 
-const emit = defineEmits(['update-money']);
+const emit = defineEmits(['update-money', 'update-content']);
 
+// 금액 범위 초기화
 const resetMoneyFilter = () => {
   state.moneyFilter = '금액';
   state.minMoney = null;
@@ -101,6 +111,7 @@ const resetMoneyFilter = () => {
   });
 };
 
+// 금액 범위 설정 (적용 버튼 클릭 시 호출)
 const setMoneyFilter = () => {
   let minText = '최소';
   let maxText = '최대';
@@ -121,8 +132,15 @@ const setMoneyFilter = () => {
   });
 };
 
+const inputContent = (content) => {
+  emit('update-content', content);
+};
+
+// 전체 초기화
 const reset = () => {
   resetMoneyFilter();
+  state.searchText = '';
+  emit('update-content', state.searchText);
 };
 </script>
 <style scoped>
