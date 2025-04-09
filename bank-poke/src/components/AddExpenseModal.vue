@@ -171,30 +171,36 @@ const subCategoryOptions = computed(() => {
 
 const name = ref("");
 const amount = ref(0);
-const date = ref(""); // 날짜 추가
+const date = ref("");
 const time = ref("");
 const memo = ref("");
-const inInclude = ref(true); // 내역 추가 변수
+const inInclude = ref(true);
 
 const handleSave = () => {
   emit("save", {
     name: name.value,
     date: date.value,
-    category: selcetedCategoryType,
-    sub_category: selectedSubCategory,
-    assetId: selectedAssetId,
-    type: selectedPayType,
+    category: selcetedCategoryType.value,
+    sub_category: selectedSubCategory.value,
+    assetId: selectedAssetId.value,
+    type: selectedPayType.value,
     amount: amount.value,
     memo: memo.value,
     time: time.value,
-    asset_type: selectedAssetType,
-    addTotal: inInclude,
+    asset_type: selectedAssetType.value,
+    addTotal: inInclude.value,
   });
 
   name.value = "";
-  amount.value = 0;
   date.value = "";
-  time.value = "";
+  category.value = "";
+  sub_category.value = "";
+  assetId.value = "";
+  type.value = "";
+  amount.value = "";
   memo.value = "";
+  time.value = "";
+  asset_type.value = "";
+  addTotal.value = "";
 };
 </script>

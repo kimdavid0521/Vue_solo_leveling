@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "id": 2,
+      "id": "2",
       "username": "dks",
       "nickname": "asdasd",
       "email": "SDas@naver.com",
@@ -54,20 +54,36 @@
         }
       ],
       "isPremium": false,
-      "transactions": {
-        "id": 2,
-        "name": "sdasd",
-        "date": "230-231023",
-        "time": "13:30",
-        "category": "dsd",
-        "sub_category": "dsd",
-        "assetId": 1,
-        "type": "income",
-        "amount": 123,
-        "memo": "sdsds",
-        "addTotal": false,
-        "asset_type": "card"
-      },
+      "transactions": [
+        {
+          "name": "김태영의 지출",
+          "date": "2025-04-09",
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 12000,
+          "memo": "태영이 밥먹음!",
+          "time": "19:44",
+          "asset_type": "card",
+          "addTotal": true,
+          "id": 1
+        },
+        {
+          "name": "밥값",
+          "date": "2025-04-09",
+          "category": 2,
+          "sub_category": "부모님",
+          "assetId": 1,
+          "type": "income",
+          "amount": 120000,
+          "memo": "부모님 밥사드림",
+          "time": "10:15",
+          "asset_type": "account",
+          "addTotal": true,
+          "id": 2
+        }
+      ],
       "fixCost": [
         {
           "id": 1,
@@ -82,12 +98,15 @@
           "type": "expense"
         }
       ],
-
       "together_bank": [
         {
           "id": 1,
           "master_user_id": 1,
-          "members_id": [2, 3, 4],
+          "members_id": [
+            2,
+            3,
+            4
+          ],
           "total_balance": 3082894,
           "history": [
             {
@@ -105,49 +124,84 @@
           {
             "id": 1,
             "main_category": "식비",
-            "sub_categories": ["외식", "마트", "카페", "배달"]
+            "sub_categories": [
+              "외식",
+              "마트",
+              "카페",
+              "배달"
+            ]
           },
           {
             "id": 2,
             "main_category": "교통비",
-            "sub_categories": ["버스", "지하철", "택시", "기타"]
+            "sub_categories": [
+              "버스",
+              "지하철",
+              "택시",
+              "기타"
+            ]
           },
           {
             "id": 3,
             "main_category": "주거/통신",
-            "sub_categories": ["월세", "관리비", "인터넷", "휴대폰"]
+            "sub_categories": [
+              "월세",
+              "관리비",
+              "인터넷",
+              "휴대폰"
+            ]
           },
           {
             "id": 4,
             "main_category": "생활",
-            "sub_categories": ["세탁", "청소", "생필품"]
+            "sub_categories": [
+              "세탁",
+              "청소",
+              "생필품"
+            ]
           },
           {
             "id": 5,
             "main_category": "기타",
-            "sub_categories": ["기타 지출"]
+            "sub_categories": [
+              "기타 지출"
+            ]
           }
         ],
         "income": [
           {
             "id": 1,
             "main_category": "급여",
-            "sub_categories": ["월급", "상여금"]
+            "sub_categories": [
+              "월급",
+              "상여금"
+            ]
           },
           {
             "id": 2,
             "main_category": "용돈",
-            "sub_categories": ["부모님", "친척", "기타"]
+            "sub_categories": [
+              "부모님",
+              "친척",
+              "기타"
+            ]
           },
           {
             "id": 3,
             "main_category": "투자수익",
-            "sub_categories": ["주식", "코인", "이자"]
+            "sub_categories": [
+              "주식",
+              "코인",
+              "이자"
+            ]
           },
           {
             "id": 4,
             "main_category": "기타",
-            "sub_categories": ["환급", "기타 수입"]
+            "sub_categories": [
+              "환급",
+              "기타 수입"
+            ]
           }
         ]
       }

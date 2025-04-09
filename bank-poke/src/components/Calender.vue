@@ -19,7 +19,7 @@
         class="milcho-custom-calendar"
         ref="calendarRef"
         :events="summarizedEvent"
-      />       
+      />
 
       <div class="offcanvas offcanvas-end" id="demo">
         <div class="offcanvas-header">
@@ -57,9 +57,10 @@
 
           <!-- 지출 추가 버튼을 그냥 해당 날짜에 둠 -->
           <!-- 이게 더 보기 직관적이고 날짜를 설정할때 편할것같음 -->
-          <button class="btn btn-primary mt-3" @click="addExpense">
+          <!-- -> 그냥 메인에서 날짜 설정까지하게끔 수정 -->
+          <!-- <button class="btn btn-primary mt-3" @click="addExpense">
             지출 추가
-          </button>
+          </button> -->
         </div>
       </div>
     </v-container>
