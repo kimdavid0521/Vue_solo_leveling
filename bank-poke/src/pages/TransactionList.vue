@@ -1,3 +1,4 @@
+
 <template>
   <h5 class="my-3">거래 내역</h5>
   <!-- 거래 내역 헤더: 년월 이동 pagination + '이번달' 버튼 + 검색 버튼 -->
@@ -201,3 +202,4 @@ const transactionsByType = (type) => {
   background-color: #f1f1f1;
 }
 </style>
+
