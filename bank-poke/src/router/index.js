@@ -6,7 +6,6 @@ import TransactionList from '../pages/TransactionList.vue';
 import Analyze from '../pages/Analyze.vue';
 import Asset from '../pages/Asset.vue';
 import Mypage from '../pages/Mypage.vue';
-import Settings from '../pages/Settings.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -71,14 +70,6 @@ const router = createRouter({
         },
       ],
     },
-
-    // 설정 페이지
-    {
-      path: '/settings',
-      name: 'settings',
-      component: () => import('../pages/Settings.vue'),
-    },
-
     /* 404 not found 페이지 */
     {
       path: '/:paths(.*)*',

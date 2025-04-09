@@ -4,11 +4,13 @@
       <div
         class="modal-content border border-dark shadow-sm bg-white text-white rounded-4"
       >
+        <!-- 모달 헤더 -->
         <div class="modal-header border-0 text-dark fw-bold">
           <h3 class="modal-title fw-bold">변경 사항 확인</h3>
           <button type="button" class="btn-close" @click="closeModal"></button>
         </div>
-
+        
+        <!-- 모달 바디 -->
         <div class="modal-body">
           <div class="d-flex justify-content-between">
             <div>
@@ -39,6 +41,7 @@
           </div>
         </div>
 
+        <!-- 모달 푸터 -->
         <div class="modal-footer border-0">
           <button
             type="button"
@@ -69,6 +72,7 @@ const authStore = useAuthStore();
 const done = ref(false);
 let modalInstance = null;
 
+// 모달 초기화
 onMounted(() => {
   const modalElement = document.getElementById('paymentModal');
   modalInstance = new Modal(modalElement, {
@@ -94,12 +98,14 @@ const cleanup = () => {
   document.body.style.paddingRight = '';
 };
 
+// 모달 닫기
 const closeModal = () => {
   if (modalInstance) {
     modalInstance.hide();
   }
 };
 
+// 결제 확인
 const confirmPayment = async () => {
   try {
     await fetch(`/api/users/${authStore.user?.id}`, {

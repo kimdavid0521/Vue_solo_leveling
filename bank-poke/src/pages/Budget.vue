@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h4 class="fw-bold mb-3">월별 예산 설정</h4>
-
+    <!-- 예산 설정 테이블 -->
     <div class="row row-cols-1 row-cols-md-2 g-3">
       <div
         v-for="(budget, month) in monthlyBudget"
@@ -25,6 +25,7 @@
       </div>
     </div>
 
+    <!-- 예산 저장 버튼 -->
     <button class="btn btn-primary mt-4" @click="saveMonthlyBudget">
       예산 저장
     </button>
@@ -37,7 +38,7 @@ import { useAuthStore } from '@/stores/auth';
 
 const authStore = useAuthStore();
 
-// ✔️ 한글 매핑
+// 한글 매핑
 const monthMap = {
   Jan: '1월',
   Feb: '2월',
@@ -53,10 +54,10 @@ const monthMap = {
   Dec: '12월',
 };
 
-// ✔️ 현재 달 계산
+// 현재 달 계산
 const currentMonthEng = Object.keys(monthMap)[new Date().getMonth()];
 
-// ✔️ 현재 달 여부 판별
+// 현재 달 여부 판별
 const isCurrentMonth = (month) => month === currentMonthEng;
 
 // 예산 객체

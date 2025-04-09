@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <!-- 플랜 업그레이드 -->
     <div class="container my-5 text-dark">
       <h2 class="text-center fw-bold mb-4">플랜 업그레이드</h2>
 
@@ -67,7 +68,6 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import ProPaymentModal from '@/components/ProPaymentModal.vue';
 const authStore = useAuthStore();

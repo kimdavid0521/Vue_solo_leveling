@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- 회원정보 수정 -->
     <h4 class="fw-bold mb-4">회원정보 수정</h4>
     <div v-if="!authenticated">
       <label class="form-label">현재 비밀번호</label>
