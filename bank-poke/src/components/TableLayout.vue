@@ -6,7 +6,7 @@
         class="nav-item"
         v-for="tab in tabs"
         :key="tab.label"
-        @click="currentTab = tab.name"
+        @click="updateTab(tab.name)"
       >
         <a
           class="nav-link"
@@ -31,16 +31,23 @@
         </a>
       </li>
     </ul>
-    <slot :currentTab="currentTab"></slot>
+    <slot></slot>
   </div>
 </template>
 <script setup>
 import { ref } from 'vue';
 const currentTab = ref('전체');
+const emit = defineEmits(['update-tab']);
 
 defineProps({
   tabs: Array,
 });
+
+// 현재 클릭된 탭 이름 부모로 전달
+const updateTab = (current) => {
+  currentTab.value = current;
+  emit('update-tab', current);
+};
 </script>
 <style scoped>
 .nav-link {
@@ -50,6 +57,6 @@ defineProps({
   color: #007bff;
 }
 .textRed {
-  color: #dc3545;
+  color: #ff4e50;
 }
 </style>

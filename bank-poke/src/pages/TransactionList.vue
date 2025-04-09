@@ -1,10 +1,10 @@
 <template>
   <h5 class="my-3">거래 내역</h5>
   <!-- 거래 내역 헤더: 년월 이동 pagination + '이번달' 버튼 + 검색 버튼 -->
-  <div class="d-flex justify-content-between mb-3">
-    <div class="d-flex">
+  <div class="d-flex justify-content-between mb-3 fixed-height">
+    <div class="d-flex flex-nowrap me-2 gap-1">
       <!-- 년월 이동 pagination -->
-      <ul class="pagination pagination-sm mb-0 me-2 custom-pagination">
+      <ul class="pagination pagination-sm mb-0 custom-pagination">
         <li class="page-item" @click="shiftYear(-1)">
           <a class="page-link" href="#"
             ><i class="fa-solid fa-angles-left"></i
@@ -15,7 +15,7 @@
             ><i class="fa-solid fa-angle-left"></i
           ></a>
         </li>
-        <li class="page-item">
+        <li class="page-item text-nowrap">
           <a class="page-link" href="#">{{ formattedDate }}</a>
         </li>
         <li class="page-item" @click="shiftMonth(1)">
@@ -30,18 +30,46 @@
         </li>
       </ul>
       <!-- '이번달' 버튼 -->
-      <button class="btn btn-sm rounded-3 custom-btn" @click="goToNow">
+      <button
+        class="btn btn-sm rounded-3 text-nowrap custom-btn"
+        @click="goToNow"
+      >
         이번달
       </button>
     </div>
-    <!-- 검색 버튼 -->
-    <button class="btn btn-sm rounded-circle custom-btn">
-      <i class="fa-solid fa-magnifying-glass"></i>
-    </button>
+    <!-- 검색 박스 -->
+    <div class="d-flex gap-1">
+      <SearchBox v-if="isSearch" @update-money="moneyFilter">
+        <template v-slot="moneyInput">
+          <input
+            type="number"
+            class="form-control"
+            placeholder="최소"
+            v-model.number="moneyData.minMoney"
+          />
+          <span class="text-muted">~</span>
+          <input
+            type="number"
+            class="form-control"
+            placeholder="최대"
+            v-model.number="moneyData.maxMoney"
+          />
+        </template>
+      </SearchBox :moneyData="moneyData">
+      <!-- 검색 버튼 -->
+      <button
+        class="btn btn-sm rounded-circle custom-btn"
+        @click="switchSearch"
+      >
+        <i
+          class="fa-solid"
+          :class="isSearch ? 'fa-xmark' : 'fa-magnifying-glass'"
+        ></i>
+      </button>
+    </div>
   </div>
   <!-- 거래 내역 테이블 -->
-  <TableLayout :tabs="tabs">
-    <template v-slot:default="slotProps">
+  <TableLayout :tabs="tabs" @update-tab="updateTab">
       <table class="table table-hover mb-0">
         <thead>
           <tr>
@@ -57,11 +85,11 @@
         </thead>
         <tbody
           v-if="
-            state.user && transactionsByType(slotProps.currentTab).length > 0
+            state.user && filteredTransactions.length > 0
           "
         >
           <tr
-            v-for="tr in transactionsByType(slotProps.currentTab)"
+            v-for="tr in filteredTransactions"
             :key="tr.id"
             @click=""
           >
@@ -72,7 +100,7 @@
             <td>{{ asset(tr.asset_type, tr.assetId) }}</td>
             <td>{{ tr.category }}</td>
             <td>{{ tr.name }}</td>
-            <td>{{ tr.amount }}원</td>
+            <td>{{ tr.amount.toLocaleString() }}원</td>
           </tr>
         </tbody>
         <tbody v-else>
@@ -81,24 +109,46 @@
           </tr>
         </tbody>
       </table>
-    </template>
   </TableLayout>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, reactive } from 'vue';
 import { useUserStore } from '@/stores/user.js';
 import TableLayout from '@/components/TableLayout.vue';
+import SearchBox from '@/components/SearchBox.vue';
 
 const { state } = useUserStore();
 const user = computed(() => state.user);
+
+// 검색 활성화관련 변수
+const isSearch = ref(true);
+// 현재 클릭된 탭 변수
+const currentTab = ref('전체');
+
+// 금액 범위
+const moneyLimit = reactive({
+  minMoney: null,
+  maxMoney: null,
+});
+
+// 이벤트 발생마다 자식으로부터 데이터 받아옴
+const updateTab = (current) => {
+  currentTab.value = current;
+}
+
+// 이벤트 발생마다 자식으로부터 데이터 받아옴
+const moneyFilter = ({ minMoney, maxMoney }) => {
+  moneyLimit.minMoney = minMoney;
+  moneyLimit.maxMoney = maxMoney;
+};
 
 // 탭 데이터
 const tabs = computed(() => [
   {
     name: '전체',
-    count: transactionsByPeriod.value.length,
-    amount: transactionsByPeriod.value.reduce((sum, t) => sum + t.amount, 0),
+    count: transactionsByType('전체').length,
+    amount: transactionsByType('전체').reduce((sum, t) => sum + t.amount, 0),
   },
   {
     name: '수입',
@@ -155,27 +205,54 @@ const goToNow = () => {
   currentDate.value = new Date();
 };
 
-// 년월별로 필터링된 거래 내역
-const transactionsByPeriod = computed(() => {
+// 필터링된 거래내역 랜더링
+const filteredTransactions = computed(() => {
   if (!state.user || !state.user.transactions) return [];
 
   const currentYear = currentDate.value.getFullYear();
   const currentMonth = currentDate.value.getMonth() + 1;
 
-  return state.user.transactions.filter((ts) => {
-    const [year, month] = ts.date.split('-').map(Number); // 현재 yyyy-mm-dd 형식으로 계산
-    return year === currentYear && month === currentMonth;
-  });
+  return state.user.transactions
+    // 1. 년월 필터
+    .filter((ts) => {
+      const [year, month] = ts.date.split('-').map(Number); // 현재 yyyy-mm-dd 형식으로 계산
+      return year === currentYear && month === currentMonth;
+    })
+    // 2. 탭 필터 (수입/지출/전체)
+    .filter((ts) => {
+      if (currentTab.value === '수입') return ts.type === 'income';
+      if (currentTab.value === '지출') return ts.type === 'expense';
+      return true;
+    })
+    // 3. 금액 범위 필터
+    .filter((ts) => {
+      if (
+        moneyLimit.minMoney !== null &&
+        ts.amount < moneyLimit.minMoney
+      ) return false;
+      if (
+        moneyLimit.maxMoney !== null &&
+        ts.amount > moneyLimit.maxMoney
+      ) return false;
+      return true;
+    });
 });
 
-// 수입/지출별로 필터링된 거래 내역
-const transactionsByType = (type) => {
-  if (type === '수입') {
-    return transactionsByPeriod.value.filter((t) => t.type === 'income');
-  } else if (type === '지출') {
-    return transactionsByPeriod.value.filter((t) => t.type === 'expense');
+// 수입/지출/전체의 금액과 거래 수 계산을 위해 각 타입별 거래 배열 반환
+const transactionsByType = (typeName) => {
+  return filteredTransactions.value.filter((ts) => {
+    if (typeName === '수입') return ts.type === 'income';
+    if (typeName === '지출') return ts.type === 'expense';
+    return true;
+  });
+};
+
+const switchSearch = () => {
+  isSearch.value = !isSearch.value;
+  if(!isSearch.value) {
+    moneyLimit.minMoney = null;
+    moneyLimit.maxMoney = null;
   }
-  return transactionsByPeriod.value;
 };
 </script>
 
@@ -199,5 +276,9 @@ const transactionsByType = (type) => {
 }
 .custom-btn:hover {
   background-color: #f1f1f1;
+}
+/* 높이 고정 */
+.fixed-height {
+  height: 2rem;
 }
 </style>
