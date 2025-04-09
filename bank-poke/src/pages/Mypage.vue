@@ -99,7 +99,7 @@ const systemLinks = [
 
 .sidebar {
   width: 260px;
-  background-color: #f6fcdc;
+  background-color: #ffffff;
   padding: 2rem 1rem;
   border-right: 1px solid #eee;
   display: flex;

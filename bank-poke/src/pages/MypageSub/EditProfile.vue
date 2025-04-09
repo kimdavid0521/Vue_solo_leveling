@@ -1,7 +1,6 @@
 <template>
   <div class="edit-profile-container">
     <h4 class="section-title">회원정보 수정</h4>
-
     <div class="form-box">
       <!-- 비밀번호 인증 전 -->
       <div v-if="!authenticated">

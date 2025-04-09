@@ -1,58 +1,94 @@
 <template>
-  <nav class="navbar navbar-expand-md bg-white shadow-sm">
-    <div class="container-fluid px-4">
-      <!-- 로고 -->
-      <RouterLink to="/main" class="navbar-brand d-flex align-items-center">
-        <img
-          src="@/assets/bankPoke.png"
-          alt="BankPoke 로고"
-          class="logo me-2"
-        />
-        <span class="brand-text fw-bold text-dark">BankPoke</span>
-      </RouterLink>
-
-      <!-- 토글 버튼 (모바일용) -->
-      <button
-        class="navbar-toggler"
-        type="button"
-        @click="isNavOpen = !isNavOpen"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <!-- 메뉴 영역 -->
-      <div class="collapse navbar-collapse" :class="{ show: isNavOpen }">
-        <ul
-          class="navbar-nav ms-auto d-flex align-items-center"
-          style="gap: 1.5rem; font-size: 1rem"
+  <nav class="navbar navbar-expand-lg navbar-light bg-white px-4 py-2">
+    <div
+      class="container-fluid d-flex align-items-center justify-content-between"
+    >
+      <!-- 왼쪽: 로고 + 토글 버튼 -->
+      <div class="d-flex align-items-center me-auto">
+        <!-- 로고 -->
+        <RouterLink
+          to="/main"
+          class="navbar-brand d-flex align-items-center fw-bold text-dark"
         >
-          <li class="nav-item">
-            <RouterLink to="/main" class="nav-link">홈</RouterLink>
-          </li>
-          <li class="nav-item">
-            <RouterLink to="/analyze" class="nav-link">지출 분석</RouterLink>
-          </li>
-          <li class="nav-item">
-            <RouterLink to="/transaction-list" class="nav-link"
-              >거래 내역</RouterLink
+          <img
+            src="../assets/bankPoke.png"
+            alt="logo"
+            width="24"
+            height="24"
+            class="me-2"
+          />
+          BankPoke
+        </RouterLink>
+
+        <!-- 토글 버튼 (항상 로고 옆에 고정됨) -->
+        <button
+          class="navbar-toggler ms-2"
+          type="button"
+          @click="toggleNav"
+          :aria-expanded="isOpen"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+
+      <!-- 중앙: 메뉴 -->
+      <div
+        class="collapse navbar-collapse justify-content-center"
+        :class="{ show: isOpen }"
+      >
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item me-3">
+            <RouterLink
+              to="/main"
+              class="nav-link fw-bold text-secondary"
+              active-class="active"
+              exact-active-class="active"
+              @click="closeNavbar"
             >
+              가계부
+            </RouterLink>
           </li>
-          <li class="nav-item">
-            <RouterLink to="/asset" class="nav-link">내 자산</RouterLink>
+          <li class="nav-item me-3">
+            <RouterLink
+              to="/transaction-list"
+              class="nav-link fw-bold text-secondary"
+              active-class="active"
+              exact-active-class="active"
+              @click="closeNavbar"
+            >
+              거래 내역
+            </RouterLink>
           </li>
-          <li class="nav-item">
-            <RouterLink to="/mypage" class="nav-link">마이 페이지</RouterLink>
+          <li class="nav-item me-3">
+            <RouterLink
+              to="/analyze"
+              class="nav-link fw-bold text-secondary"
+              active-class="active"
+              exact-active-class="active"
+              @click="closeNavbar"
+            >
+              분석
+            </RouterLink>
           </li>
-          <li>
-            <Alarm />
-          </li>
-          <li>
-            <Time />
-          </li>
-          <li>
-            <MyAccount />
+          <li class="nav-item me-3">
+            <RouterLink
+              to="/asset"
+              class="nav-link fw-bold text-secondary"
+              active-class="active"
+              exact-active-class="active"
+              @click="closeNavbar"
+            >
+              자산
+            </RouterLink>
           </li>
         </ul>
+      </div>
+
+      <!-- 오른쪽: 알림 + 마이페이지 -->
+      <div class="d-flex align-items-center gap-3 ms-3">
+        <Alarm class="mb-3" />
+        <MyAccount class="mb-3 mt-3" />
       </div>
     </div>
   </nav>
@@ -60,40 +96,31 @@
 
 <script setup>
 import { ref } from 'vue';
+import { RouterLink } from 'vue-router';
 import Alarm from './Alarm.vue';
-import Time from './TimeOut.vue';
 import MyAccount from './MyAccount.vue';
-const isNavOpen = ref(false);
+
+// 열림/닫힘 상태
+const isOpen = ref(false);
+
+// 토글 버튼
+function toggleNav() {
+  isOpen.value = !isOpen.value;
+}
+
+// 메뉴 항목 클릭 시 닫기
+function closeNavbar() {
+  isOpen.value = false;
+}
 </script>
 
 <style scoped>
-.logo {
-  height: 40px;
-  width: auto;
-}
-
 .navbar {
-  height: 70px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 2px solid #e0e0e0;
 }
-
-.navbar .nav-link {
-  color: #555;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.navbar .nav-link.router-link-exact-active {
-  color: #ffc436;
+.nav-link.active {
   font-weight: bold;
-}
-
-.navbar .nav-link:hover {
-  color: #ffc436;
-  text-decoration: underline;
-}
-
-.brand-text {
-  font-size: 1.2rem;
+  color: #ffd95a !important;
+  border-bottom: 2px solid #ffd95a;
 }
 </style>

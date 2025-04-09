@@ -1,7 +1,6 @@
 <template>
   <div>
     <Calender />
-
     <div
       class="dropup"
       style="float: right; margin-right: 130px"
@@ -35,6 +34,7 @@ import { ref } from 'vue';
 import axios from 'axios';
 import Calender from '@/components/Calender.vue';
 import AddExpenseModal from '@/components/AddExpenseModal.vue';
+
 const expenses = ref([]);
 const showModal = ref(false);
 const dropdownOpen = ref(false);
