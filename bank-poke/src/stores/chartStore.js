@@ -1,18 +1,16 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
-import axios from 'axios';
+import { ref, computed } from 'vue';
 import dayjs from 'dayjs';
+import { useAuthStore } from '@/stores/auth';
+import { useAssetStore } from '@/stores/assetStore';
 
 export const useChartStore = defineStore('chart', () => {
-  const userId = 1;
-
-  // 기존 상태
+  // 차트 데이터 상태 정의
   const chartData = ref(null);
   const totalExpense = ref(0);
   const averageExpense = ref(0);
   const transactionCount = ref(0);
 
-  // 새로운 상태
   const incomeChartData = ref(null);
   const incomeCategorySummary = ref({});
   const expenseChartData = ref(null);
@@ -22,113 +20,90 @@ export const useChartStore = defineStore('chart', () => {
   const usedPercent = ref(0);
   const remaining = ref(0);
 
-  function generateDynamicColors(count, baseHue) {
-    const colors = [];
-    for (let i = 0; i < count; i++) {
-      const hue = (baseHue + i * 30) % 360; // 기본 색상에서 일정 간격으로 색상 분배
-      colors.push(`hsl(${hue}, 100%, 60%)`);
-    }
-    return colors;
-  }
+  // 스토어 참조
+  const authStore = useAuthStore();
+  const assetStore = useAssetStore();
 
-  // 수입 데이터 가져오기
-  async function fetchIncomeData(year, month) {
+  const userId = computed(() => authStore.user?.id);
+  const user = computed(
+    () => assetStore.users.find((u) => u.id === userId.value) || null
+  );
+
+  // 카테고리 매핑 함수
+  const mapToMainCategory = (categories, type) => {
+    const map = {};
+    categories?.forEach((main) => {
+      main.sub_categories.forEach((sub) => {
+        map[sub] = main.main_category;
+      });
+    });
+    return map;
+  };
+
+  // 컬러 생성 함수
+  const generateColors = (count, baseHue) =>
+    Array.from(
+      { length: count },
+      (_, i) => `hsl(${(baseHue + i * 30) % 360}, 100%, 60%)`
+    );
+
+  // 데이터 필터링 함수
+  const filterTransactions = (type, year, month) => {
+    return (user.value?.transactions ?? []).filter((tx) => {
+      const date = dayjs(tx.date);
+      return tx.type === type && date.year() === year && date.month() === month;
+    });
+  };
+
+  // 수입 차트 생성
+  const fetchIncomeData = async (year, month) => {
     try {
-      const res = await axios.get(`/api/users/${userId}`);
-      const transactions = res.data.transactions ?? [];
-      const incomeCategories = res.data.category?.income ?? [];
-
-      const subToMainMap = {};
-      incomeCategories.forEach((main) => {
-        main.sub_categories.forEach((sub) => {
-          subToMainMap[sub] = main.main_category;
-        });
-      });
-
-      const filtered = transactions.filter((tx) => {
-        const date = dayjs(tx.date);
-        return (
-          tx.type === 'income' && date.year() === year && date.month() === month
-        );
-      });
+      const filtered = filterTransactions('income', year, month);
+      const map = mapToMainCategory(user.value?.category?.income);
 
       const mainTotals = {};
       filtered.forEach((tx) => {
-        const mainCategory = subToMainMap[tx.category] || tx.category;
-        if (!mainTotals[mainCategory]) {
-          mainTotals[mainCategory] = 0;
-        }
-        mainTotals[mainCategory] += tx.amount;
+        const main = map[tx.category] || tx.category;
+        mainTotals[main] = (mainTotals[main] || 0) + tx.amount;
       });
-
       incomeCategorySummary.value = mainTotals;
 
       const labels = Object.keys(mainTotals);
       const data = Object.values(mainTotals);
-      const hasData = labels.length > 0 && data.some((val) => val > 0);
-
-      incomeChartData.value = hasData
-        ? {
-            labels,
-            datasets: [
-              {
-                label: '수입 금액',
-                data,
-                backgroundColor: generateDynamicColors(labels.length, 200),
-                borderWidth: 0,
-              },
-            ],
-          }
-        : {
-            labels: ['수입 없음'],
-            datasets: [
-              {
-                label: '수입 금액',
-                data: [1],
-                backgroundColor: ['#d3d3d3'],
-                borderWidth: 0,
-              },
-            ],
-          };
+      incomeChartData.value =
+        labels.length && data.some((val) => val > 0)
+          ? {
+              labels,
+              datasets: [
+                {
+                  label: '수입 금액',
+                  data,
+                  backgroundColor: generateColors(labels.length, 200),
+                  borderWidth: 0,
+                },
+              ],
+            }
+          : {
+              labels: ['수입 없음'],
+              datasets: [
+                {
+                  label: '수입 금액',
+                  data: [1],
+                  backgroundColor: ['#d3d3d3'],
+                  borderWidth: 0,
+                },
+              ],
+            };
     } catch (err) {
       console.error('수입 데이터 로딩 실패:', err);
-      incomeChartData.value = {
-        labels: ['수입 없음'],
-        datasets: [
-          {
-            label: '수입 금액',
-            data: [1],
-            backgroundColor: ['#d3d3d3'],
-            borderWidth: 0,
-          },
-        ],
-      };
-      incomeCategorySummary.value = {};
     }
-  }
+  };
 
-  // 카테고리별 지출 데이터 가져오기
-  async function fetchExpenseData(year, month) {
+  // 지출 차트 생성
+  const fetchExpenseData = async (year, month) => {
     try {
-      const res = await axios.get(`/api/users/${userId}`);
-      const transactions = res.data.transactions ?? [];
-      const expenseCategories = res.data.category?.expense ?? [];
-
-      const subToMainMap = {};
-      expenseCategories.forEach((main) => {
-        main.sub_categories.forEach((sub) => {
-          subToMainMap[sub] = main.main_category;
-        });
-      });
-
-      const filtered = transactions.filter((tx) => {
-        const date = dayjs(tx.date);
-        return (
-          tx.type === 'expense' &&
-          date.year() === year &&
-          date.month() === month
-        );
-      });
+      const filtered = filterTransactions('expense', year, month);
+      const map = mapToMainCategory(user.value?.category?.expense);
 
       totalExpense.value = filtered.reduce((sum, tx) => sum + tx.amount, 0);
       transactionCount.value = filtered.length;
@@ -138,122 +113,62 @@ export const useChartStore = defineStore('chart', () => {
 
       const mainTotals = {};
       filtered.forEach((tx) => {
-        const mainCategory = subToMainMap[tx.category] || tx.category;
-        if (!mainTotals[mainCategory]) {
-          mainTotals[mainCategory] = 0;
-        }
-        mainTotals[mainCategory] += tx.amount;
+        const main = map[tx.category] || tx.category;
+        mainTotals[main] = (mainTotals[main] || 0) + tx.amount;
       });
-
       expenseCategorySummary.value = mainTotals;
 
       const labels = Object.keys(mainTotals);
       const data = Object.values(mainTotals);
-      const hasData = labels.length > 0 && data.some((val) => val > 0);
-
-      expenseChartData.value = hasData
-        ? {
-            labels,
-            datasets: [
-              {
-                label: '지출 금액',
-                data,
-                backgroundColor: generateDynamicColors(labels.length, 300),
-              },
-            ],
-          }
-        : {
-            labels: ['지출 없음'],
-            datasets: [
-              {
-                label: '지출 금액',
-                data: [1],
-                backgroundColor: ['#d3d3d3'],
-              },
-            ],
-          };
+      expenseChartData.value =
+        labels.length && data.some((val) => val > 0)
+          ? {
+              labels,
+              datasets: [
+                {
+                  label: '지출 금액',
+                  data,
+                  backgroundColor: generateColors(labels.length, 300),
+                },
+              ],
+            }
+          : {
+              labels: ['지출 없음'],
+              datasets: [
+                { label: '지출 금액', data: [1], backgroundColor: ['#d3d3d3'] },
+              ],
+            };
     } catch (err) {
-      console.error('카테고리 지출 로딩 실패:', err);
-      expenseChartData.value = {
-        labels: ['지출 없음'],
-        datasets: [
-          {
-            label: '지출 금액',
-            data: [1],
-            backgroundColor: ['#d3d3d3'],
-          },
-        ],
-      };
-      totalExpense.value = 0;
-      averageExpense.value = 0;
-      transactionCount.value = 0;
-      expenseCategorySummary.value = {};
+      console.error('지출 데이터 로딩 실패:', err);
     }
-  }
+  };
 
-  async function fetchBudgetData(year, month) {
+  // 예산 데이터 계산
+  const fetchBudgetData = async (year, month) => {
     try {
-      const res = await axios.get(`/api/users/${userId}`);
-      const user = res.data;
-      const budgetObj = user.setting?.[0]?.monthlyBudget ?? {};
+      const budgetObj = user.value?.setting?.[0]?.monthlyBudget ?? {};
       const monthStr = dayjs(`${year}-${month + 1}-01`).format('MMM');
       const budget = budgetObj[monthStr] || 0;
       totalBudget.value = budget;
 
-      const transactions = user.transactions ?? [];
+      const expenses = filterTransactions('expense', year, month);
+      const total = expenses.reduce((sum, tx) => sum + tx.amount, 0);
 
-      const monthlyExpenses = transactions
-        .filter((tx) => {
-          const date = dayjs(tx.date);
-          return (
-            tx.type === 'expense' &&
-            date.year() === year &&
-            date.month() === month
-          );
-        })
-        .reduce((sum, tx) => sum + tx.amount, 0);
-
-      const percent =
-        budget > 0
-          ? Math.min(100, Math.round((monthlyExpenses / budget) * 100))
-          : 0;
-      const remain = Math.max(0, budget - monthlyExpenses);
-
-      usedPercent.value = percent;
-      remaining.value = remain;
+      usedPercent.value =
+        budget > 0 ? Math.min(100, Math.round((total / budget) * 100)) : 0;
+      remaining.value = Math.max(0, budget - total);
     } catch (err) {
       console.error('예산 정보 로딩 실패:', err);
-      usedPercent.value = 0;
-      remaining.value = 0;
-      totalBudget.value = 0;
     }
-  }
+  };
 
-  async function fetchDailyExpenseData(year, month) {
+  // 일별 지출 차트 생성
+  const fetchDailyExpenseData = async (year, month) => {
     try {
-      const res = await axios.get(`/api/users/${userId}`);
-      const transactions = res.data.transactions ?? [];
-
-      const daysInMonth = dayjs(`${year}-${month + 1}`).daysInMonth();
+      const filtered = filterTransactions('expense', year, month);
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
       const dailyTotals = Array(daysInMonth).fill(0);
 
-      const filtered = transactions.filter((tx) => {
-        const date = dayjs(tx.date);
-        return (
-          tx.type === 'expense' &&
-          date.year() === year &&
-          date.month() === month
-        );
-      });
-
-      // 분석용 데이터 계산
-      totalExpense.value = filtered.reduce((sum, tx) => sum + tx.amount, 0);
-      transactionCount.value = filtered.length;
-      averageExpense.value = transactionCount.value
-        ? Math.round(totalExpense.value / transactionCount.value)
-        : 0;
-
-      // 일별 누적 계산
       filtered.forEach((tx) => {
         const day = dayjs(tx.date).date();
         dailyTotals[day - 1] += tx.amount;
@@ -272,31 +187,18 @@ export const useChartStore = defineStore('chart', () => {
           },
         ],
       };
+
+      totalExpense.value = filtered.reduce((sum, tx) => sum + tx.amount, 0);
+      transactionCount.value = filtered.length;
+      averageExpense.value = transactionCount.value
+        ? Math.round(totalExpense.value / transactionCount.value)
+        : 0;
     } catch (err) {
-      console.error('데이터 로드 실패:', err);
-      const daysInMonth = dayjs(`${year}-${month + 1}`).daysInMonth();
-
-      chartData.value = {
-        labels: Array.from({ length: daysInMonth }, (_, i) => `${i + 1}일`),
-        datasets: [
-          {
-            label: '지출',
-            data: Array(daysInMonth).fill(0),
-            borderColor: '#0d6efd',
-            backgroundColor: 'rgba(13, 110, 253, 0.2)',
-            tension: 0.3,
-            fill: true,
-          },
-        ],
-      };
-
-      // 실패 시 분석값 초기화
-      totalExpense.value = 0;
-      averageExpense.value = 0;
-      transactionCount.value = 0;
+      console.error('일별 지출 데이터 로딩 실패:', err);
     }
-  }
+  };
 
+  // 외부로 반환
   return {
     chartData,
     totalExpense,
@@ -306,12 +208,12 @@ export const useChartStore = defineStore('chart', () => {
     incomeCategorySummary,
     expenseChartData,
     expenseCategorySummary,
+    totalBudget,
+    usedPercent,
+    remaining,
     fetchIncomeData,
     fetchExpenseData,
     fetchBudgetData,
     fetchDailyExpenseData,
-    totalBudget,
-    usedPercent,
-    remaining,
   };
 });

@@ -5,25 +5,9 @@
       <button class="btn btn-outline-primary" @click="prevMonth">
         &#8592;
       </button>
-      <h3 @click="showPicker = !showPicker" style="cursor: pointer">
+      <h3 style="cursor: pointer">
         {{ displayDate }}
       </h3>
-
-      <!-- 달력 -->
-      <div
-        v-if="showPicker"
-        class="position-absolute bg-white border rounded shadow p-2"
-        style="z-index: 10"
-      >
-        <Datepicker
-          v-model="selectedMonth"
-          type="month"
-          format="YYYY-MM"
-          :clearable="false"
-          :editable="false"
-          @closed="showPicker = false"
-        />
-      </div>
       <button class="btn btn-outline-primary" @click="nextMonth">
         &#8594;
       </button>
@@ -40,13 +24,11 @@
 <script setup>
 import { ref, computed } from 'vue';
 import dayjs from 'dayjs';
+
 import DailyExpenseChart from '@/components/DailyExpenseChart.vue';
 import CategoryExpenseChart from '@/components/CategoryExpenseChart.vue';
 import CategoryIncomeChart from '@/components/CategoryIncomeChart.vue';
 import BudgetProgress from '@/components/BudgetProgress.vue';
-import Datepicker from 'vue3-datepicker';
-
-const selectedMonth = ref(new Date()); // 기본값 현재 월
 
 const today = dayjs();
 const year = ref(today.year());
@@ -54,7 +36,6 @@ const month = ref(today.month());
 
 const displayDate = computed(() => `${year.value}년 ${month.value + 1}월`);
 
-// 월 이동 함수
 function prevMonth() {
   const date = dayjs()
     .year(year.value)
