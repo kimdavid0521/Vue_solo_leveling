@@ -1,14 +1,13 @@
 <template>
   <div>
     <Calender />
-
     <div
       class="dropup"
       style="float: right; margin-right: 130px"
       @click="toggleDropdown"
     >
       <button class="btn btn-secondary dropdown-toggle">
-        {{ selectedCategory || "+" }}
+        {{ selectedCategory || '+' }}
       </button>
       <ul class="dropdown-menu" :class="{ show: dropdownOpen }">
         <li>
@@ -31,15 +30,15 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import axios from "axios";
-import Calender from "@/components/Calender.vue";
-import AddExpenseModal from "@/components/AddExpenseModal.vue";
+import { ref } from 'vue';
+import axios from 'axios';
+import Calender from '@/components/Calender.vue';
+import AddExpenseModal from '@/components/AddExpenseModal.vue';
 
 const expenses = ref([]);
 const showModal = ref(false);
 const dropdownOpen = ref(false);
-const selectedCategory = ref("");
+const selectedCategory = ref('');
 const userId = 2;
 
 const addExpense = () => {
@@ -70,10 +69,10 @@ const saveExpense = async (newExpense) => {
       transactions: userData.transactions,
     });
 
-    console.log("저장 완료");
+    console.log('저장 완료');
     showModal.value = false;
   } catch (error) {
-    console.error("저장 실패", error);
+    console.error('저장 실패', error);
   }
 };
 

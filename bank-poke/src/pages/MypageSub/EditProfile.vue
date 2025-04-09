@@ -57,8 +57,8 @@
 <script setup>
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
-
 const authStore = useAuthStore();
+console.log(authStore.user);
 
 // 사용자 정보
 const nickname = ref(authStore.user?.nickname ?? '');

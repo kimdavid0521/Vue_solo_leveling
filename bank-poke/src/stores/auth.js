@@ -3,15 +3,16 @@ import { defineStore } from 'pinia';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: null, // 로그인한 사용자 정보
+    user: JSON.parse(localStorage.getItem('user')) || null, // ✅ 초기값에 localStorage
   }),
-  // 로그인한 사용자 정보 설정
   actions: {
     setUser(userData) {
       this.user = userData;
+      localStorage.setItem('user', JSON.stringify(userData)); // 자동 저장
     },
     clearUser() {
       this.user = null;
+      localStorage.removeItem('user');
     },
   },
 });

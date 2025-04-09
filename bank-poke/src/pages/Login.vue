@@ -137,6 +137,7 @@ const login = async () => {
       alert('이메일 또는 비밀번호가 일치하지 않습니다.');
     } else {
       authStore.setUser(foundUser);
+      localStorage.setItem('user', JSON.stringify(foundUser));
       router.push('/main');
     }
   } catch (error) {
@@ -180,4 +181,3 @@ form {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 </style>
-
