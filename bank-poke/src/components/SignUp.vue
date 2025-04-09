@@ -80,7 +80,11 @@
 
     <!-- 버튼 영역 -->
     <div class="d-grid">
-      <button type="submit" class="btn btn-light text-secondary">
+      <button
+        type="submit"
+        class="btn btn-light text-secondary"
+        @click="signUp"
+      >
         회원가입
       </button>
     </div>
