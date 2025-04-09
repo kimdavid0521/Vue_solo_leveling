@@ -86,9 +86,11 @@
 import { useRouter } from 'vue-router';
 import ForgotPassword from '@/components/ForgotPassword.vue';
 import Signup from '@/components/SignUp.vue';
+import { useAuthStore } from '@/stores/auth';
 import { ref } from 'vue';
 
 const router = useRouter();
+const authStore = useAuthStore();
 
 // 비밀번호 찾기 페이지 표시 여부
 const showForgotPassword = ref(false);
@@ -134,6 +136,7 @@ const login = async () => {
     if (!foundUser) {
       alert('이메일 또는 비밀번호가 일치하지 않습니다.');
     } else {
+      authStore.setUser(foundUser);
       router.push('/main');
     }
   } catch (error) {
