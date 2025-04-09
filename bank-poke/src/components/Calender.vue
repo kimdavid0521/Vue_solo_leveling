@@ -248,22 +248,22 @@ const calendarOptions = {
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
   initialView: "dayGridMonth",
   headerToolbar: {
-    left: "prev,next today",
+    left: "prev,next",
     center: "title",
+    right: "today",
     // 월별, 주별, 일별로 보기 버튼
-    right: "dayGridMonth, timeGridWeek, timeGridDay",
   },
-  views: {
-    dayGridMonth: {
-      buttonText: "월별",
-    },
-    timeGridWeek: {
-      buttonText: "주별",
-    },
-    timeGridDay: {
-      buttonText: "일별",
-    },
-  },
+  // views: {
+  //   dayGridMonth: {
+  //     buttonText: "월별",
+  //   },
+  //   // timeGridWeek: {
+  //   //   buttonText: "주별",
+  //   // },
+  //   // timeGridDay: {
+  //   //   buttonText: "일별",
+  //   // },
+  // },
   // eventClick: handleEventClick,
   // 날짜 셀 클릭 이벤트를 dateClick으로 설정
   // 사용자가 날짜 클릭하면 해당 함수 실행
