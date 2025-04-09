@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-4">
-    <h4 class="fw-bold mb-4">지출 카테고리 관리</h4>
+    <h4 class="fw-bold mb-4 section-title">지출 카테고리 관리</h4>
     <div class="row">
       <!-- 왼쪽: 대분류 리스트 -->
       <div class="col-md-4">
@@ -138,7 +138,112 @@ const saveCategories = async () => {
 </script>
 
 <style scoped>
+.section-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2b2b2b;
+  margin-bottom: 2rem;
+  border-left: 5px solid #ffd95a;
+  padding-left: 0.75rem;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+h4,
+h5,
+h6 {
+  color: #2b2b2b;
+  font-weight: bold;
+}
+
+.list-group-item {
+  transition: background-color 0.2s ease;
+}
+
+.list-group-item.active {
+  background-color: #ffd95a !important;
+  border-color: #ffd95a;
+  color: #2b2b2b;
+  font-weight: bold;
+}
+
+.list-group-item:hover {
+  background-color: #fff7db;
+}
+
+.btn {
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+/* 추가/삭제 버튼 */
+.btn-outline-danger,
+.btn-outline-primary {
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+/* 저장 버튼 */
+.btn-success {
+  background-color: #28a745;
+  border: none;
+  font-weight: bold;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+/* 대분류 추가 버튼 */
+.btn-primary {
+  background-color: #ffd95a;
+  border: none;
+  font-weight: bold;
+  color: #2b2b2b;
+}
+
+.btn-primary:hover {
+  background-color: #ffc436;
+}
+
+/* 서브카테고리 추가 버튼 */
+.btn-outline-primary {
+  color: #2b2b2b;
+  border-color: #ffd95a;
+}
+
+.btn-outline-primary:hover {
+  background-color: #ffd95a;
+  color: #2b2b2b;
+}
+
+/* 입력창 */
 input.form-control {
   max-width: 300px;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.95rem;
+  border-radius: 6px;
+}
+
+input.form-control:focus {
+  border-color: #ffd95a;
+  box-shadow: 0 0 0 0.15rem rgba(255, 217, 90, 0.25);
+  outline: none;
+}
+
+/* 서브카테고리 줄 정렬 */
+.d-flex.align-items-center {
+  gap: 0.5rem;
+}
+
+/* 구분선 느낌 */
+hr {
+  margin: 1.5rem 0;
+  border-top: 1px solid #eee;
 }
 </style>

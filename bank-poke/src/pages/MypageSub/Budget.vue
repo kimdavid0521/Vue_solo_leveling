@@ -1,34 +1,33 @@
 <template>
-  <div class="container">
-    <h4 class="fw-bold mb-3">월별 예산 설정</h4>
-    <!-- 예산 설정 테이블 -->
-    <div class="row row-cols-1 row-cols-md-2 g-3">
-      <div
-        v-for="(budget, month) in monthlyBudget"
-        :key="month"
-        class="col d-flex align-items-center"
-      >
-        <label
-          class="form-label me-2 mb-0 fw-bold"
-          :class="{ 'text-primary': isCurrentMonth(month) }"
-          style="width: 100px"
-        >
-          {{ monthMap[month] }}
-          <span v-if="isCurrentMonth(month)">✔️</span>
-        </label>
+  <div class="budget-container">
+    <h4 class="section-title">월별 예산 설정</h4>
 
-        <input
-          type="number"
-          class="form-control"
-          v-model.number="monthlyBudget[month]"
-        />
+    <!-- 월별 예산 입력 필드 -->
+    <div class="row row-cols-1 row-cols-md-2 g-3">
+      <div v-for="(budget, month) in monthlyBudget" :key="month" class="col">
+        <div
+          class="budget-card"
+          :class="{ 'current-month': isCurrentMonth(month) }"
+        >
+          <label class="budget-label">
+            {{ monthMap[month] }}
+            <span v-if="isCurrentMonth(month)">✔️</span>
+          </label>
+          <input
+            type="number"
+            class="form-control budget-input"
+            v-model.number="monthlyBudget[month]"
+          />
+        </div>
       </div>
     </div>
 
-    <!-- 예산 저장 버튼 -->
-    <button class="btn btn-primary mt-4" @click="saveMonthlyBudget">
-      예산 저장
-    </button>
+    <!-- 저장 버튼 -->
+    <div class="text-end">
+      <button class="btn btn-save mt-4" @click="saveMonthlyBudget">
+        예산 저장
+      </button>
+    </div>
   </div>
 </template>
 
@@ -92,3 +91,68 @@ const saveMonthlyBudget = async () => {
   }
 };
 </script>
+
+<style scoped>
+.budget-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: #2b2b2b;
+  border-left: 5px solid #ffd95a;
+  padding-left: 0.75rem;
+}
+
+.budget-card {
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: 0.2s;
+}
+
+.budget-card.current-month {
+  background-color: #fff7db;
+  border: 2px solid #ffd95a;
+}
+
+.budget-label {
+  font-weight: 600;
+  color: #333;
+  width: 80px;
+}
+
+.budget-input {
+  width: 50%;
+  font-size: 0.95rem;
+  border-radius: 6px;
+}
+
+.budget-input:focus {
+  border-color: #ffd95a;
+  box-shadow: 0 0 0 0.15rem rgba(255, 217, 90, 0.2);
+  outline: none;
+}
+
+.btn-save {
+  background-color: #ffd95a;
+  font-weight: bold;
+  color: #2b2b2b;
+  padding: 0.6rem 1.5rem;
+  border-radius: 8px;
+}
+
+.btn-save:hover {
+  background-color: #ffc436;
+}
+</style>

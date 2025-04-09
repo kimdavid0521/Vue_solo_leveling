@@ -3,9 +3,8 @@
     <!-- 우측 로그인 카드 -->
     <div class="right-section">
       <div class="login-card">
-        <Sign v-if="!isSignup" @signup="isSignup = true" />
         <form @submit.prevent v-if="!showSignup && !showForgotPassword">
-          <div class="text-center mb-3 mt-5">
+          <div class="text-center mb-3">
             <h4 class="main-title">BankPoke 로그인</h4>
           </div>
 

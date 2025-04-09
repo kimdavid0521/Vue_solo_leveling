@@ -224,18 +224,18 @@
           "weekStart": "Monday",
           "monthStart": 1,
           "monthlyBudget": {
-            "Jan": 0,
-            "Feb": 0,
-            "Mar": 0,
-            "Apr": 0,
-            "May": 0,
-            "Jun": 0,
-            "Jul": 0,
-            "Aug": 0,
-            "Sep": 0,
-            "Oct": 0,
-            "Nov": 0,
-            "Dec": 0
+            "Jan": 1000,
+            "Feb": 1000,
+            "Mar": 1000,
+            "Apr": 1000,
+            "May": 1000,
+            "Jun": 1000,
+            "Jul": 1000,
+            "Aug": 1000,
+            "Sep": 1000,
+            "Oct": 10001000,
+            "Nov": 1000,
+            "Dec": 1000
           }
         }
       ],

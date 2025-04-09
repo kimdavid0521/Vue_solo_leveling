@@ -1,108 +1,100 @@
 <template>
-  <div class="container">
-    <form action="/action_page.php" @submit.prevent="signUp">
-      <div class="text-center">
-        <div class="main-title mb-1">회원가입</div>
-      </div>
-      <div class="mb-3 mt-3">
-        <div class="row">
-          <!-- 이름 -->
-          <div class="col">
-            <label for="username" class="form-label">이름</label>
-            <input
-              class="form-control"
-              type="text"
-              autofocus
-              placeholder="이름 입력"
-              v-model="username"
-              required
-            />
-          </div>
-          <!-- 닉네임 -->
-          <div class="col">
-            <label for="nickname" class="form-label">닉네임</label>
-            <input
-              class="form-control"
-              type="text"
-              autofocus
-              placeholder="닉네임 입력"
-              v-model="nickname"
-              required
-            />
-          </div>
-        </div>
-      </div>
-      <!-- 이메일 -->
-      <div class="mb-3 mt-3">
-        <div class="row align-items-end">
-          <div class="col-6">
-            <label for="email" class="form-label">이메일</label>
-            <input
-              class="form-control"
-              type="text"
-              autofocus
-              placeholder="이메일 입력"
-              v-model="email"
-              required
-            />
-          </div>
-          <div class="col-1 d-flex justify-content-center align-items-end">
-            <span class="pb-1">@</span>
-          </div>
-          <div class="col-5">
-            <label for="emailDomain" class="form-label">&nbsp;</label>
-            <select class="form-select" v-model="emailDomain" required>
-              <option value="" disabled selected>선택</option>
-              <option value="naver.com">naver.com</option>
-              <option value="gmail.com">gmail.com</option>
-              <option value="daum.net">daum.net</option>
-              <option value="hanmail.net">hanmail.net</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <!-- 비밀번호 -->
-      <div class="mb-3 mt-3">
-        <label for="password" class="form-label">비밀번호</label>
+  <form @submit.prevent>
+    <div class="text-center mb-3">
+      <div class="main-title mb-1">회원가입</div>
+    </div>
+
+    <!-- 이름 & 닉네임 -->
+    <div class="mb-3 mt-3 row">
+      <div class="col">
+        <label class="form-label">이름</label>
         <input
           class="form-control"
-          type="password"
-          autofocus
-          placeholder="비밀번호 입력"
-          v-model="password"
+          type="text"
+          placeholder="이름 입력"
+          v-model="username"
           required
         />
       </div>
-      <!-- 비밀번호 확인 -->
-      <div class="mb-3 mt-3">
-        <label for="password" class="form-label">비밀번호 확인</label>
+      <div class="col">
+        <label class="form-label">닉네임</label>
         <input
           class="form-control"
-          type="password"
-          autofocus
-          placeholder="비밀번호 확인"
-          v-model="passwordCheck"
+          type="text"
+          placeholder="닉네임 입력"
+          v-model="nickname"
           required
         />
       </div>
-      <!-- 회원가입 버튼 -->
-      <div class="d-grid">
-        <button type="submit" class="btn btn-light btn-block text-secondary">
-          회원가입
-        </button>
+    </div>
+
+    <!-- 이메일 -->
+    <div class="mb-3 mt-3 row align-items-end">
+      <div class="col-6">
+        <label class="form-label">이메일</label>
+        <input
+          class="form-control"
+          type="text"
+          placeholder="이메일 입력"
+          v-model="email"
+          required
+          autocomplete
+        />
       </div>
-      <!-- 로그인으로 돌아가기 -->
-      <div class="text-center">
-        <button
-          type="button"
-          class="btn btn-link sub-title text-secondary pt-3"
-          @click.prevent="$emit('back')"
-        >
-          로그인으로 돌아가기
-        </button>
+      <div class="col-1 text-center">@</div>
+      <div class="col-5">
+        <label class="form-label">&nbsp;</label>
+        <select class="form-select" v-model="emailDomain" required>
+          <option value="" disabled selected>선택</option>
+          <option value="naver.com">naver.com</option>
+          <option value="gmail.com">gmail.com</option>
+          <option value="daum.net">daum.net</option>
+          <option value="hanmail.net">hanmail.net</option>
+        </select>
       </div>
-    </form>
-  </div>
+    </div>
+
+    <!-- 비밀번호 -->
+    <div class="mb-3 mt-3">
+      <label class="form-label">비밀번호</label>
+      <input
+        class="form-control"
+        type="password"
+        placeholder="비밀번호 입력"
+        v-model="password"
+        required
+      />
+    </div>
+
+    <!-- 비밀번호 확인 -->
+    <div class="mb-3 mt-3">
+      <label class="form-label">비밀번호 확인</label>
+      <input
+        class="form-control"
+        type="password"
+        placeholder="비밀번호 확인"
+        v-model="passwordCheck"
+        required
+      />
+    </div>
+
+    <!-- 버튼 영역 -->
+    <div class="d-grid">
+      <button type="submit" class="btn btn-light text-secondary">
+        회원가입
+      </button>
+    </div>
+
+    <div class="text-center">
+      <button
+        type="button"
+        class="btn btn-link sub-title text-secondary pt-3"
+        @click.prevent="$emit('back')"
+      >
+        로그인으로 돌아가기
+      </button>
+    </div>
+  </form>
 </template>
 
 <script setup>
@@ -248,35 +240,30 @@ const signUp = async () => {
 </script>
 
 <style scoped>
-.container {
-  min-height: 100vh;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f9f9f9;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-}
-
 .main-title {
-  font-size: 1rem;
-  font-weight: lighter;
-  color: #242323;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #2b2b2b;
 }
 
-form {
-  width: 100%;
-  max-width: 400px; /* 폼 너비 제한 */
-  padding: 2rem;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.sub-title {
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: #555555;
 }
 
 input.form-control:focus {
   outline: none;
   box-shadow: none;
+}
+
+.btn-light {
+  background-color: #ffd95a;
+  font-weight: bold;
+  color: #2b2b2b;
+}
+
+.btn-light:hover {
+  background-color: #ffc436;
 }
 </style>

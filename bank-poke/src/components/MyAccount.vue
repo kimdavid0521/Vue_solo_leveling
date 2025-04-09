@@ -6,6 +6,7 @@
         type="button"
         class="btn btn-primary dropdown-toggle"
         data-bs-toggle="dropdown"
+        aria-expanded="false"
       >
         <!-- 로그인 상태 -->
         <i class="fa-regular fa-circle-user"></i>
@@ -75,8 +76,21 @@
 <script setup>
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
+import { onMounted } from 'vue';
+import { Dropdown } from 'bootstrap';
+
 const authStore = useAuthStore();
 const router = useRouter();
+
+// 드롭다운 초기화
+onMounted(() => {
+  const dropdownElementList = document.querySelectorAll(
+    '[data-bs-toggle="dropdown"]'
+  );
+  const dropdownList = [...dropdownElementList].map(
+    (dropdownToggleEl) => new Dropdown(dropdownToggleEl)
+  );
+});
 
 // 로그아웃
 const logout = () => {
@@ -90,23 +104,66 @@ const myPage = () => {
 </script>
 
 <style>
-/* 드롭다운 아이템 너비 */
+/* 드롭다운 전체 너비 */
 .dropdown-item {
   width: 250px;
+  font-size: 0.95rem;
+  color: #333;
+  transition: background-color 0.2s ease;
 }
+
+.dropdown-item:hover {
+  background-color: #fff7db;
+}
+
+/* 비활성화된 항목 (닉네임, 이메일 등) */
+.dropdown-item.disabled {
+  opacity: 1;
+  font-weight: 500;
+  background-color: transparent;
+  color: #999;
+  cursor: default;
+}
+
 /* 드롭다운 토글 버튼 */
 .dropdown-toggle {
   background-color: transparent;
   border: none;
-  font-size: 1.5rem;
-  color: #000;
+  font-size: 1.6rem;
+  color: #2b2b2b;
 }
+
 .dropdown-toggle:hover,
 .dropdown-toggle:focus,
 .dropdown-toggle:active,
 .dropdown-toggle.show {
-  background-color: transparent !important;
+  background-color: #ffd95a !important;
+  border-radius: 50%;
   box-shadow: none !important;
-  color: #000;
+  color: #2b2b2b;
+}
+
+/* 드롭다운 메뉴 꾸미기 */
+.dropdown-menu {
+  padding: 0.5rem 0;
+  border-radius: 10px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* 구분선 */
+.dropdown-divider {
+  margin: 0.3rem 0;
+  border-top: 1px solid #ddd;
+}
+
+/* 로그아웃 색상 강조 */
+.dropdown-item.text-danger {
+  color: #d9534f;
+  font-weight: bold;
+}
+
+.dropdown-item.text-danger:hover {
+  background-color: #ffe6e6;
 }
 </style>

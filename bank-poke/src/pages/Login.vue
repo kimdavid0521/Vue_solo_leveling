@@ -22,78 +22,23 @@
           @goSignup="isSignup = true"
           @goForgot="isForgot = true"
         />
-
         <Signup v-else-if="isSignup" @back="isSignup = false" />
-
-        <ForgotPassword v-else @back="isForgot = false" />
+        <ForgotPassword v-else="isForgot" @back="isForgot = false" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
 import ForgotPassword from '@/components/ForgotPassword.vue';
 import Signup from '@/components/SignUp.vue';
-import { useAuthStore } from '@/stores/auth';
 import { ref } from 'vue';
 import LoginForm from '@/components/LoginForm.vue';
-const router = useRouter();
-const authStore = useAuthStore();
 
 // 비밀번호 찾기 페이지 표시 여부
 const isForgot = ref(false);
 // 회원가입 페이지 표시 여부
 const isSignup = ref(false);
-// 비밀번호 보이기 여부
-const passwordVisible = ref(false);
-
-// 비밀번호 보이기 토글
-function togglePassword() {
-  passwordVisible.value = !passwordVisible.value;
-}
-
-// 이메일 입력 값
-const email = ref('');
-// 비밀번호 입력 값
-const password = ref('');
-
-// 로그인 버튼 클릭 시 실행
-const login = async () => {
-  // 이메일 입력 체크
-  if (!email.value) {
-    alert('이메일을 입력해주세요.');
-    return;
-  }
-
-  // 이메일 형식 체크
-  if (!email.value.includes('@')) {
-    alert('이메일 형식이 올바르지 않습니다.');
-    return;
-  }
-
-  try {
-    const response = await fetch('/api/users');
-    const users = await response.json();
-
-    const foundUser = users.find(
-      (user) =>
-        user.email.toLowerCase() === email.value.toLowerCase() &&
-        user.password === password.value
-    );
-
-    if (!foundUser) {
-      alert('이메일 또는 비밀번호가 일치하지 않습니다.');
-    } else {
-      authStore.setUser(foundUser);
-      localStorage.setItem('user', JSON.stringify(foundUser));
-      router.push('/main');
-    }
-  } catch (error) {
-    console.error(error);
-    alert('오류가 발생했습니다.');
-  }
-};
 </script>
 
 <style scoped>
@@ -143,7 +88,7 @@ body {
   justify-content: center;
   align-items: center;
   background-color: #ffffff;
-  height: 100vh; /* ✅ 추가 */
+  /* height: 100vh; ✅ 추가 */
 }
 
 /* 로그인 카드 */
@@ -151,7 +96,8 @@ body {
   width: 100%;
   max-width: 600px;
   min-width: 500px;
-  height: 500px;
+  max-height: 500px;
+  height: auto;
   padding: 2rem;
   background-color: white;
   border-radius: 12px;

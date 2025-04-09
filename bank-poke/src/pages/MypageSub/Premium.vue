@@ -79,8 +79,84 @@ const registerFree = () => {
 
 <style scoped>
 .container {
-  background-color: #f9f9f9;
+  /* background-color: #f9f9f9; */
   padding: 3rem;
   border-radius: 1rem;
+}
+
+/* 플랜 카드 공통 스타일 */
+.plan-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 1.2rem;
+  border: 2px solid #eee;
+  background-color: white;
+  padding: 2rem;
+  min-height: 350px;
+}
+
+.plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* 플랜명 */
+.plan-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #2b2b2b;
+}
+
+/* 가격 */
+.plan-price {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2b2b2b;
+  margin-bottom: 1.5rem;
+}
+
+/* 기능 리스트 */
+.plan-card ul {
+  padding-left: 1rem;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* 버튼 상태 */
+.btn-outline-secondary {
+  border-color: #ccc;
+  color: #555;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #eee;
+  color: #333;
+}
+
+.btn-dark {
+  background-color: #2b2b2b;
+  color: white;
+  font-weight: bold;
+}
+
+.btn-dark:hover {
+  background-color: #1f1f1f;
+}
+
+.btn-outline-dark {
+  border-color: #2b2b2b;
+  color: #2b2b2b;
+}
+
+.btn-outline-dark:hover {
+  background-color: #2b2b2b;
+  color: white;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .plan-card {
+    margin-bottom: 2rem;
+  }
 }
 </style>
