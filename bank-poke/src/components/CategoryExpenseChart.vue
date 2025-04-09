@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-4">
     <div class="row mb-4">
-      <div class="col-5">
+      <div class="col-12 col-md-5 mb-3 mb-md-0">
         <div class="card shadow-sm p-3 h-100">
           <h5 class="card-title text-center fw-bold">카테고리별 지출 비율</h5>
           <div class="ratio ratio-1x1" style="max-width: 100%; height: 20rem">
@@ -13,7 +13,7 @@
           </div>
         </div>
       </div>
-      <div class="col-7">
+      <div class="col-12 col-md-7">
         <div class="card shadow-sm p-3 h-100">
           <h5 class="text-center mb-3 fw-bold">지출 분석</h5>
           <ul class="m-3">

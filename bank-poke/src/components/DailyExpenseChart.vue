@@ -1,13 +1,13 @@
 <template>
   <div class="container mt-4">
     <div class="row mb-4 align-items-stretch">
-      <div class="col-7">
+      <div class="col-12 col-md-7 mb-3 mb-md-0">
         <div class="card shadow-sm p-3 h-100">
           <h5 class="card-title text-center fw-bold">일별 누적 지출</h5>
           <Line v-if="chartData" :data="chartData" :options="chartOptions" />
         </div>
       </div>
-      <div class="col-5">
+      <div class="col-12 col-md-5">
         <div class="card shadow-sm p-3 h-100">
           <div class="mb-5">
             <h5 class="text-center mb-3 fw-bold">일별 지출 분석</h5>
