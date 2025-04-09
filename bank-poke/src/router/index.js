@@ -6,7 +6,6 @@ import TransactionList from '../pages/TransactionList.vue';
 import Analyze from '../pages/Analyze.vue';
 import Asset from '../pages/Asset.vue';
 import Mypage from '../pages/Mypage.vue';
-import Settings from '../pages/Settings.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,15 +50,25 @@ const router = createRouter({
       path: '/mypage',
       name: 'mypage',
       component: () => import('../pages/Mypage.vue'),
+      children: [
+        {
+          path: 'edit-profile',
+          component: () => import('../pages/EditProfile.vue'), // 비밀번호 인증
+        },
+        {
+          path: 'premium',
+          component: () => import('../pages/Premium.vue'), // 프리미엄 설정
+        },
+        {
+          path: 'budget',
+          component: () => import('../pages/Budget.vue'), // 예산 설정
+        },
+        {
+          path: 'cancle-account',
+          component: () => import('../pages/CancleAccount.vue'), // 회원 탈퇴
+        },
+      ],
     },
-
-    // 설정 페이지
-    {
-      path: '/settings',
-      name: 'settings',
-      component: () => import('../pages/Settings.vue'),
-    },
-
     /* 404 not found 페이지 */
     {
       path: '/:paths(.*)*',

@@ -6,68 +6,84 @@
       "nickname": "asdasd",
       "email": "SDas@naver.com",
       "password": "wqqsqa",
-		  "asset_group": {
-		    "card": [ 
-		      {
-		        "id": 1,                    
-		        "name": "Sda",             
-		        "minus_balance": 32423,    
-		        "sales_achievements": 34234, 
-		        "dueDate": "2025-05-01",   
-		        "isCheck": true            
-		      }
-		    ],
-		    "account": [ 
-		      {
-		        "id": 1,
-		        "name": "kb",          
-		        "balance": 34234          
-		      }
-		    ],
-		    "etc": [
-		      {
-		        "id": 1,
-		        "name": "custom",            
-		        "balance": 1000000         
-		      }
-		    ]
-		  },
+      "asset_group": {
+        "card": [
+          {
+            "id": 1,
+            "name": "Sda",
+            "minus_balance": 32423,
+            "sales_achievements": 34234,
+            "dueDate": "2025-05-01",
+            "isCheck": true
+          }
+        ],
+        "account": [
+          {
+            "id": 1,
+            "name": "kb",
+            "balance": 34234
+          }
+        ],
+        "etc": [
+          {
+            "id": 1,
+            "name": "custom",
+            "balance": 1000000
+          }
+        ]
+      },
       "setting": [
         {
           "currency": "kr",
           "weekStart": "Monday",
-          "monthStart": 1
+          "monthStart": 1,
           "monthlyBudget": {
-			       "Jan": 200000,
-						  "Feb": 200000,
-						  "Mar": 200000,
-						  "Apr": 200000,
-						  "May": 200000,
-						  "Jun": 200000,
-						  "Jul": 200000,
-						  "Aug": 200000,
-						  "Sep": 200000,
-						  "Oct": 200000,
-						  "Nov": 200000,
-						  "Dec": 200000
-				    }
-	        }
+            "Jan": 200000,
+            "Feb": 200000,
+            "Mar": 200000,
+            "Apr": 200000,
+            "May": 200000,
+            "Jun": 200000,
+            "Jul": 200000,
+            "Aug": 200000,
+            "Sep": 200000,
+            "Oct": 200000,
+            "Nov": 200000,
+            "Dec": 200000
+          }
+        }
       ],
       "isPremium": false,
-      "transactions": {
-        "id": 2,
-        "name": "sdasd",
-        "date": "230-231023",
-        "time": "13:30",
-        "category": "dsd",
-        "sub_category": "dsd",
-        "assetId": 1, 
-        "type": "income", 
-        "amount": 123,
-        "memo": "sdsds",
-        "addTotal": false
-        "asset_type" : "card" 
-      },
+      "transactions": [
+        {
+          "id": 2,
+          "name": "sdasd",
+          "date": "230-231023",
+          "time": "13:30",
+          "category": "dsd",
+          "sub_category": "dsd",
+          "assetId": 1,
+          "type": "income",
+          "amount": 123,
+          "memo": "sdsds",
+          "addTotal": false,
+          "asset_type": "card"
+        },
+        {
+          "id": 3,
+          "name": "급여",
+          "date": "2025-04-08",
+          "time": "18:00",
+          "category": "수입",
+          "sub_category": "월급",
+          "assetId": 1,
+          "type": "income",
+          "amount": 3000000,
+          "memo": "3월 월급",
+          "addTotal": true,
+          "asset_type": "bank"
+        }
+      ],
       "fixCost": [
         {
           "id": 1,
@@ -77,9 +93,9 @@
           "category": "넷플릭스",
           "sub_category": "넷플릭스 결제",
           "amount": 1232,
-          "interval": "month", 
+          "interval": "month",
           "endDate": "2026-04-09",
-          "type": "expense" 
+          "type": "expense"
         }
       ],
 
@@ -103,49 +119,49 @@
       "category": {
         "expense": [
           {
-	          "id": 1,
+            "id": 1,
             "main_category": "식비",
             "sub_categories": ["외식", "마트", "카페", "배달"]
           },
           {
-	          "id": 2,
+            "id": 2,
             "main_category": "교통비",
             "sub_categories": ["버스", "지하철", "택시", "기타"]
           },
           {
-	          "id": 3,
+            "id": 3,
             "main_category": "주거/통신",
             "sub_categories": ["월세", "관리비", "인터넷", "휴대폰"]
           },
           {
-	          "id": 4,
+            "id": 4,
             "main_category": "생활",
             "sub_categories": ["세탁", "청소", "생필품"]
           },
           {
-	          "id": 5,
+            "id": 5,
             "main_category": "기타",
             "sub_categories": ["기타 지출"]
           }
         ],
         "income": [
           {
-	          "id": 1,
+            "id": 1,
             "main_category": "급여",
             "sub_categories": ["월급", "상여금"]
           },
           {
-	          "id": 2,
+            "id": 2,
             "main_category": "용돈",
             "sub_categories": ["부모님", "친척", "기타"]
           },
           {
-	          "id": 3,
+            "id": 3,
             "main_category": "투자수익",
             "sub_categories": ["주식", "코인", "이자"]
           },
           {
-	          "id": 4,
+            "id": 4,
             "main_category": "기타",
             "sub_categories": ["환급", "기타 수입"]
           }
