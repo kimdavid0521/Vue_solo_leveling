@@ -24,7 +24,6 @@ const router = createRouter({
       name: 'main',
       component: () => import('../pages/Main.vue'),
     },
-
     // 거래 내역 목록 페이지
     {
       path: '/transaction-list',
