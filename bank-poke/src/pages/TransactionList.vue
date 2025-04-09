@@ -1,5 +1,3 @@
-
-
 <template>
   <h5 class="my-3">거래 내역</h5>
   <!-- 거래 내역 헤더: 년월 이동 pagination + '이번달' 버튼 + 검색 버튼 -->
@@ -88,48 +86,48 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import { useUserStore } from '@/stores/user.js';
-import TableLayout from '@/components/TableLayout.vue';
+import { ref, computed } from "vue";
+import { useAuthStore } from "@/stores/auth.js";
+import TableLayout from "@/components/TableLayout.vue";
 
-const { state } = useUserStore();
+const { state } = useAuthStore();
 const user = computed(() => state.user);
 
 // 탭 데이터
 const tabs = computed(() => [
   {
-    name: '전체',
+    name: "전체",
     count: transactionsByPeriod.value.length,
     amount: transactionsByPeriod.value.reduce((sum, t) => sum + t.amount, 0),
   },
   {
-    name: '수입',
-    count: transactionsByType('수입').length,
-    amount: transactionsByType('수입').reduce((sum, t) => sum + t.amount, 0),
+    name: "수입",
+    count: transactionsByType("수입").length,
+    amount: transactionsByType("수입").reduce((sum, t) => sum + t.amount, 0),
   },
   {
-    name: '지출',
-    count: transactionsByType('지출').length,
-    amount: transactionsByType('지출').reduce((sum, t) => sum + t.amount, 0),
+    name: "지출",
+    count: transactionsByType("지출").length,
+    amount: transactionsByType("지출").reduce((sum, t) => sum + t.amount, 0),
   },
 ]);
 
 // 어떤 자산인지 계산하여 반환
 const asset = computed(() => {
   return (type, id) => {
-    if (type === 'card') {
+    if (type === "card") {
       const card = user.value.asset_group.card.find((c) => c.id === id);
-      return card ? (card.isCheck ? '체크카드' : '신용카드') : '';
-    } else if (type === 'cash') {
-      return '현금';
-    } else if (type === 'account') {
+      return card ? (card.isCheck ? "체크카드" : "신용카드") : "";
+    } else if (type === "cash") {
+      return "현금";
+    } else if (type === "account") {
       const account = user.value.asset_group.account.find((a) => a.id === id);
-      return account ? account.name : '';
-    } else if (type === 'etc') {
+      return account ? account.name : "";
+    } else if (type === "etc") {
       const assetEtc = user.value.asset_group.etc.find((i) => i.id === id);
-      return assetEtc ? assetEtc.name : '';
+      return assetEtc ? assetEtc.name : "";
     }
-    return '기타';
+    return "기타";
   };
 });
 
@@ -139,7 +137,7 @@ const currentDate = ref(new Date());
 // YYYY-MM 형식으로 포맷
 const formattedDate = computed(() => {
   const year = currentDate.value.getFullYear();
-  const month = String(currentDate.value.getMonth() + 1).padStart(2, '0');
+  const month = String(currentDate.value.getMonth() + 1).padStart(2, "0");
   return `${year}-${month}`;
 });
 
@@ -165,17 +163,17 @@ const transactionsByPeriod = computed(() => {
   const currentMonth = currentDate.value.getMonth() + 1;
 
   return state.user.transactions.filter((ts) => {
-    const [year, month] = ts.date.split('-').map(Number); // 현재 yyyy-mm-dd 형식으로 계산
+    const [year, month] = ts.date.split("-").map(Number); // 현재 yyyy-mm-dd 형식으로 계산
     return year === currentYear && month === currentMonth;
   });
 });
 
 // 수입/지출별로 필터링된 거래 내역
 const transactionsByType = (type) => {
-  if (type === '수입') {
-    return transactionsByPeriod.value.filter((t) => t.type === 'income');
-  } else if (type === '지출') {
-    return transactionsByPeriod.value.filter((t) => t.type === 'expense');
+  if (type === "수입") {
+    return transactionsByPeriod.value.filter((t) => t.type === "income");
+  } else if (type === "지출") {
+    return transactionsByPeriod.value.filter((t) => t.type === "expense");
   }
   return transactionsByPeriod.value;
 };
@@ -203,4 +201,3 @@ const transactionsByType = (type) => {
   background-color: #f1f1f1;
 }
 </style>
-

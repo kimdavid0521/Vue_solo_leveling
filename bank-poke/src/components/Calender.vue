@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <v-container class="milcho-calendar-container">
+    <div class="milcho-calendar-container">
       <div class="text-center my-4">
         <h4>{{ currentMonth }}</h4>
         <p>
@@ -54,34 +54,24 @@
               - {{ event.name }} : {{ event.amount.toLocaleString() }}원
             </li>
           </ul>
-
-          <!-- 지출 추가 버튼을 그냥 해당 날짜에 둠 -->
-          <!-- 이게 더 보기 직관적이고 날짜를 설정할때 편할것같음 -->
-          <!-- -> 그냥 메인에서 날짜 설정까지하게끔 수정 -->
-          <!-- <button class="btn btn-primary mt-3" @click="addExpense">
-            지출 추가
-          </button> -->
         </div>
       </div>
-    </v-container>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid"; // 날짜
 import timeGridPlugin from "@fullcalendar/timegrid"; // 시간 그리드 플러그인
 import interactionPlugin from "@fullcalendar/interaction";
 import { Offcanvas } from "bootstrap";
-import AddExpenseModal from "../components/AddExpenseModal.vue";
+import axios from "axios";
 
-const showModal = ref(false);
-
-const saveExpense = (expense) => {
-  console.log(expense);
-};
 const currentDate = ref(new Date());
+// 사용자가 클릭한 날짜
+const selectedDate = ref("");
 
 const currentMonth = computed(() => {
   const year = currentDate.value.getFullYear();
@@ -111,56 +101,29 @@ const handleMonthSummary = computed(() => {
 });
 // event 배열구조
 // expense: 지출, income: 수입
-const events = ref([
-  {
-    id: 1,
-    name: "아빠 용돈",
-    start: "2025-04-10T09:30:00",
-    amount: 10000,
-    type: "income",
-    memo: "아빠한테 받은 용돈",
-  },
-  {
-    id: 2,
-    name: "점심",
-    start: "2025-04-10T12:00:00",
-    amount: 12000,
-    type: "expense",
-    memo: "점심 먹음",
-  },
-  {
-    id: 3,
-    name: "점심 값 제공",
-    start: "2025-04-10T12:00:00",
-    amount: 12000,
-    type: "income",
-    memo: "점심값 제공받음",
-  },
-  {
-    id: 4,
-    name: "편의점",
-    start: "2025-04-12T20:30:00",
-    amount: 3000,
-    type: "expense",
-    memo: "편의점 다녀옴",
-  },
-]);
+const events = ref([]);
 
-// 월별 총합 금액 추출
-// const monthSummarized = computed(() => {
-//   const monthSummaryMap = new Map();
-//   for (const event of events.value) {
-//     const month = event.start.slice(0, 7); // 일별로 나누기
-//     if (!monthSummaryMap.has(month)) {
-//       monthSummaryMap.set(month, { income: 0, expense: 0 });
-//     }
-//     monthSummaryMap.get(month)[event.type] += event.amount;
-//   }
+// 날짜 변경될때마다 일정 api 호출
+onMounted(async () => {
+  try {
+    const response = await axios.get("http://localhost:3000/users/2");
+    const transData = response.data.transactions;
 
-//   return monthSummaryMap;
-// });
-
-//
+    const convertedData = transData.map((t) => ({
+      ...t,
+      start: `${t.date}T${t.time}:00`,
+    }));
+    const plainData = JSON.parse(JSON.stringify(convertedData));
+    events.value = plainData;
+    if (selectedDate.value) {
+      selectedDateEvents.value = events.value
+        .filter((e) => e.start.startsWith(selectedDate.value))
+        .sort((a, b) => new Date(a.start) - new Date(b.start));
+    }
+  } catch (error) {
+    console.error("API 연결 에러:", error);
+  }
+});
 
 // eventContent는 이벤트 하나에대해 한번씩만 실행되므로 3개의 지출이 있다면 함수가 3번이 실행돼서
 // 현실적으로 총합계산이 불가능
@@ -196,53 +159,26 @@ const summarizedEvent = computed(() => {
   return [...events.value, ...summaryEvents];
 });
 
-// 사용자가 클릭한 날짜
-const selectedDate = ref("");
-
-// 클릭한 날짜의 지출 내역
 const selectedDateEvents = ref([]);
 
 // 해당 날짜 클릭시 해당 날짜에 속한 지출 내역 시간순으로 정렬 후 출력
+let offcanvasInstance = null;
+
 const handleDateClick = (info) => {
   selectedDate.value = info.dateStr;
   selectedDateEvents.value = events.value
-    // 날짜 필터링 (dateStr은 클릭된 날짜 문자열 ex 2025-04-10)
     .filter((e) => e.start.startsWith(info.dateStr))
-    // 일정 시간순으로 필터링
     .sort((a, b) => new Date(a.start) - new Date(b.start));
 
-  // 직접 부트스트랩 canvas열기
   const offcanvasElement = document.getElementById("demo");
-  const offcanvasInstance = new Offcanvas(offcanvasElement);
-  offcanvasInstance.show();
-};
 
-// 현재까지의 지출 id
-let nextId = Math.max(...events.value.map((e) => e.id)) + 1;
-// 지출 내역 추가 함수
-const addExpense = () => {
-  const time = prompt("시간 예(13:30)");
-  const name = prompt("지출 이름:");
-  const amount = parseInt(prompt("금액:"), 10);
-  const type = prompt("지출: expense, 수입: income");
-  const memo = prompt("지출 내역 메모");
-
-  if (time && name && amount) {
-    const start = `${selectedDate.value}T${time}:00`;
-    events.value.push({
-      id: nextId++,
-      name,
-      start,
-      amount,
-      type,
-      memo,
-    });
-
-    // 목록 추가 후 다시 최신화(필터링)
-    selectedDateEvents.value = events.value
-      .filter((e) => e.start.startsWith(selectedDate.value))
-      .sort((a, b) => new Date(a.start) - new Date(b.start));
+  // 기존 인스턴스를 닫고 새로 생성
+  if (offcanvasInstance) {
+    offcanvasInstance.hide();
   }
+
+  offcanvasInstance = new Offcanvas(offcanvasElement);
+  offcanvasInstance.show();
 };
 
 const calendarOptions = {
@@ -280,21 +216,7 @@ const calendarOptions = {
   dayMaxEventRows: false,
   height: "auto",
   datesSet: handleDatesSet,
-  // eventContent를 통해서 각 이벤트의 렌더링 방식 직접 지정 가능
-  // eventContent: function (arg) {
-  //   const title = arg.event.extendProps.name;
-  //   const amount = arg.event.extendedProps.amount;
 
-  //   //html 리턴
-  //   return {
-  //     html: `
-  //     <div class="custom-event">
-  //       <strong>${title}</strong><br/>
-  //       <span class="amount">${amount.toLocaleString()}원</span>
-  //       </div>
-  //       `,
-  //   };
-  // },
   eventContent(arg) {
     // 총합 이벤트인 경우
     if (arg.event.extendedProps.isSummary) {
