@@ -4,6 +4,7 @@
       <!-- 각 탭 추가 -->
       <li
         class="nav-item"
+        :class="currentTab !== tab.name ? 'bgColorSky shadow-sm' : ''"
         v-for="tab in tabs"
         :key="tab.label"
         @click="updateTab(tab.name)"
@@ -58,5 +59,11 @@ const updateTab = (current) => {
 }
 .textRed {
   color: #ff4e50;
+}
+.bgColorSky {
+  background-color: #edf2fa;
+}
+.bgColorSky > a:hover {
+  background-color: #d9e7fd;
 }
 </style>
