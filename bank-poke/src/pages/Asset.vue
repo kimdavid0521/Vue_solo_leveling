@@ -1,3 +1,4 @@
+
 <template>
   <div class="container py-3">
     <RetrieveAsset />
@@ -18,3 +19,4 @@ import AddAsset from '@/components/AddAsset.vue';
   position: relative;
 }
 </style>
+
