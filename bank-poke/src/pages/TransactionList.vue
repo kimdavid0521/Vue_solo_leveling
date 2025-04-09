@@ -38,7 +38,7 @@
       </button>
     </div>
     <!-- 검색 박스 -->
-    <div class="d-flex gap-1">
+    <div class="d-flex gap-1 me-2">
       <SearchBox
         v-if="isSearch"
         @update-money="moneyFilter"
@@ -61,9 +61,14 @@
   <TableLayout :tabs="tabs" @update-tab="updateTab">
     <table class="table table-hover mb-0">
       <thead>
-        <tr>
+        <tr v-if="selectedTransactions.length === 0">
           <th>
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              :disabled="filteredTransactionsByType.length === 0"
+              :checked="allSelected"
+              @change="toggleSelectAll"
+            />
           </th>
           <th>날짜</th>
           <th>자산</th>
@@ -71,11 +76,39 @@
           <th>내용</th>
           <th>금액</th>
         </tr>
+        <tr v-else class="custom-selected">
+          <th>
+            <input
+              type="checkbox"
+              :checked="allSelected"
+              @change="toggleSelectAll"
+            />
+          </th>
+          <th colspan="4" class="text-white">
+            {{ selectedTransactions.length }}건 선택
+          </th>
+          <th class="p-0 align-middle">
+            <button
+              class="btn btn-sm text-white"
+              @click="deleteSelectedTransactions"
+            >
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </th>
+        </tr>
       </thead>
-      <tbody v-if="state.user && filteredTransactions.length > 0">
-        <tr v-for="tr in filteredTransactions" :key="tr.id" @click="">
+      <tbody v-if="state.user && filteredTransactionsByType.length > 0">
+        <tr
+          v-for="tr in filteredTransactionsByType"
+          :key="tr.id"
+          :class="{ 'selected-row': selectedTransactions.includes(tr.id) }"
+        >
           <td>
-            <input type="checkbox" :value="tr.id" />
+            <input
+              type="checkbox"
+              :value="tr.id"
+              v-model="selectedTransactions"
+            />
           </td>
           <td>{{ tr.date }}</td>
           <td>{{ asset(tr.asset_type, tr.assetId) }}</td>
@@ -99,11 +132,14 @@ import { useUserStore } from '@/stores/user.js';
 import TableLayout from '@/components/TableLayout.vue';
 import SearchBox from '@/components/SearchBox.vue';
 
-const { state } = useUserStore();
+const { state, deleteTransactions } = useUserStore();
 const user = computed(() => state.user);
 
+// 선택된 거래 내역 id 리스트
+const selectedTransactions = ref([]);
+
 // 검색 활성화관련 변수
-const isSearch = ref(true);
+const isSearch = ref(false);
 // 현재 클릭된 탭 변수
 const currentTab = ref('전체');
 
@@ -119,17 +155,20 @@ const searchText = ref('');
 // 이벤트 발생마다 자식으로부터 데이터 받아옴
 const updateTab = (current) => {
   currentTab.value = current;
+  selectedTransactions.value = []; // 선택 초기화
 };
 
 // 이벤트 발생마다 자식으로부터 데이터 받아옴
 const moneyFilter = ({ minMoney, maxMoney }) => {
   moneyLimit.minMoney = minMoney;
   moneyLimit.maxMoney = maxMoney;
+  selectedTransactions.value = []; // 선택 초기화
 };
 
 // 이벤트 발생마다 자식으로부터 데이터 받아옴
 const contentFilter = (content) => {
   searchText.value = content;
+  selectedTransactions.value = []; // 선택 초기화
 };
 
 // 탭 데이터
@@ -183,18 +222,21 @@ const formattedDate = computed(() => {
 const shiftMonth = (direction) => {
   currentDate.value.setMonth(currentDate.value.getMonth() + direction);
   currentDate.value = new Date(currentDate.value);
+  selectedTransactions.value = []; // 선택 초기화
 };
 
 const shiftYear = (direction) => {
   currentDate.value.setFullYear(currentDate.value.getFullYear() + direction);
   currentDate.value = new Date(currentDate.value);
+  selectedTransactions.value = []; // 선택 초기화
 };
 
 const goToNow = () => {
   currentDate.value = new Date();
+  selectedTransactions.value = []; // 선택 초기화
 };
 
-// 필터링된 거래내역 랜더링
+// 필터링된 거래내역
 const filteredTransactions = computed(() => {
   if (!state.user || !state.user.transactions) return [];
 
@@ -208,13 +250,7 @@ const filteredTransactions = computed(() => {
         const [year, month] = ts.date.split('-').map(Number); // 현재 yyyy-mm-dd 형식으로 계산
         return year === currentYear && month === currentMonth;
       })
-      // 2. 탭 필터 (수입/지출/전체)
-      .filter((ts) => {
-        if (currentTab.value === '수입') return ts.type === 'income';
-        if (currentTab.value === '지출') return ts.type === 'expense';
-        return true;
-      })
-      // 3. 금액 범위 필터
+      // 2. 금액 범위 필터
       .filter((ts) => {
         if (moneyLimit.minMoney !== null && ts.amount < moneyLimit.minMoney)
           return false;
@@ -222,7 +258,7 @@ const filteredTransactions = computed(() => {
           return false;
         return true;
       })
-      // 4. 내용 또는 메모 필터
+      // 3. 내용 또는 메모 필터
       .filter((ts) => {
         if (!searchText.value) return true;
         if (ts.name?.toLowerCase().includes(searchText.value.toLowerCase()))
@@ -234,7 +270,16 @@ const filteredTransactions = computed(() => {
   );
 });
 
-// 수입/지출/전체의 금액과 거래 수 계산을 위해 각 타입별 거래 배열 반환
+// 필터링된 거래내역에서 전체/수입/지출 필터하여 랜더링
+const filteredTransactionsByType = computed(() => {
+  return filteredTransactions.value.filter((ts) => {
+    if (currentTab.value === '수입') return ts.type === 'income';
+    if (currentTab.value === '지출') return ts.type === 'expense';
+    return true;
+  });
+});
+
+// 수입/지출/전체의 금액과 거래 수 계산을 위해 타입별 거래 배열 반환
 const transactionsByType = (typeName) => {
   return filteredTransactions.value.filter((ts) => {
     if (typeName === '수입') return ts.type === 'income';
@@ -251,6 +296,36 @@ const switchSearch = () => {
     moneyLimit.minMoney = null;
     moneyLimit.maxMoney = null;
     searchText.value = '';
+  }
+  selectedTransactions.value = []; // 선택 초기화
+};
+
+// 선택된 거래 내역 삭제
+const deleteSelectedTransactions = () => {
+  if (!confirm('선택한 거래내역을 삭제하시겠습니까?')) return;
+
+  deleteTransactions(selectedTransactions.value);
+  // 삭제 후 선택 초기화
+  selectedTransactions.value = [];
+};
+
+// 전체 선택이 checked되면 모든 거래 선택
+const allSelected = computed(() => {
+  return (
+    filteredTransactions.value.length > 0 &&
+    filteredTransactions.value.every((tr) =>
+      selectedTransactions.value.includes(tr.id)
+    )
+  );
+});
+
+// 전체 선택 클릭 시 호출
+const toggleSelectAll = () => {
+  // 이미 전체 선택이 되어있다면 모두 해제로 변경
+  if (allSelected.value) {
+    selectedTransactions.value = [];
+  } else {
+    selectedTransactions.value = filteredTransactions.value.map((tr) => tr.id);
   }
 };
 </script>
@@ -279,5 +354,11 @@ const switchSearch = () => {
 /* 높이 고정 */
 .fixed-height {
   height: 2rem;
+}
+tr.custom-selected th {
+  background-color: #3e4474;
+}
+tr.selected-row td {
+  background-color: #f0f2f5; /* #fff8e1 */
 }
 </style>
