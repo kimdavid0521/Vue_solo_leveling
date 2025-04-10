@@ -107,25 +107,67 @@ const saveExpense = async (newExpense) => {
     const res = await axios.get(`http://localhost:3000/users/${userId}`);
     const userData = res.data;
 
-    // 거래 배열 없으면 초기화
-    if (!Array.isArray(userData.transactions)) {
-      userData.transactions = [];
+    if (newExpense.isRepeat) {
+      if (!Array.isArray(userData.fixCost)) {
+        userData.fixCost = [];
+      }
+
+      const newId = userData.fixCost.length + 1;
+      newExpense.id = newId;
+
+      //fixCost배열에 추가
+      userData.fixCost.push(newExpense);
+
+      // 반복거래 내역 추가
+      const repeatDates = generateRepeatDates(
+        newExpense.date.startDate,
+        newExpense.date.endDate,
+        newExpense.interval
+      );
+
+      if (!Array.isArray(userData.transactions)) {
+        userData.transactions = [];
+      }
+
+      // 반복된 날짜만큼 거래 생성
+      for (const recurDate of repeatDates) {
+        userData.transactions.push({
+          ...newExpense,
+          id: userData.transactions.length + 1,
+          date: recurDate.toISOString().split("T")[0],
+          isRepeat: false,
+        });
+      }
+
+      // 고정 지출이랑 그에따른 지출 저장
+      await axios.patch(`http://localhost:3000/users/${userId}`, {
+        fixCost: userData.fixCost,
+        transactions: userData.transactions,
+      });
+
+      console.log("고정 지출 저장 완료");
+      showModal.value = false;
+    } else {
+      // 거래 배열 없으면 초기화
+      if (!Array.isArray(userData.transactions)) {
+        userData.transactions = [];
+      }
+
+      // 새로운 거래에 고유 id 부여
+      const newId = userData.transactions.length + 1;
+      newExpense.id = newId;
+
+      // 거래 추가
+      userData.transactions.push(newExpense);
+
+      // 서버에 patch요청으로 저장
+      await axios.patch(`http://localhost:3000/users/${userId}`, {
+        transactions: userData.transactions,
+      });
+
+      console.log("거래 내역 저장 완료");
+      showModal.value = false;
     }
-
-    // 새로운 거래에 고유 id 부여
-    const newId = userData.transactions.length + 1;
-    newExpense.id = newId;
-
-    // 거래 추가
-    userData.transactions.push(newExpense);
-
-    // 서버에 patch요청으로 저장
-    await axios.patch(`http://localhost:3000/users/${userId}`, {
-      transactions: userData.transactions,
-    });
-
-    console.log('저장 완료');
-    showModal.value = false;
   } catch (error) {
     console.error('저장 실패', error);
   }
@@ -134,6 +176,35 @@ const saveExpense = async (newExpense) => {
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value;
 };
+
+// 반복 날짜 생성 함수
+function generateRepeatDates(startDate, endDate, interval) {
+  const dates = [];
+  const current = new Date(startDate);
+  const last = new Date(endDate);
+
+  while (current <= last) {
+    dates.push(new Date(current));
+
+    switch (interval) {
+      case "daily":
+        current.setDate(current.getDate() + 1);
+        break;
+      case "weekly":
+        current.setDate(current.getDate() + 7);
+        break;
+      case "monthly":
+        current.setMonth(current.getMonth() + 1);
+        break;
+      case "yearly":
+        current.setFullYear(current.getFullYear() + 1);
+        break;
+      default:
+        throw new Error("지원하지 않는 인터벌 기간입니다.");
+    }
+  }
+  return dates;
+}
 </script>
 
 <style scoped>
