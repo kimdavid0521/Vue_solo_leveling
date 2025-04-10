@@ -37,7 +37,6 @@
         :key="currentPage"
       />
 
-      <!-- ✅ 선택 날짜 상세 -->
       <div class="offcanvas offcanvas-end" id="demo">
         <div class="offcanvas-header">
           <h1 class="offcanvas-title">
@@ -149,6 +148,91 @@
                 class="form-control"
               />
             </div>
+
+            <!-- 자산 타입 -->
+            <div>
+              <!-- 자산 타입 -->
+              <div class="mb-3">
+                <label class="form-label">자산 타입</label>
+                <select v-model="selectedAssetType" class="form-select">
+                  <option disabled value="">자산 타입 선택</option>
+                  <option value="card">카드</option>
+                  <option value="account">계좌</option>
+                  <option value="etc">기타</option>
+                </select>
+              </div>
+
+              <!-- 자산 선택 -->
+              <div class="mb-3">
+                <label class="form-label">자산 선택</label>
+                <select v-model="selectedAssetId" class="form-select">
+                  <option disabled value="">자산 선택</option>
+                  <option
+                    v-for="asset in filteredAssets"
+                    :key="asset.id"
+                    :value="asset.id"
+                  >
+                    {{ asset.name }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- 소비 타입 -->
+              <div class="mb-3">
+                <label class="form-label">소비 타입</label>
+                <select v-model="selectedPayType" class="form-select">
+                  <option disabled value="">소비 타입 선택</option>
+                  <option value="expense">소비</option>
+                  <option value="income">입금</option>
+                </select>
+              </div>
+
+              <!-- 상위 카테고리 -->
+              <div class="mb-3">
+                <label class="form-label">상위 카테고리 선택</label>
+                <select v-model="selectedCategoryType" class="form-select">
+                  <option disabled value="">상위 카테고리 선택</option>
+                  <option
+                    v-for="category in filterCategory"
+                    :key="category.id"
+                    :value="category.id"
+                  >
+                    {{ category.main_category }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- 하위 카테고리 -->
+              <div class="mb-3">
+                <label class="form-label">하위 카테고리 선택</label>
+                <select v-model="selectedSubCategory" class="form-select">
+                  <option disabled value="">하위 카테고리 선택</option>
+                  <option
+                    v-for="subcategory in subCategoryOptions"
+                    :key="subcategory"
+                    :value="subcategory"
+                  >
+                    {{ subcategory }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <!-- 메모 -->
+            <div class="mb-3">
+              <label class="form-label">메모</label>
+              <input v-model="memo" type="text" class="form-control" />
+            </div>
+
+            <!-- 내역에 추가할지 -->
+            <div class="mb-3">
+              <label class="form-label">내역에 추가할지</label>
+              <input
+                v-model="inInclude"
+                type="checkbox"
+                class="form-check-input"
+              />
+            </div>
           </div>
           <div class="modal-footer">
             <button class="btn btn-secondary" data-bs-dismiss="modal">
@@ -182,6 +266,53 @@ const editEvent = ref({
   start: "",
 });
 
+const selectedAssetType = ref("");
+const selectedAssetId = ref("");
+const selectedPayType = ref("");
+const selectedCategoryType = ref("");
+const selectedSubCategory = ref("");
+const memo = ref("");
+const inInclude = ref(true);
+
+// API로부터 받아올 데이터
+const assetGroup = ref({});
+const categoryGroup = ref({});
+
+// 마운트 시 데이터 가져오기
+onMounted(async () => {
+  try {
+    const userId = authStore.user?.id;
+    if (!userId) {
+      console.log("유저 정보가 없습니다");
+      return;
+    }
+
+    const res = await axios.get(`http://localhost:3000/users/${userId}`);
+    assetGroup.value = res.data.asset_group;
+    categoryGroup.value = res.data.category;
+  } catch (err) {
+    console.error("데이터 불러오기 실패:", err);
+  }
+});
+
+// 자산 타입에 따라 자산 목록 필터링
+const filteredAssets = computed(() => {
+  return assetGroup.value[selectedAssetType.value] || [];
+});
+
+// 소비/입금 타입에 따라 카테고리 필터링
+const filterCategory = computed(() => {
+  return categoryGroup.value[selectedPayType.value] || [];
+});
+
+// 상위 카테고리에 따라 하위 카테고리 필터링
+const subCategoryOptions = computed(() => {
+  const selected = filterCategory.value.find(
+    (c) => c.id === Number(selectedCategoryType.value)
+  );
+  return selected ? selected.sub_categories : [];
+});
+
 const editModalRef = ref(null);
 let editModalInstance = null;
 
@@ -202,13 +333,13 @@ const submitEdit = async () => {
     console.log("유저 정보가 없습니다");
     return;
   }
+
   try {
     const userResponse = await axios.get(
       `http://localhost:3000/users/${userId}`
     );
     const user = userResponse.data;
 
-    // 해당 트랜잭션 수정
     const updateTransactions = user.transactions.map((t) => {
       if (t.id == editEvent.value.id) {
         return {
@@ -217,6 +348,13 @@ const submitEdit = async () => {
           amount: editEvent.value.amount,
           date: new Date(editEvent.value.start).toISOString().slice(0, 10),
           time: new Date(editEvent.value.start).toTimeString().slice(0, 5),
+          assetType: selectedAssetType.value,
+          assetId: selectedAssetId.value,
+          payType: selectedPayType.value,
+          categoryType: selectedCategoryType.value,
+          subCategory: selectedSubCategory.value,
+          memo: memo.value,
+          include: inInclude.value,
         };
       }
       return t;
@@ -227,7 +365,7 @@ const submitEdit = async () => {
     });
 
     editModalInstance.hide();
-    await fetchEvents(); // 이벤트 목록 다시 가져오기
+    window.location.reload();
   } catch (err) {
     console.error("수정 실패", err);
   }
@@ -258,7 +396,7 @@ const deleteEvent = async (transactionId) => {
       transactions: updateTransactions,
     });
 
-    await fetchEvents();
+    window.location.reload();
   } catch (err) {
     console.error("삭제 실패", err);
   }

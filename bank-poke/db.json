@@ -1884,23 +1884,7 @@
           }
         }
       ],
-      "transactions": [
-        {
-          "name": "점심값",
-          "date": "2025-04-11",
-          "category": 1,
-          "sub_category": "외식",
-          "assetId": 1744276708608,
-          "type": "expense",
-          "amount": 12000,
-          "memo": "김태영 식비",
-          "time": "20:23",
-          "asset_type": "card",
-          "addTotal": true,
-          "isRepeat": false,
-          "id": 1
-        }
-      ],
+      "transactions": [],
       "fixCost": [],
       "together_bank": [],
       "category": {
