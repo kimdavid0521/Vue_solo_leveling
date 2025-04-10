@@ -174,7 +174,7 @@ import { useAuthStore } from "@/stores/auth";
 import { Modal } from "bootstrap";
 
 const userAuth = useAuthStore();
-
+const calendarRef = ref();
 const editEvent = ref({
   id: null,
   name: "",
@@ -266,7 +266,6 @@ const deleteEvent = async (transactionId) => {
 // 유저 id(정보) 가져오기
 const authStore = useAuthStore();
 
-const calendarRef = ref(false);
 // 현재 페이지 변수 받아오기
 const pageProps = defineProps({
   currentPage: String,
@@ -510,7 +509,7 @@ watchEffect(() => {
   });
 });
 
-// ✨ 선택된 날짜의 필터링된 수입/지출 이벤트만 보여주기
+// 선택된 날짜의 필터링된 수입/지출 이벤트만 보여주기
 const filteredSelectedDateEvents = computed(() => {
   if (!selectedDate.value) return [];
 
@@ -524,25 +523,20 @@ const filteredSelectedDateEvents = computed(() => {
 
   return filtered;
 });
+
+// 켈린더 api 데이터 베이스 다시 불러오기
+function refreshCalendar() {
+  const calendarApi = calendarRef.value?.getApi?.();
+  if (calendarApi) {
+    calendarApi.refetchEvents();
+  }
+}
+
+defineExpose({
+  refreshCalendar,
+});
 </script>
 
-<!-- /* .milcho-custom-calendar {
-  max-width: 800px;
-  height: 600px;
-  margin: 0 auto;
-}
-.fc-event {
-  max-height: 25px !important;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.custom-event {
-  max-height: 25px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-} */ -->
 <style scoped>
 .container {
   max-width: 1000px;
@@ -576,7 +570,6 @@ const filteredSelectedDateEvents = computed(() => {
   font-weight: bold;
 }
 
-/* ✅ FullCalendar 스타일 커스터마이징 */
 .milcho-custom-calendar {
   margin-top: 1.5rem;
 }
@@ -598,19 +591,16 @@ const filteredSelectedDateEvents = computed(() => {
   border: none;
 }
 
-/* ✅ 수입 색상 */
 .fc-event.income {
   background-color: #3498db !important;
   color: #fff !important;
 }
 
-/* ✅ 지출 색상 */
 .fc-event.expense {
   background-color: #e74c3c !important;
   color: #fff !important;
 }
 
-/* ✅ Offcanvas 스타일 */
 .offcanvas {
   width: 400px;
   background-color: #fff;
@@ -660,5 +650,3 @@ const filteredSelectedDateEvents = computed(() => {
   transform: translateX(5px);
 }
 </style>
-
-<!-- </style> -->

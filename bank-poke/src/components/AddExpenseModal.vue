@@ -185,7 +185,12 @@ const selcetedCategoryType = ref(""); // 선택된 대분류 카테고리
 const selectedSubCategory = ref(""); // 소분류 카테고리
 const assetGroup = ref({ card: [], account: [], etc: [] });
 const categoryGroup = ref({ expense: [], income: [] });
-
+const category = ref("");
+const sub_category = ref("");
+const assetId = ref("");
+const type = ref("");
+const asset_type = ref("");
+const addTotal = ref("");
 // 고정 지출 여부 체크
 const isRepeat = ref(false);
 // 반복 주기

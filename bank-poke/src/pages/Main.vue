@@ -8,7 +8,11 @@
       <TableLayout :tabs="tabs" @update-tab="updateTab" />
     </div>
 
-    <Calender :currentPage="currentTab" @update-summary="updateSummary" />
+    <Calender
+      ref="calendarRef"
+      :currentPage="currentTab"
+      @update-summary="updateSummary"
+    />
 
     <div
       class="dropup"
@@ -43,10 +47,14 @@
       @save="saveExpense"
     />
   </div>
+  <!-- 저장 완료 토스트 -->
+  <Transition name="fade">
+    <div v-if="showToast" class="toast-message">거래 내역 저장 완료!</div>
+  </Transition>
 </template>
 
 <script setup>
-import { ref, computed, isRef } from "vue";
+import { ref, computed, isRef, nextTick } from "vue";
 import axios from "axios";
 import Calender from "@/components/Calender.vue";
 import AddExpenseModal from "@/components/AddExpenseModal.vue";
@@ -61,18 +69,8 @@ const dropdownOpen = ref(false);
 const selectedCategory = ref("");
 
 const currentTab = ref("전체");
-// const summary = ref({ income: 0, expenses: 0, total: 0 });
-// const summaryCount = ref({ incomeCount: 0, expenseCount: 0, totalCount: 0 });
-
-// 하위 컴포넌트에서 전달받은 값 등록
-// const updateSummary = ({
-//   summary: newSummary,
-//   countSummary: newCountSummary,
-// }) => {
-//   summary.value = newSummary;
-//   summaryCount.value = newCountSummary;
-// };
-
+const calendarRef = ref(null);
+const showToast = ref(false);
 // 페이지 이동 함수
 const updateTab = (current) => {
   currentTab.value = current;
@@ -160,7 +158,7 @@ const saveExpense = async (newExpense) => {
       });
 
       console.log("고정 지출 저장 완료");
-      showModal.value = false;
+      window.location.reload();
     } else {
       // 거래 배열 없으면 초기화
       if (!Array.isArray(userData.transactions)) {
@@ -180,7 +178,7 @@ const saveExpense = async (newExpense) => {
       });
 
       console.log("거래 내역 저장 완료");
-      showModal.value = false;
+      window.location.reload();
     }
   } catch (error) {
     console.error("저장 실패", error);
@@ -227,5 +225,18 @@ function generateRepeatDates(startDate, endDate, interval) {
   bottom: 100%;
   top: auto;
   transform: translateY(-0.5rem);
+}
+/* 토스트 메세지 css */
+.toast-message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4ade80;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  z-index: 9999;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 </style>
