@@ -43,6 +43,7 @@
         v-if="isSearch"
         @update-money="moneyFilter"
         @update-content="contentFilter"
+        @update-asset="assetFilter"
       >
       </SearchBox>
       <!-- 검색 버튼 -->
@@ -152,6 +153,9 @@ const moneyLimit = reactive({
 // 검색된 내용 문자열
 const searchText = ref('');
 
+// 선택된 자산 필터
+const assetSelected = ref(null);
+
 // 이벤트 발생마다 자식으로부터 데이터 받아옴
 const updateTab = (current) => {
   currentTab.value = current;
@@ -168,6 +172,12 @@ const moneyFilter = ({ minMoney, maxMoney }) => {
 // 이벤트 발생마다 자식으로부터 데이터 받아옴
 const contentFilter = (content) => {
   searchText.value = content;
+  selectedTransactions.value = []; // 선택 초기화
+};
+
+// 이벤트 발생마다 자식으로부터 데이터 받아옴
+const assetFilter = (asset) => {
+  assetSelected.value = asset;
   selectedTransactions.value = []; // 선택 초기화
 };
 
@@ -264,6 +274,19 @@ const filteredTransactions = computed(() => {
         if (ts.name?.toLowerCase().includes(searchText.value.toLowerCase()))
           return true;
         if (ts.memo?.toLowerCase().includes(searchText.value.toLowerCase()))
+          return true;
+        return false;
+      })
+      // 4. 자산 필터
+      .filter((ts) => {
+        if (!assetSelected.value) return true;
+        if (assetSelected.value === 'cash' && ts.asset_type === 'cash')
+          return true;
+        else if (
+          assetSelected.value !== null &&
+          assetSelected.value.type === ts.asset_type &&
+          assetSelected.value.id === ts.assetId
+        )
           return true;
         return false;
       })
