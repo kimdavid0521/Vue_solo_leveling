@@ -1,7 +1,13 @@
 <template>
   <div>
     <!-- 테이블 상단 네비게이션 바 -->
-    <TableLayout :tabs="tabs" @update-tab="updateTab" />
+    <div
+      class="container"
+      style="max-width: 970px; margin-bottom: -50px; margin-top: 30px"
+    >
+      <TableLayout :tabs="tabs" @update-tab="updateTab" />
+    </div>
+
     <Calender :currentPage="currentTab" @update-summary="updateSummary" />
 
     <div

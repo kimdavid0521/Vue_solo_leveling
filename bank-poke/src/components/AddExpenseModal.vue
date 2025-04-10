@@ -8,7 +8,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">지출 추가</h5>
+          <h5 class="modal-title">내역 추가</h5>
           <button
             type="button"
             class="btn-close"
@@ -272,7 +272,7 @@ const handleSave = () => {
 }
 
 .modal-header {
-  background: #6c63ff;
+  background: #ffd95a;
   color: white;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;

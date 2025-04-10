@@ -447,6 +447,7 @@ const calendarOptions = {
   dayMaxEvents: false,
   dayMaxEventRows: false,
   height: "auto",
+  width: "auto",
   datesSet: handleDatesSet,
 
   eventContent(arg) {
