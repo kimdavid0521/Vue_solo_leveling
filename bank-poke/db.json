@@ -1884,7 +1884,23 @@
           }
         }
       ],
-      "transactions": [],
+      "transactions": [
+        {
+          "name": "ㄴㅁㅇㅁㄴㅇ",
+          "date": "2025-04-10",
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744276708608,
+          "type": "expense",
+          "amount": 12212,
+          "memo": "ㄴㅁㅇㅁㄴ",
+          "time": "19:24",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 1
+        }
+      ],
       "fixCost": [],
       "together_bank": [],
       "category": {

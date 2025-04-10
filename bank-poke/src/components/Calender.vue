@@ -787,4 +787,67 @@ defineExpose({
 .list-group-item:hover {
   transform: translateX(5px);
 }
+.modal-content {
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  padding: 1rem;
+  background-color: #fdfdfd;
+}
+
+.modal-header {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.modal-title {
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+.form-label,
+label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+  color: #333;
+}
+
+.form-control,
+.form-select {
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease-in-out;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+}
+
+.modal-footer {
+  border-top: none;
+  padding-top: 0;
+}
+
+.btn-primary {
+  background-color: #4a90e2;
+  border-color: #4a90e2;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #3b78c5;
+}
+
+.btn-secondary:hover {
+  background-color: #6c757d;
+  opacity: 0.9;
+}
+
+input[type="checkbox"].form-check-input {
+  transform: scale(1.3);
+  margin-left: 0.5rem;
+}
 </style>
