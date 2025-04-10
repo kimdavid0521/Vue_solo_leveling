@@ -1,4 +1,3 @@
-
 <template>
   <h5 class="my-3">거래 내역</h5>
   <!-- 거래 내역 헤더: 년월 이동 pagination + '이번달' 버튼 + 검색 버튼 -->
@@ -386,4 +385,3 @@ tr.selected-row td {
   background-color: #f0f2f5; /* #fff8e1 */
 }
 </style>
-
