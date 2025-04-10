@@ -1290,7 +1290,27 @@
         }
       ],
       "transactions": [],
-      "fixCost": [],
+      "fixCost": [
+        {
+          "name": "김매주지출",
+          "date": {
+            "startDate": "2025-04-10",
+            "endDate": "2025-04-16"
+          },
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 12000,
+          "memo": "김매주지출메모",
+          "time": "16:03",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": true,
+          "interval": "weekly",
+          "id": 1
+        }
+      ],
       "together_bank": [],
       "category": {
         "expense": [
