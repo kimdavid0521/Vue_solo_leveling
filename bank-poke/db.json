@@ -1386,12 +1386,65 @@
           }
         }
       ],
-      "transactions": [],
-      "fixCost": [],
+      "transactions": [
+        {
+          "name": "김지출",
+          "date": "2025-04-10",
+          "category": 2,
+          "sub_category": "지하철",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 120000,
+          "memo": "김지출 메모",
+          "time": "16:01",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 1
+        },
+        {
+          "name": "김매주지출",
+          "date": "2025-04-10",
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 12000,
+          "memo": "김매주지출메모",
+          "time": "16:03",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "weekly",
+          "id": 2
+        }
+      ],
+      "fixCost": [
+        {
+          "name": "김매주지출",
+          "date": {
+            "startDate": "2025-04-10",
+            "endDate": "2025-04-16"
+          },
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 12000,
+          "memo": "김매주지출메모",
+          "time": "16:03",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": true,
+          "interval": "weekly",
+          "id": 1
+        }
+      ],
       "together_bank": [],
       "category": {
         "expense": [
           {
+            "id": 1,
             "main_category": "식비",
             "sub_categories": [
               "외식",
@@ -1401,6 +1454,7 @@
             ]
           },
           {
+            "id": 2,
             "main_category": "교통비",
             "sub_categories": [
               "버스",
@@ -1419,6 +1473,7 @@
             ]
           },
           {
+            "id": 3,
             "main_category": "생활",
             "sub_categories": [
               "세탁",
@@ -1427,6 +1482,7 @@
             ]
           },
           {
+            "id": 4,
             "main_category": "기타",
             "sub_categories": [
               "기타 지출"
@@ -1469,6 +1525,7 @@
             ]
           },
           {
+            "id": 5,
             "main_category": "김대분류",
             "sub_categories": [
               "안녕",
