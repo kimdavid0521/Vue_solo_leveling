@@ -1,8 +1,10 @@
 <template>
   <div>
+
     <!-- 테이블 상단 네비게이션 바 -->
     <TableLayout :tabs="tabs" @update-tab="updateTab" />
     <Calender :currentPage="currentTab" @update-summary="updateSummary" />
+
 
     <div
       class="dropup"
