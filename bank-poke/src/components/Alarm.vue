@@ -187,9 +187,10 @@ watchEffect(() => {
   today.setHours(0, 0, 0, 0);
 
   fixedCostList.value.forEach((item) => {
-    if (item.type !== 'expense' || !item.startDate || !item.interval) return;
+    if (item.type !== 'expense' || !item.date?.startDate || !item.interval)
+      return;
 
-    const nextDue = getNextDueDate(item.startDate, item.interval);
+    const nextDue = getNextDueDate(item.date?.startDate, item.interval);
     if (!nextDue) return;
 
     const diff = Math.ceil((nextDue - today) / (1000 * 60 * 60 * 24));
