@@ -58,9 +58,7 @@
         {
           "id": 2,
           "name": "sdasd",
-
           "date": "2025-04-09",
-
           "time": "13:30",
           "category": "dsd",
           "sub_category": "dsd",
@@ -84,7 +82,6 @@
           "memo": "3월 월급",
           "addTotal": true,
           "asset_type": "bank"
-
         },
         {
           "name": "태영이 밥먹고싶음",
@@ -113,10 +110,64 @@
           "asset_type": "card",
           "addTotal": true,
           "id": 4
-
+        },
+        {
+          "name": "ㄴㅁㅇㄴㅇㅁㄴㅇ",
+          "date": "2025-04-15",
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 9000,
+          "memo": "",
+          "time": "03:13",
+          "asset_type": "card",
+          "addTotal": true,
+          "id": 5
+        },
+        {
+          "name": "ㅇㄴㅁㅇ",
+          "date": "2025-04-15",
+          "category": 1,
+          "sub_category": "카페",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 9000,
+          "memo": "",
+          "time": "12:03",
+          "asset_type": "card",
+          "addTotal": true,
+          "id": 6
+        },
+        {
+          "name": "temp",
+          "date": "2025-04-01",
+          "sub_category": "",
+          "assetId": 1744250542634,
+          "type": "expense",
+          "amount": 9000,
+          "memo": "",
+          "time": "15:21",
+          "asset_type": "account",
+          "addTotal": true,
+          "id": 7
+        },
+        {
+          "name": "",
+          "date": "",
+          "category": "",
+          "sub_category": "",
+          "assetId": "",
+          "type": "",
+          "amount": 0,
+          "memo": "",
+          "time": "",
+          "asset_type": "",
+          "addTotal": true,
+          "id": 8
         }
       ],
-     "fixCost": [
+      "fixCost": [
         {
           "id": 1,
           "date": {
@@ -128,7 +179,7 @@
           "category": "넷플릭스",
           "sub_category": "넷플릭스 결제",
           "amount": 1232,
-          "interval": "month", 
+          "interval": "month",
           "type": "expense",
           "assetId": 1,
           "asset_type": "card",
@@ -234,6 +285,120 @@
           },
           {
             "id": 4,
+            "main_category": "기타",
+            "sub_categories": [
+              "환급",
+              "기타 수입"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "d660",
+      "username": "1",
+      "nickname": "1",
+      "email": "1@naver.com",
+      "password": "1",
+      "isPremium": true,
+      "asset_group": {
+        "card": [],
+        "account": [],
+        "etc": []
+      },
+      "setting": [
+        {
+          "currency": "kr",
+          "weekStart": "Monday",
+          "monthStart": 1,
+          "monthlyBudget": {
+            "Jan": 0,
+            "Feb": 0,
+            "Mar": 0,
+            "Apr": 10000,
+            "May": 0,
+            "Jun": 0,
+            "Jul": 0,
+            "Aug": 0,
+            "Sep": 0,
+            "Oct": 0,
+            "Nov": 0,
+            "Dec": 0
+          }
+        }
+      ],
+      "transactions": [],
+      "fixCost": [],
+      "together_bank": [],
+      "category": {
+        "expense": [
+          {
+            "main_category": "식비",
+            "sub_categories": [
+              "외식",
+              "마트",
+              "카페",
+              "배달"
+            ]
+          },
+          {
+            "main_category": "교통비",
+            "sub_categories": [
+              "버스",
+              "지하철",
+              "택시",
+              "기타"
+            ]
+          },
+          {
+            "main_category": "주거/통신",
+            "sub_categories": [
+              "월세",
+              "관리비",
+              "인터넷",
+              "휴대폰"
+            ]
+          },
+          {
+            "main_category": "생활",
+            "sub_categories": [
+              "세탁",
+              "청소",
+              "생필품"
+            ]
+          },
+          {
+            "main_category": "기타",
+            "sub_categories": [
+              "기타 지출"
+            ]
+          }
+        ],
+        "income": [
+          {
+            "main_category": "급여",
+            "sub_categories": [
+              "월급",
+              "상여금"
+            ]
+          },
+          {
+            "main_category": "용돈",
+            "sub_categories": [
+              "부모님",
+              "친척",
+              "기타"
+            ]
+          },
+          {
+            "main_category": "투자수익",
+            "sub_categories": [
+              "주식",
+              "코인",
+              "이자"
+            ]
+          },
+          {
             "main_category": "기타",
             "sub_categories": [
               "환급",

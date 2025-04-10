@@ -172,9 +172,9 @@
 </template>
 <script setup>
 import { reactive, computed } from 'vue';
-import { useUserStore } from '@/stores/user.js';
+import { useAuthStore } from '@/stores/auth.js';
 
-const { state } = useUserStore();
+const { state } = useAuthStore();
 const user = computed(() => state.user);
 
 // 자산 선택창 내 확장 여부

@@ -66,19 +66,9 @@
             </select>
           </div>
 
-          <!-- <div class="mb-3">
-            <label class="form-label">상위 카테고리</label>
-            <select v-model="selcetedCategoryType" class="form-select">
-              <option disabled value="">카테고리 선택</option>
-              <option value="card">카드</option>
-              <option value="account">계좌</option>
-              <option value="etc">기타</option>
-            </select>
-          </div> -->
-
           <div class="mb-3">
             <label class="form-label">상위 카테고리 선택</label>
-            <select v-model="selcetedCategoryType" class="form-select">
+            <select v-model="selectedCategoryType" class="form-select">
               <option disabled value="">상위 카테고리 선택</option>
               <option
                 v-for="category in filterCategory"
@@ -94,12 +84,8 @@
             <label class="form-label">하위 카테고리 선택</label>
             <select v-model="selectedSubCategory" class="form-select">
               <option disabled value="">하위 카테고리 선택</option>
-              <option
-                v-for="category in subCategoryOptions"
-                :key="category"
-                :value="category"
-              >
-                {{ category }}
+              <option v-for="sub in subCategoryOptions" :key="sub" :value="sub">
+                {{ sub }}
               </option>
             </select>
           </div>
@@ -129,58 +115,68 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
-import axios from "axios";
-const emit = defineEmits(["close", "save"]);
+import { ref, computed, onMounted } from 'vue';
+import axios from 'axios';
+import { useAuthStore } from '@/stores/auth';
 
-const selectedAssetType = ref(""); // 자산 타입
-const selectedAssetId = ref(""); // 자산 id
-const selectedPayType = ref(""); // 소비 분류 타입 : 소비인지 입금인지
-const selcetedCategoryType = ref(""); // 선택된 대분류 카테고리
-const selectedSubCategory = ref(""); // 소분류 카테고리
+const emit = defineEmits(['close', 'save']);
+
+const selectedAssetType = ref(''); // 자산 타입
+const selectedAssetId = ref(''); // 자산 id
+const selectedPayType = ref(''); // 소비 유형: 'expense' or 'income'
+const selectedCategoryType = ref(''); // 상위 카테고리 id
+const selectedSubCategory = ref(''); // 하위 카테고리
 const assetGroup = ref({ card: [], account: [], etc: [] });
 const categoryGroup = ref({ expense: [], income: [] });
 
+const name = ref('');
+const amount = ref(0);
+const date = ref('');
+const time = ref('');
+const memo = ref('');
+const inInclude = ref(true);
+
+const authStore = useAuthStore();
+
 onMounted(async () => {
   try {
-    const res = await axios.get("http://localhost:3000/users/2");
+    const userId = authStore.user?.id;
+    if (!userId) {
+      console.error('유저 정보가 없습니다.');
+      return;
+    }
+    const res = await axios.get(`http://localhost:3000/users/${userId}`);
     assetGroup.value = res.data.asset_group;
     categoryGroup.value = res.data.category;
   } catch (err) {
     console.error(err);
   }
 });
-// 자산 타입에 따라 자산 추출 변경
+
+// 자산 타입에 따라 자산 필터링
 const filteredAssets = computed(() => {
-  console.log(assetGroup.value[selectedAssetType.value]);
   return assetGroup.value[selectedAssetType.value] || [];
 });
-
 // 소비 타입에 따라 카테고리 분류
 const filterCategory = computed(() => {
   return categoryGroup.value[selectedPayType.value] || [];
 });
 
-// 선택된 상위 카테고리 id에 따른 하위 카테고리 리스트
+// 선택된 상위 카테고리에 따른 하위 카테고리 리스트
 const subCategoryOptions = computed(() => {
   const selected = filterCategory.value.find(
-    (c) => c.id === Number(selcetedCategoryType.value)
+    (c) => c.id === Number(selectedCategoryType.value)
   );
+
   return selected ? selected.sub_categories : [];
 });
 
-const name = ref("");
-const amount = ref(0);
-const date = ref("");
-const time = ref("");
-const memo = ref("");
-const inInclude = ref(true);
-
 const handleSave = () => {
-  emit("save", {
+  // 부모 컴포넌트에게 데이터 전달
+  emit('save', {
     name: name.value,
     date: date.value,
-    category: selcetedCategoryType.value,
+    category: selectedCategoryType.value,
     sub_category: selectedSubCategory.value,
     assetId: selectedAssetId.value,
     type: selectedPayType.value,
@@ -191,16 +187,18 @@ const handleSave = () => {
     addTotal: inInclude.value,
   });
 
-  name.value = "";
-  date.value = "";
-  category.value = "";
-  sub_category.value = "";
-  assetId.value = "";
-  type.value = "";
-  amount.value = "";
-  memo.value = "";
-  time.value = "";
-  asset_type.value = "";
-  addTotal.value = "";
+  // 입력 항목 초기화
+  name.value = '';
+  amount.value = 0;
+  date.value = '';
+  time.value = '';
+  memo.value = '';
+  inInclude.value = true;
+
+  selectedAssetType.value = '';
+  selectedAssetId.value = '';
+  selectedPayType.value = '';
+  selectedCategoryType.value = '';
+  selectedSubCategory.value = '';
 };
 </script>

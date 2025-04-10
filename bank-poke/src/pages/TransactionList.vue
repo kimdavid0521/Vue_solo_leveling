@@ -129,12 +129,11 @@
 
 <script setup>
 import { ref, computed, reactive } from 'vue';
-import { useUserStore } from '@/stores/user.js';
+import { useAuthStore } from '@/stores/auth.js';
 import TableLayout from '@/components/TableLayout.vue';
 import SearchBox from '@/components/SearchBox.vue';
 
-const { state, deleteTransactions } = useUserStore();
-const user = computed(() => state.user);
+const { state, deleteTransactions } = useAuthStore();
 
 // 선택된 거래 내역 id 리스트
 const selectedTransactions = ref([]);
@@ -189,33 +188,33 @@ const tabs = computed(() => [
     amount: transactionsByType('전체').reduce((sum, t) => sum + t.amount, 0),
   },
   {
-    name: "수입",
-    count: transactionsByType("수입").length,
-    amount: transactionsByType("수입").reduce((sum, t) => sum + t.amount, 0),
+    name: '수입',
+    count: transactionsByType('수입').length,
+    amount: transactionsByType('수입').reduce((sum, t) => sum + t.amount, 0),
   },
   {
-    name: "지출",
-    count: transactionsByType("지출").length,
-    amount: transactionsByType("지출").reduce((sum, t) => sum + t.amount, 0),
+    name: '지출',
+    count: transactionsByType('지출').length,
+    amount: transactionsByType('지출').reduce((sum, t) => sum + t.amount, 0),
   },
 ]);
 
 // 어떤 자산인지 계산하여 반환
 const asset = computed(() => {
   return (type, id) => {
-    if (type === "card") {
+    if (type === 'card') {
       const card = user.value.asset_group.card.find((c) => c.id === id);
-      return card ? (card.isCheck ? "체크카드" : "신용카드") : "";
-    } else if (type === "cash") {
-      return "현금";
-    } else if (type === "account") {
+      return card ? (card.isCheck ? '체크카드' : '신용카드') : '';
+    } else if (type === 'cash') {
+      return '현금';
+    } else if (type === 'account') {
       const account = user.value.asset_group.account.find((a) => a.id === id);
-      return account ? account.name : "";
-    } else if (type === "etc") {
+      return account ? account.name : '';
+    } else if (type === 'etc') {
       const assetEtc = user.value.asset_group.etc.find((i) => i.id === id);
-      return assetEtc ? assetEtc.name : "";
+      return assetEtc ? assetEtc.name : '';
     }
-    return "기타";
+    return '기타';
   };
 });
 
@@ -225,7 +224,7 @@ const currentDate = ref(new Date());
 // YYYY-MM 형식으로 포맷
 const formattedDate = computed(() => {
   const year = currentDate.value.getFullYear();
-  const month = String(currentDate.value.getMonth() + 1).padStart(2, "0");
+  const month = String(currentDate.value.getMonth() + 1).padStart(2, '0');
   return `${year}-${month}`;
 });
 
