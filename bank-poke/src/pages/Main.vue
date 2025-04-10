@@ -3,7 +3,7 @@
     <!-- 테이블 상단 네비게이션 바 -->
     <div
       class="container"
-      style="max-width: 970px; margin-bottom: -50px; margin-top: 30px"
+      style="max-width: 970px; margin-bottom: -50px; margin-top: 50px"
     >
       <TableLayout :tabs="tabs" @update-tab="updateTab" />
     </div>
