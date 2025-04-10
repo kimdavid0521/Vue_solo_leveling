@@ -173,6 +173,8 @@ import axios from "axios";
 import { useAuthStore } from "@/stores/auth";
 import { Modal } from "bootstrap";
 
+const userAuth = useAuthStore();
+
 const editEvent = ref({
   id: null,
   name: "",
@@ -189,17 +191,41 @@ onMounted(() => {
 
 const openEditModal = (event) => {
   editEvent.value = { ...event };
-  editEvent.value.start = new Date(event.start).toISOString().slice(0, 16); // datetime-local 형식
+  editEvent.value.start = new Date(event.start).toISOString().slice(0, 16);
   editModalInstance.show();
 };
 
+// 내역 업데이트 함수
 const submitEdit = async () => {
+  const userId = userAuth.user?.id;
+  if (!userId) {
+    console.log("유저 정보가 없습니다");
+    return;
+  }
   try {
-    await axios.patch(`/api/events/${editEvent.value.id}`, {
-      name: editEvent.value.name,
-      amount: editEvent.value.amount,
-      start: new Date(editEvent.value.start).toISOString(),
+    const userResponse = await axios.get(
+      `http://localhost:3000/users/${userId}`
+    );
+    const user = userResponse.data;
+
+    // 해당 트랜잭션 수정
+    const updateTransactions = user.transactions.map((t) => {
+      if (t.id == editEvent.value.id) {
+        return {
+          ...t,
+          name: editEvent.value.name,
+          amount: editEvent.value.amount,
+          date: new Date(editEvent.value.start).toISOString().slice(0, 10),
+          time: new Date(editEvent.value.start).toTimeString().slice(0, 5),
+        };
+      }
+      return t;
     });
+
+    await axios.patch(`http://localhost:3000/users/${userId}`, {
+      transactions: updateTransactions,
+    });
+
     editModalInstance.hide();
     await fetchEvents(); // 이벤트 목록 다시 가져오기
   } catch (err) {
@@ -207,10 +233,31 @@ const submitEdit = async () => {
   }
 };
 
-const deleteEvent = async (id) => {
+// 내역 삭제 함수
+const deleteEvent = async (transactionId) => {
+  const userId = userAuth.user?.id;
+  if (!userId) {
+    console.log("유저 정보가 없습니다");
+    return;
+  }
+
   if (!confirm("정말 삭제하시겠습니까?")) return;
   try {
-    await axios.delete(`/api/events/${id}`);
+    const userResponse = await axios.get(
+      `http://localhost:3000/users/${userId}`
+    );
+    const user = userResponse.data;
+
+    // 트랜잭션에서 해당 항목 제거하기
+    const updateTransactions = user.transactions.filter(
+      (t) => t.id !== transactionId
+    );
+
+    // 변경된 transaction으로 patch 요청
+    await axios.patch(`http://localhost:3000/users/${userId}`, {
+      transactions: updateTransactions,
+    });
+
     await fetchEvents();
   } catch (err) {
     console.error("삭제 실패", err);

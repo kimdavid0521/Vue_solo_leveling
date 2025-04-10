@@ -1386,39 +1386,7 @@
           }
         }
       ],
-      "transactions": [
-        {
-          "name": "김지출",
-          "date": "2025-04-10",
-          "category": 2,
-          "sub_category": "지하철",
-          "assetId": 1744258929857,
-          "type": "expense",
-          "amount": 120000,
-          "memo": "김지출 메모",
-          "time": "16:01",
-          "asset_type": "account",
-          "addTotal": true,
-          "isRepeat": false,
-          "id": 1
-        },
-        {
-          "name": "김매주지출",
-          "date": "2025-04-10",
-          "category": 1,
-          "sub_category": "외식",
-          "assetId": 1744258929857,
-          "type": "expense",
-          "amount": 12000,
-          "memo": "김매주지출메모",
-          "time": "16:03",
-          "asset_type": "account",
-          "addTotal": true,
-          "isRepeat": false,
-          "interval": "weekly",
-          "id": 2
-        }
-      ],
+      "transactions": [],
       "fixCost": [
         {
           "name": "김매주지출",

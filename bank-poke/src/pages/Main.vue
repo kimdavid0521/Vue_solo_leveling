@@ -6,7 +6,14 @@
 
     <div
       class="dropup"
-      style="float: right; margin-right: 130px"
+      style="
+        float: right;
+        margin-right: 130px;
+        position: fixed;
+        bottom: 40px;
+        right: 50px;
+        z-index: 10;
+      "
       @click="toggleDropdown"
     >
       <button class="btn btn-secondary dropdown-toggle">

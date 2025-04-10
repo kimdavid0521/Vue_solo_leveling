@@ -257,3 +257,106 @@ const handleSave = () => {
   interval.value = "";
 };
 </script>
+
+<style scoped>
+.modal-dialog {
+  max-width: 600px;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.modal-content {
+  background: linear-gradient(to right, #f8f9fa, #ffffff);
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  background: #6c63ff;
+  color: white;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 1.2rem 1.5rem;
+}
+
+.modal-title {
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.btn-close {
+  filter: brightness(100);
+}
+
+.modal-body {
+  padding: 2rem;
+  font-size: 1rem;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.form-control,
+.form-select {
+  border-radius: 12px;
+  border: 1px solid #ced4da;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #6c63ff;
+  box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.25);
+}
+
+.form-check-input {
+  width: 1.2rem;
+  height: 1.2rem;
+  cursor: pointer;
+}
+
+.modal-footer {
+  background: #f1f3f5;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-primary {
+  background-color: #6c63ff;
+  border: none;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #574fd6;
+}
+
+.btn-secondary {
+  background-color: #adb5bd;
+  border: none;
+  font-weight: 600;
+}
+
+.btn-secondary:hover {
+  background-color: #868e96;
+}
+
+@keyframes fadeInUp {
+  0% {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+</style>
