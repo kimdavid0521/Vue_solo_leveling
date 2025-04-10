@@ -4,8 +4,8 @@
       "id": "2",
       "username": "dks",
       "nickname": "asdasd",
-      "email": "SDas@naver.com",
-      "password": "wqqsqa",
+      "email": "123@naver.com",
+      "password": "123",
       "asset_group": {
         "card": [
           {
@@ -58,9 +58,7 @@
         {
           "id": 2,
           "name": "sdasd",
-
           "date": "2025-04-09",
-
           "time": "13:30",
           "category": "dsd",
           "sub_category": "dsd",
@@ -86,7 +84,6 @@
           "addTotal": true,
           "asset_type": "bank",
           "isRepeat": false
-
         },
         {
           "name": "태영이 밥먹고싶음",
@@ -115,7 +112,6 @@
           "time": "20:10",
           "asset_type": "card",
           "addTotal": true,
-
           "id": 4,
           "isRepeat": false
         },
@@ -1142,10 +1138,278 @@
           "isRepeat": false,
           "interval": "daily",
           "id": 68
-
+        },
+        {
+          "name": "test",
+          "date": "2025-04-03",
+          "category": 1,
+          "sub_category": "1",
+          "assetId": 1744260891379,
+          "type": "expense",
+          "amount": 1111,
+          "memo": "",
+          "time": "15:58",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "weekly",
+          "id": 69
+        },
+        {
+          "name": "test",
+          "date": "2025-04-10",
+          "category": 1,
+          "sub_category": "1",
+          "assetId": 1744260891379,
+          "type": "expense",
+          "amount": 1111,
+          "memo": "",
+          "time": "15:58",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "weekly",
+          "id": 70
+        },
+        {
+          "name": "test",
+          "date": "2025-04-17",
+          "category": 1,
+          "sub_category": "1",
+          "assetId": 1744260891379,
+          "type": "expense",
+          "amount": 1111,
+          "memo": "",
+          "time": "15:58",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "weekly",
+          "id": 71
+        },
+        {
+          "name": "test",
+          "date": "2025-04-24",
+          "category": 1,
+          "sub_category": "1",
+          "assetId": 1744260891379,
+          "type": "expense",
+          "amount": 1111,
+          "memo": "",
+          "time": "15:58",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "weekly",
+          "id": 72
+        },
+        {
+          "name": "강매주지출",
+          "date": "2025-04-04",
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744261139000,
+          "type": "expense",
+          "amount": 3000,
+          "memo": "",
+          "time": "16:04",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "weekly",
+          "id": 73
+        },
+        {
+          "name": "강매주지출",
+          "date": "2025-04-11",
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744261139000,
+          "type": "expense",
+          "amount": 3000,
+          "memo": "",
+          "time": "16:04",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "weekly",
+          "id": 74
+        },
+        {
+          "name": "강매주지출",
+          "date": "2025-04-18",
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744261139000,
+          "type": "expense",
+          "amount": 3000,
+          "memo": "",
+          "time": "16:04",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "weekly",
+          "id": 75
+        },
+        {
+          "name": "강매주지출",
+          "date": "2025-04-25",
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744261139000,
+          "type": "expense",
+          "amount": 3000,
+          "memo": "",
+          "time": "16:04",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "weekly",
+          "id": 76
+        },
+        {
+          "name": "123",
+          "date": "2025-04-16",
+          "category": 2,
+          "sub_category": "버스",
+          "assetId": 1744261139000,
+          "type": "expense",
+          "amount": 33333,
+          "memo": "",
+          "time": "17:07",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 77
+        },
+        {
+          "name": "강test",
+          "date": "2025-04-11",
+          "category": 1,
+          "sub_category": "마트",
+          "assetId": 1744261641407,
+          "type": "expense",
+          "amount": 1333,
+          "memo": "",
+          "time": "16:10",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "weekly",
+          "id": 78
+        },
+        {
+          "name": "강test",
+          "date": "2025-04-18",
+          "category": 1,
+          "sub_category": "마트",
+          "assetId": 1744261641407,
+          "type": "expense",
+          "amount": 1333,
+          "memo": "",
+          "time": "16:10",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "weekly",
+          "id": 79
+        },
+        {
+          "name": "강test",
+          "date": "2025-04-25",
+          "category": 1,
+          "sub_category": "마트",
+          "assetId": 1744261641407,
+          "type": "expense",
+          "amount": 1333,
+          "memo": "",
+          "time": "16:10",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "weekly",
+          "id": 80
+        },
+        {
+          "name": "1321",
+          "date": "2025-04-10",
+          "category": 1,
+          "sub_category": "상여금",
+          "assetId": 1744261641407,
+          "type": "income",
+          "amount": 33,
+          "memo": "",
+          "time": "16:15",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "weekly",
+          "id": 81
+        },
+        {
+          "name": "1321",
+          "date": "2025-04-17",
+          "category": 1,
+          "sub_category": "상여금",
+          "assetId": 1744261641407,
+          "type": "income",
+          "amount": 33,
+          "memo": "",
+          "time": "16:15",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "weekly",
+          "id": 82
+        },
+        {
+          "name": "1321",
+          "date": "2025-04-24",
+          "category": 1,
+          "sub_category": "상여금",
+          "assetId": 1744261641407,
+          "type": "income",
+          "amount": 33,
+          "memo": "",
+          "time": "16:15",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "weekly",
+          "id": 83
+        },
+        {
+          "name": "test",
+          "date": "2025-04-16",
+          "category": 4,
+          "sub_category": "세탁",
+          "assetId": 1744261641407,
+          "type": "expense",
+          "amount": 3000,
+          "memo": "",
+          "time": "17:18",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 84
+        },
+        {
+          "name": "ㅇㄴㅁㅇ",
+          "date": "2025-04-22",
+          "category": 2,
+          "sub_category": "지하철",
+          "assetId": 1744261641407,
+          "type": "expense",
+          "amount": 3000,
+          "memo": "",
+          "time": "18:21",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 85
         }
       ],
-     "fixCost": [
+      "fixCost": [
         {
           "id": 1,
           "date": {
@@ -1181,7 +1445,7 @@
           "asset_type": "card",
           "addTotal": true,
           "isRepeat": true,
-          "interval": "daily",
+          "interval": "monthly",
           "id": 2
         },
         {
@@ -1240,6 +1504,82 @@
           "isRepeat": true,
           "interval": "daily",
           "id": 5
+        },
+        {
+          "name": "test",
+          "date": {
+            "startDate": "2025-04-03",
+            "endDate": "2025-04-30"
+          },
+          "category": 1,
+          "sub_category": "1",
+          "assetId": 1744260891379,
+          "type": "expense",
+          "amount": 1111,
+          "memo": "",
+          "time": "15:58",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": true,
+          "interval": "weekly",
+          "id": 6
+        },
+        {
+          "name": "강매주지출",
+          "date": {
+            "startDate": "2025-04-04",
+            "endDate": "2025-04-30"
+          },
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744261139000,
+          "type": "expense",
+          "amount": 3000,
+          "memo": "",
+          "time": "16:04",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": true,
+          "interval": "weekly",
+          "id": 7
+        },
+        {
+          "name": "강test",
+          "date": {
+            "startDate": "2025-04-11",
+            "endDate": "2025-04-30"
+          },
+          "category": 1,
+          "sub_category": "마트",
+          "assetId": 1744261641407,
+          "type": "expense",
+          "amount": 1333,
+          "memo": "",
+          "time": "16:10",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": true,
+          "interval": "weekly",
+          "id": 8
+        },
+        {
+          "name": "1321",
+          "date": {
+            "startDate": "2025-04-10",
+            "endDate": "2025-04-25"
+          },
+          "category": 1,
+          "sub_category": "상여금",
+          "assetId": 1744261641407,
+          "type": "income",
+          "amount": 33,
+          "memo": "",
+          "time": "16:15",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": true,
+          "interval": "weekly",
+          "id": 9
         }
       ],
       "together_bank": [
@@ -1263,6 +1603,153 @@
           ]
         }
       ],
+      "category": {
+        "expense": [
+          {
+            "id": 1,
+            "main_category": "식비",
+            "sub_categories": [
+              "외식",
+              "마트",
+              "카페",
+              "배달"
+            ]
+          },
+          {
+            "id": 2,
+            "main_category": "교통비",
+            "sub_categories": [
+              "버스",
+              "지하철",
+              "택시",
+              "기타"
+            ]
+          },
+          {
+            "id": 3,
+            "main_category": "주거/통신",
+            "sub_categories": [
+              "월세",
+              "관리비",
+              "인터넷",
+              "휴대폰"
+            ]
+          },
+          {
+            "id": 4,
+            "main_category": "생활",
+            "sub_categories": [
+              "세탁",
+              "청소",
+              "생필품"
+            ]
+          },
+          {
+            "id": 5,
+            "main_category": "기타",
+            "sub_categories": [
+              "기타 지출"
+            ]
+          }
+        ],
+        "income": [
+          {
+            "id": 1,
+            "main_category": "급여",
+            "sub_categories": [
+              "월급",
+              "상여금"
+            ]
+          },
+          {
+            "id": 2,
+            "main_category": "용돈",
+            "sub_categories": [
+              "부모님",
+              "친척",
+              "기타"
+            ]
+          },
+          {
+            "id": 3,
+            "main_category": "투자수익",
+            "sub_categories": [
+              "주식",
+              "코인",
+              "이자"
+            ]
+          },
+          {
+            "id": 4,
+            "main_category": "기타",
+            "sub_categories": [
+              "환급",
+              "기타 수입"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "66a5",
+      "username": "1",
+      "nickname": "1",
+      "email": "1@naver.com",
+      "password": "1",
+      "isPremium": false,
+      "asset_group": {
+        "card": [],
+        "account": [
+          {
+            "id": 1744261641407,
+            "name": "1",
+            "balance": 1333,
+            "type": "은행",
+            "group": "입출금"
+          }
+        ],
+        "etc": []
+      },
+      "setting": [
+        {
+          "currency": "kr",
+          "weekStart": "Monday",
+          "monthStart": 1,
+          "monthlyBudget": {
+            "Jan": 0,
+            "Feb": 0,
+            "Mar": 0,
+            "Apr": 0,
+            "May": 0,
+            "Jun": 0,
+            "Jul": 0,
+            "Aug": 0,
+            "Sep": 0,
+            "Oct": 0,
+            "Nov": 0,
+            "Dec": 0
+          }
+        }
+      ],
+      "transactions": [
+        {
+          "name": "132",
+          "date": "2025-04-23",
+          "category": 3,
+          "sub_category": "관리비",
+          "assetId": 1744261641407,
+          "type": "expense",
+          "amount": 3333,
+          "memo": "",
+          "time": "17:21",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 1
+        }
+      ],
+      "fixCost": [],
+      "together_bank": [],
       "category": {
         "expense": [
           {

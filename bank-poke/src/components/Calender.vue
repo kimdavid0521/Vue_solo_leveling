@@ -2,31 +2,31 @@
   <div class="container">
     <div class="milcho-calendar-container">
       <!-- ✅ 월 요약 -->
-      <div class="text-center my-4">
-        <!-- <h4>{{ currentMonth }}</h4> -->
+      <!-- <div class="text-center my-4"> -->
+      <!-- <h4>{{ currentMonth }}</h4> -->
 
-        <!-- 전체 -->
-        <p v-if="pageProps.currentPage === '전체'">
+      <!-- 전체 -->
+      <!-- <p v-if="pageProps.currentPage === '전체'">
           총합:
           <strong>{{ handleMonthSummary.total.toLocaleString() }}</strong>
           수입:
           {{ handleMonthSummary.income.toLocaleString() }}
           지출:
           {{ handleMonthSummary.expense.toLocaleString() }}
-        </p>
+        </p> -->
 
-        <!-- 수입만 -->
-        <p v-else-if="pageProps.currentPage === '수입'">
+      <!-- 수입만 -->
+      <!-- <p v-else-if="pageProps.currentPage === '수입'">
           총 수입:
           <strong>{{ handleMonthSummary.income.toLocaleString() }}</strong>
-        </p>
+        </p> -->
 
-        <!-- 지출만 -->
-        <p v-else-if="pageProps.currentPage === '지출'">
+      <!-- 지출만 -->
+      <!-- <p v-else-if="pageProps.currentPage === '지출'">
           총 지출:
           <strong>{{ handleMonthSummary.expense.toLocaleString() }}</strong>
-        </p>
-      </div>
+        </p> -->
+      <!-- </div> -->
 
       <!-- ✅ 달력 -->
       <FullCalendar
@@ -43,11 +43,11 @@
           <h1 class="offcanvas-title">
             {{ selectedDate }}일의
             {{
-              pageProps.currentPage === "수입"
-                ? "수입"
-                : pageProps.currentPage === "지출"
-                ? "지출"
-                : "내역"
+              pageProps.currentPage === '수입'
+                ? '수입'
+                : pageProps.currentPage === '지출'
+                ? '지출'
+                : '내역'
             }}
           </h1>
           <button
@@ -60,11 +60,11 @@
           <div v-if="filteredSelectedDateEvents.length === 0">
             <p>
               {{
-                pageProps.currentPage === "수입"
-                  ? "수입 내역이 없습니다."
-                  : pageProps.currentPage === "지출"
-                  ? "지출 내역이 없습니다."
-                  : "내역이 없습니다."
+                pageProps.currentPage === '수입'
+                  ? '수입 내역이 없습니다.'
+                  : pageProps.currentPage === '지출'
+                  ? '지출 내역이 없습니다.'
+                  : '내역이 없습니다.'
               }}
             </p>
           </div>
@@ -81,8 +81,8 @@
             >
               {{
                 new Date(event.start).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
+                  hour: '2-digit',
+                  minute: '2-digit',
                 })
               }}
               - {{ event.name }} : {{ event.amount.toLocaleString() }}원
@@ -95,13 +95,17 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watchEffect, watch } from "vue";
-import FullCalendar from "@fullcalendar/vue3";
-import dayGridPlugin from "@fullcalendar/daygrid"; // 날짜
-import timeGridPlugin from "@fullcalendar/timegrid"; // 시간 그리드 플러그인
-import interactionPlugin from "@fullcalendar/interaction";
-import { Offcanvas } from "bootstrap";
-import axios from "axios";
+import { ref, computed, onMounted, watchEffect, watch } from 'vue';
+import FullCalendar from '@fullcalendar/vue3';
+import dayGridPlugin from '@fullcalendar/daygrid'; // 날짜
+import timeGridPlugin from '@fullcalendar/timegrid'; // 시간 그리드 플러그인
+import interactionPlugin from '@fullcalendar/interaction';
+import { Offcanvas } from 'bootstrap';
+import axios from 'axios';
+import { useAuthStore } from '@/stores/auth';
+
+// 유저 id(정보) 가져오기
+const authStore = useAuthStore();
 
 const calendarRef = ref(false);
 // 현재 페이지 변수 받아오기
@@ -111,15 +115,15 @@ const pageProps = defineProps({
 
 const currentDate = ref(new Date());
 // 사용자가 클릭한 날짜
-const selectedDate = ref("");
+const selectedDate = ref('');
 
 const currentMonth = computed(() => {
   const year = currentDate.value.getFullYear();
-  const month = String(currentDate.value.getMonth() + 1).padStart(2, "0");
+  const month = String(currentDate.value.getMonth() + 1).padStart(2, '0');
   return `${year}-${month}`;
 });
 const handleDatesSet = (info) => {
-  console.log("handledataset", info);
+  console.log('handledataset', info);
   // 이 값이 바뀌면 month값도 변하게끔 만듬
   const viewDate = info.view.currentStart;
   currentDate.value = new Date(viewDate);
@@ -164,7 +168,12 @@ const events = ref([]);
 // 날짜 변경될때마다 일정 api 호출
 onMounted(async () => {
   try {
-    const response = await axios.get("http://localhost:3000/users/2");
+    const userId = authStore.user?.id;
+    if (!userId) {
+      console.log('유저 정보가 없습니다');
+      return;
+    }
+    const response = await axios.get(`http://localhost:3000/users/${userId}`);
     const transData = response.data.transactions;
 
     const convertedData = transData.map((t) => ({
@@ -185,7 +194,7 @@ onMounted(async () => {
         .sort((a, b) => new Date(a.start) - new Date(b.start));
     }
   } catch (error) {
-    console.error("API 연결 에러:", error);
+    console.error('API 연결 에러:', error);
   }
 });
 
@@ -234,7 +243,7 @@ const handleDateClick = (info) => {
     .filter((e) => e.start.startsWith(info.dateStr))
     .sort((a, b) => new Date(a.start) - new Date(b.start));
 
-  const offcanvasElement = document.getElementById("demo");
+  const offcanvasElement = document.getElementById('demo');
 
   // 기존 인스턴스를 닫고 새로 생성
   if (offcanvasInstance) {
@@ -247,11 +256,11 @@ const handleDateClick = (info) => {
 
 const calendarOptions = {
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
-  initialView: "dayGridMonth",
+  initialView: 'dayGridMonth',
   headerToolbar: {
-    left: "prev,next",
-    center: "title",
-    right: "today",
+    left: 'prev,next',
+    center: 'title',
+    right: 'today',
     // 월별, 주별, 일별로 보기 버튼
   },
   // views: {
@@ -278,48 +287,48 @@ const calendarOptions = {
 
   dayMaxEvents: false,
   dayMaxEventRows: false,
-  height: "auto",
+  height: 'auto',
   datesSet: handleDatesSet,
 
   eventContent(arg) {
     if (arg.event.extendedProps.isSummary) {
       const { total, incomeTotal, expenseTotal } = arg.event.extendedProps;
 
-      const container = document.createElement("div");
-      container.style.fontWeight = "bold";
-      container.style.backgroundColor = "white";
+      const container = document.createElement('div');
+      container.style.fontWeight = 'bold';
+      container.style.backgroundColor = 'white';
 
       const currentPage = pageProps.currentPage;
 
-      if (currentPage === "전체") {
-        const totalText = document.createElement("div");
-        totalText.style.color = "black";
-        totalText.textContent = `${total >= 0 ? "+" : "-"}${Math.abs(
+      if (currentPage === '전체') {
+        const totalText = document.createElement('div');
+        totalText.style.color = 'black';
+        totalText.textContent = `${total >= 0 ? '+' : '-'}${Math.abs(
           total
         ).toLocaleString()}`;
 
-        const incomeText = document.createElement("div");
-        incomeText.style.color = "blue";
+        const incomeText = document.createElement('div');
+        incomeText.style.color = 'blue';
         incomeText.textContent = `+${incomeTotal.toLocaleString()}`;
 
-        const expenseText = document.createElement("div");
-        expenseText.style.color = "red";
+        const expenseText = document.createElement('div');
+        expenseText.style.color = 'red';
         expenseText.textContent = `-${expenseTotal.toLocaleString()}`;
 
         container.appendChild(totalText);
         container.appendChild(incomeText);
         container.appendChild(expenseText);
-      } else if (currentPage === "수입") {
+      } else if (currentPage === '수입') {
         if (incomeTotal > 0) {
-          const incomeText = document.createElement("div");
-          incomeText.style.color = "blue";
+          const incomeText = document.createElement('div');
+          incomeText.style.color = 'blue';
           incomeText.textContent = `+${incomeTotal.toLocaleString()}`;
           container.appendChild(incomeText);
         }
-      } else if (currentPage === "지출") {
+      } else if (currentPage === '지출') {
         if (expenseTotal > 0) {
-          const expenseText = document.createElement("div");
-          expenseText.style.color = "red";
+          const expenseText = document.createElement('div');
+          expenseText.style.color = 'red';
           expenseText.textContent = `-${expenseTotal.toLocaleString()}`;
           container.appendChild(expenseText);
         }
@@ -331,11 +340,11 @@ const calendarOptions = {
 };
 
 // 총합을 상위 컴포넌트로 전달
-const emit = defineEmits(["update-summary"]);
+const emit = defineEmits(['update-summary']);
 
 // 처음 마운트 되었을때나 값이 변경될때 emit
 watchEffect(() => {
-  emit("update-summary", {
+  emit('update-summary', {
     summary: handleMonthSummary.value,
     countSummary: handleMonthCountSummary.value,
   });
@@ -347,10 +356,10 @@ const filteredSelectedDateEvents = computed(() => {
 
   let filtered = selectedDateEvents.value;
 
-  if (pageProps.currentPage === "수입") {
-    filtered = filtered.filter((e) => e.type === "income");
-  } else if (pageProps.currentPage === "지출") {
-    filtered = filtered.filter((e) => e.type === "expense");
+  if (pageProps.currentPage === '수입') {
+    filtered = filtered.filter((e) => e.type === 'income');
+  } else if (pageProps.currentPage === '지출') {
+    filtered = filtered.filter((e) => e.type === 'expense');
   }
 
   return filtered;
@@ -379,7 +388,7 @@ const filteredSelectedDateEvents = computed(() => {
   max-width: 1000px;
   margin: 0 auto;
   padding: 2rem;
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 .milcho-calendar-container {

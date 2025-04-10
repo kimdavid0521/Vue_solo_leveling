@@ -39,7 +39,7 @@ import { useAuthStore } from '@/stores/auth';
 // 1. 상태 선언 정리
 const authStore = useAuthStore();
 const alarm = ref([]);
-const monthConsumption = ref(10000000);
+const monthConsumption = ref(0);
 // 현재 월을 영어 약어 (Jan ~ Dec)로 가져오기
 const monthNames = [
   'Jan',
@@ -56,11 +56,24 @@ const monthNames = [
   'Dec',
 ];
 const currentMonth = monthNames[new Date().getMonth()];
+const currentYearMonth = new Date().toISOString().slice(0, 7); // 'YYYY-MM'
 
 // 예산 가져오기 (기본값 0)
 const budget = ref(
   authStore.user?.setting?.[0]?.monthlyBudget?.[currentMonth] ?? 0
 );
+
+// 여기서 monthConsumption 계산 로직 추가
+onMounted(() => {
+  const transactions = authStore.user?.transactions ?? [];
+  const expensesThisMonth = transactions.filter(
+    (tx) => tx.type === 'expense' && tx.date?.startsWith(currentYearMonth)
+  );
+  monthConsumption.value = expensesThisMonth.reduce(
+    (sum, tx) => sum + tx.amount,
+    0
+  );
+});
 
 // 알림 관련 상태
 const unreadCount = computed(
