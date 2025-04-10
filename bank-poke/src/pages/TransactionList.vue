@@ -98,7 +98,7 @@
           </th>
         </tr>
       </thead>
-      <tbody v-if="state.user && filteredTransactionsByType.length > 0">
+      <tbody v-if="user && filteredTransactionsByType.length > 0">
         <tr
           v-for="tr in filteredTransactionsByType"
           :key="tr.id"
@@ -129,12 +129,15 @@
 
 <script setup>
 import { ref, computed, reactive } from 'vue';
-import { useUserStore } from '@/stores/user.js';
+// import { useUserStore } from '@/stores/user.js';
+import { useAuthStore } from '@/stores/auth.js';
 import TableLayout from '@/components/TableLayout.vue';
 import SearchBox from '@/components/SearchBox.vue';
 
-const { state, deleteTransactions } = useUserStore();
-const user = computed(() => state.user);
+// const { state, deleteTransactions } = useAuthStore();
+const authStore = useAuthStore();
+const user = computed(() => authStore.user);
+console.log(user.value);
 
 // 선택된 거래 내역 id 리스트
 const selectedTransactions = ref([]);
@@ -189,33 +192,33 @@ const tabs = computed(() => [
     amount: transactionsByType('전체').reduce((sum, t) => sum + t.amount, 0),
   },
   {
-    name: "수입",
-    count: transactionsByType("수입").length,
-    amount: transactionsByType("수입").reduce((sum, t) => sum + t.amount, 0),
+    name: '수입',
+    count: transactionsByType('수입').length,
+    amount: transactionsByType('수입').reduce((sum, t) => sum + t.amount, 0),
   },
   {
-    name: "지출",
-    count: transactionsByType("지출").length,
-    amount: transactionsByType("지출").reduce((sum, t) => sum + t.amount, 0),
+    name: '지출',
+    count: transactionsByType('지출').length,
+    amount: transactionsByType('지출').reduce((sum, t) => sum + t.amount, 0),
   },
 ]);
 
 // 어떤 자산인지 계산하여 반환
 const asset = computed(() => {
   return (type, id) => {
-    if (type === "card") {
+    if (type === 'card') {
       const card = user.value.asset_group.card.find((c) => c.id === id);
-      return card ? (card.isCheck ? "체크카드" : "신용카드") : "";
-    } else if (type === "cash") {
-      return "현금";
-    } else if (type === "account") {
+      return card ? (card.isCheck ? '체크카드' : '신용카드') : '';
+    } else if (type === 'cash') {
+      return '현금';
+    } else if (type === 'account') {
       const account = user.value.asset_group.account.find((a) => a.id === id);
-      return account ? account.name : "";
-    } else if (type === "etc") {
+      return account ? account.name : '';
+    } else if (type === 'etc') {
       const assetEtc = user.value.asset_group.etc.find((i) => i.id === id);
-      return assetEtc ? assetEtc.name : "";
+      return assetEtc ? assetEtc.name : '';
     }
-    return "기타";
+    return '기타';
   };
 });
 
@@ -225,7 +228,7 @@ const currentDate = ref(new Date());
 // YYYY-MM 형식으로 포맷
 const formattedDate = computed(() => {
   const year = currentDate.value.getFullYear();
-  const month = String(currentDate.value.getMonth() + 1).padStart(2, "0");
+  const month = String(currentDate.value.getMonth() + 1).padStart(2, '0');
   return `${year}-${month}`;
 });
 
@@ -248,13 +251,13 @@ const goToNow = () => {
 
 // 필터링된 거래내역
 const filteredTransactions = computed(() => {
-  if (!state.user || !state.user.transactions) return [];
+  if (!user.value || !user.value.transactions) return [];
 
   const currentYear = currentDate.value.getFullYear();
   const currentMonth = currentDate.value.getMonth() + 1;
 
   return (
-    state.user.transactions
+    user.value.transactions
       // 1. 년월 필터
       .filter((ts) => {
         const [year, month] = ts.date.split('-').map(Number); // 현재 yyyy-mm-dd 형식으로 계산
@@ -297,7 +300,7 @@ const filteredTransactions = computed(() => {
 const filteredTransactionsByType = computed(() => {
   return filteredTransactions.value.filter((ts) => {
     if (currentTab.value === '수입') return ts.type === 'income';
-    if (currentTab.value === '지출') return ts.type === 'expense';
+    else if (currentTab.value === '지출') return ts.type === 'expense';
     return true;
   });
 });
