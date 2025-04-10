@@ -172,10 +172,11 @@
 </template>
 <script setup>
 import { reactive, computed } from 'vue';
-import { useUserStore } from '@/stores/user.js';
+// import { useUserStore } from '@/stores/user.js';
+import { useAuthStore } from '@/stores/auth.js';
 
-const { state } = useUserStore();
-const user = computed(() => state.user);
+const authStore = useAuthStore();
+const user = authStore.user;
 
 // 자산 선택창 내 확장 여부
 const expanded = reactive({});
@@ -194,7 +195,7 @@ const emit = defineEmits(['update-money', 'update-content', 'update-asset']);
 
 // 사용자 보유 자산 목록
 const userAssetList = () => {
-  const userAssetGroup = user.value.asset_group;
+  const userAssetGroup = user.asset_group;
   if (userAssetGroup.account.length !== 0) {
     states.assetList.push({
       name: '은행(계좌)',
@@ -219,7 +220,6 @@ const userAssetList = () => {
         children: check,
       });
     }
-    console.log(check);
   }
   if (userAssetGroup.etc.length !== 0) {
     states.assetList.push({
