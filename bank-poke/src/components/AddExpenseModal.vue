@@ -94,8 +94,8 @@
             <label class="form-label">소비 타입</label>
             <select v-model="selectedPayType" class="form-select">
               <option disabled value="">소비 타입 선택</option>
-              <option value="expense">소비</option>
-              <option value="income">입금</option>
+              <option value="expense">지출</option>
+              <option value="income">수입</option>
             </select>
           </div>
 

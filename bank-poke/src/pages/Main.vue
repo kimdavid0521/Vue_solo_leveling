@@ -26,7 +26,9 @@
           >
         </li>
         <li>
-          <a class="dropdown-item" href="#" @click="addExpense">예산 설정</a>
+          <router-link to="/mypage/budget" class="dropdown-item">
+            예산 설정
+          </router-link>
         </li>
       </ul>
     </div>
@@ -46,6 +48,7 @@ import Calender from '@/components/Calender.vue';
 import AddExpenseModal from '@/components/AddExpenseModal.vue';
 import TableLayout from '@/components/TableLayout.vue';
 import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
 
 // 유저 정보 받아오기
 const authStore = useAuthStore();
@@ -152,6 +155,7 @@ const saveExpense = async (newExpense) => {
         fixCost: userData.fixCost,
         transactions: userData.transactions,
       });
+      authStore.setUser(userData);
 
       console.log('고정 지출 저장 완료');
       showModal.value = false;
@@ -172,6 +176,7 @@ const saveExpense = async (newExpense) => {
       await axios.patch(`http://localhost:3000/users/${userId}`, {
         transactions: userData.transactions,
       });
+      authStore.setUser(userData);
 
       console.log('거래 내역 저장 완료');
       showModal.value = false;
