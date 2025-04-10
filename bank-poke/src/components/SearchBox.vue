@@ -12,7 +12,7 @@
         <!-- 자산 선택창 -->
         <div class="dropdown-menu p-3" style="width: 300px">
           <!-- 보유 자산 목록 -->
-          <div style="height: 300px; overflow-y: scroll">
+          <div style="height: 300px; overflow-y: auto">
             <div
               class="px-2 py-2 mouseHover"
               style="cursor: pointer"

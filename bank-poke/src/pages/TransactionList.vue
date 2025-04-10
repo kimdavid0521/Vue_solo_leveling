@@ -133,6 +133,7 @@ import { ref, computed, reactive } from 'vue';
 import { useAuthStore } from '@/stores/auth.js';
 import TableLayout from '@/components/TableLayout.vue';
 import SearchBox from '@/components/SearchBox.vue';
+import axios from 'axios';
 
 // const { state, deleteTransactions } = useAuthStore();
 const authStore = useAuthStore();
@@ -327,12 +328,34 @@ const switchSearch = () => {
 };
 
 // 선택된 거래 내역 삭제
-const deleteSelectedTransactions = () => {
+const deleteSelectedTransactions = async () => {
   if (!confirm('선택한 거래내역을 삭제하시겠습니까?')) return;
 
-  deleteTransactions(selectedTransactions.value);
-  // 삭제 후 선택 초기화
-  selectedTransactions.value = [];
+  // deleteTransactions(selectedTransactions.value);
+  if (!user.value) return;
+
+  // 1. 삭제된 거래내역 필터링
+  const updatedTransactions = user.value.transactions.filter(
+    (ts) => !selectedTransactions.value.includes(ts.id)
+  );
+
+  try {
+    // 2. PUT 요청으로 업데이트된 거래내역을 서버에 저장
+    const response = await axios.put(`/api/users/${user.value.id}`, {
+      ...user.value,
+      transactions: updatedTransactions,
+    });
+
+    if (response.status === 200) {
+      user.value.transactions = updatedTransactions; // 클라이언트 반영
+      selectedTransactions.value = []; //삭제 후 선택 초기화
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error('거래내역 삭제 중 오류 발생:', error);
+    return false;
+  }
 };
 
 // 전체 선택이 checked되면 모든 거래 선택
@@ -385,6 +408,6 @@ tr.custom-selected th {
   background-color: #3e4474;
 }
 tr.selected-row td {
-  background-color: #f0f2f5; /* #fff8e1 */
+  background-color: #fff8e1;
 }
 </style>
