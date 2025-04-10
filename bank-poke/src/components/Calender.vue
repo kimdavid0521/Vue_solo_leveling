@@ -103,6 +103,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { Offcanvas } from "bootstrap";
 import axios from "axios";
 
+const calendarRef = ref(false);
 // 현재 페이지 변수 받아오기
 const pageProps = defineProps({
   currentPage: String,

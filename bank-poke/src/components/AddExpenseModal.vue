@@ -16,6 +16,26 @@
           ></button>
         </div>
         <div class="modal-body">
+          <!-- 고정 지출 여부 -->
+          <div class="mb-3">
+            <label class="form-label">고정 지출 여부</label>
+            <input
+              v-model="isRepeat"
+              type="checkbox"
+              class="form-check-input"
+            />
+          </div>
+          <!-- 고정 지출 반복 주기 -->
+          <div v-if="isRepeat" class="mb-3">
+            <label class="form-label">반복 주기</label>
+            <select v-model="interval" class="form-select">
+              <option disabled value="">주기 선택</option>
+              <option value="daily">매일</option>
+              <option value="weekly">매주</option>
+              <option value="monthly">매월</option>
+              <option value="yearly">매년</option>
+            </select>
+          </div>
           <div class="mb-3">
             <label class="form-label">지출 이름</label>
             <input v-model="name" type="text" class="form-control" />
@@ -24,9 +44,22 @@
             <label class="form-label">금액</label>
             <input v-model.number="amount" type="number" class="form-control" />
           </div>
-          <div class="mb-3">
+          <!-- 고정 지출이라면 시작날짜와 종료날짜로 변경 -->
+          <div class="mb-3" v-if="!isRepeat">
             <label class="form-label">날짜</label>
             <input v-model="date" type="date" class="form-control" />
+          </div>
+
+          <div v-else class="row mb-3">
+            <div class="col">
+              <label class="form-label">시작 날짜</label>
+              <input v-model="startDate" type="date" class="form-control" />
+            </div>
+
+            <div class="col">
+              <label class="form-label">종료 날짜</label>
+              <input v-model="endDate" type="date" class="form-control" />
+            </div>
           </div>
           <div class="mb-3">
             <label class="form-label">시간</label>
@@ -133,6 +166,14 @@ import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 const emit = defineEmits(["close", "save"]);
 
+const name = ref("");
+const amount = ref(0);
+const date = ref("");
+const startDate = ref("");
+const endDate = ref("");
+const time = ref("");
+const memo = ref("");
+const inInclude = ref(true);
 const selectedAssetType = ref(""); // 자산 타입
 const selectedAssetId = ref(""); // 자산 id
 const selectedPayType = ref(""); // 소비 분류 타입 : 소비인지 입금인지
@@ -140,6 +181,11 @@ const selcetedCategoryType = ref(""); // 선택된 대분류 카테고리
 const selectedSubCategory = ref(""); // 소분류 카테고리
 const assetGroup = ref({ card: [], account: [], etc: [] });
 const categoryGroup = ref({ expense: [], income: [] });
+
+// 고정 지출 여부 체크
+const isRepeat = ref(false);
+// 반복 주기
+const interval = ref("");
 
 onMounted(async () => {
   try {
@@ -169,17 +215,12 @@ const subCategoryOptions = computed(() => {
   return selected ? selected.sub_categories : [];
 });
 
-const name = ref("");
-const amount = ref(0);
-const date = ref("");
-const time = ref("");
-const memo = ref("");
-const inInclude = ref(true);
-
 const handleSave = () => {
   emit("save", {
     name: name.value,
-    date: date.value,
+    date: isRepeat.value
+      ? { startDate: startDate.value, endDate: endDate.value }
+      : date.value,
     category: selcetedCategoryType.value,
     sub_category: selectedSubCategory.value,
     assetId: selectedAssetId.value,
@@ -189,6 +230,8 @@ const handleSave = () => {
     time: time.value,
     asset_type: selectedAssetType.value,
     addTotal: inInclude.value,
+    isRepeat: isRepeat.value,
+    ...(isRepeat.value && { interval: interval.value }), // 인터벌 값 제어
   });
 
   name.value = "";
@@ -202,5 +245,7 @@ const handleSave = () => {
   time.value = "";
   asset_type.value = "";
   addTotal.value = "";
+  isRepeat.value = "";
+  interval.value = "";
 };
 </script>
