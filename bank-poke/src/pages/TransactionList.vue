@@ -39,7 +39,7 @@
         </button>
       </div>
 
-      <!-- 검색 박스 -->
+      <!-- 버튼 박스(검색 + 엑셀로 내보내기) -->
       <div class="d-flex gap-1 me-2">
         <!-- <div class="search-box-wrapper" :class="{ expanded: isSearch }"> -->
         <SearchBox
@@ -60,6 +60,14 @@
             class="fa-solid"
             :class="isSearch ? 'fa-xmark' : 'fa-magnifying-glass'"
           ></i>
+        </button>
+        <button
+          v-if="user.isPremium"
+          class="btn btn-sm rounded-circle custom-btn"
+          style="width: 2rem"
+          @click="downloadExcel"
+        >
+          <i class="fa-solid fa-file-arrow-down"></i>
         </button>
       </div>
     </div>
@@ -143,6 +151,8 @@ import { useAuthStore } from '@/stores/auth.js';
 import TableLayout from '@/components/TableLayout.vue';
 import SearchBox from '@/components/SearchBox.vue';
 import axios from 'axios';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 // const { state, deleteTransactions } = useAuthStore();
 const authStore = useAuthStore();
@@ -385,6 +395,61 @@ const toggleSelectAll = () => {
   } else {
     selectedTransactions.value = filteredTransactions.value.map((tr) => tr.id);
   }
+};
+
+// 엑셀 파일로 변환하여 저장
+function exportToExcelWithHeader(data, headerMap, fileName = 'data.xlsx') {
+  // Step 1. 기존 JSON 키를 헤더 순서에 맞게 변환
+  const newData = data.map((item) => {
+    const row = {};
+    // 영어로 된 헤더/값 한글로 변환
+    for (const key in headerMap) {
+      if (key === 'asset_type') {
+        row[headerMap[key]] = asset.value(item.asset_type, item.assetId);
+      } else if (key === 'type') {
+        row[headerMap[key]] = item.type === 'income' ? '수입' : '지출';
+      } else if (key == 'date') {
+        row[headerMap[key]] = item[key] + ' ' + item.time;
+      } else {
+        row[headerMap[key]] = item[key];
+      }
+    }
+    return row;
+  });
+
+  const worksheet = XLSX.utils.json_to_sheet(newData, {
+    header: Object.values(headerMap), // 한글 헤더 순서 지정
+  });
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+
+  const excelBuffer = XLSX.write(workbook, {
+    bookType: 'xlsx',
+    type: 'array',
+  });
+
+  const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+  saveAs(blob, fileName);
+}
+
+// 엑셀 다운 버튼 클릭 시 호출
+const downloadExcel = () => {
+  const headerMap = {
+    date: '날짜',
+    asset_type: '자산 유형',
+    category: '분류',
+    sub_category: '소분류',
+    name: '내용',
+    amount: '금액',
+    type: '수입/지출',
+    memo: '메모',
+  };
+  exportToExcelWithHeader(
+    transactionsByType(currentTab.value),
+    headerMap,
+    'user_data.xlsx'
+  );
 };
 </script>
 
