@@ -1,130 +1,139 @@
 <template>
-  <h5 class="my-3">거래 내역</h5>
-  <!-- 거래 내역 헤더: 년월 이동 pagination + '이번달' 버튼 + 검색 버튼 -->
-  <div class="d-flex justify-content-between mb-3 fixed-height">
-    <div class="d-flex flex-nowrap me-2 gap-1">
-      <!-- 년월 이동 pagination -->
-      <ul class="pagination pagination-sm mb-0 custom-pagination">
-        <li class="page-item" @click="shiftYear(-1)">
-          <a class="page-link" href="#"
-            ><i class="fa-solid fa-angles-left"></i
-          ></a>
-        </li>
-        <li class="page-item" @click="shiftMonth(-1)">
-          <a class="page-link" href="#"
-            ><i class="fa-solid fa-angle-left"></i
-          ></a>
-        </li>
-        <li class="page-item text-nowrap">
-          <a class="page-link" href="#">{{ formattedDate }}</a>
-        </li>
-        <li class="page-item" @click="shiftMonth(1)">
-          <a class="page-link" href="#"
-            ><i class="fa-solid fa-angle-right"></i
-          ></a>
-        </li>
-        <li class="page-item" @click="shiftYear(1)">
-          <a class="page-link" href="#"
-            ><i class="fa-solid fa-angles-right"></i
-          ></a>
-        </li>
-      </ul>
-      <!-- '이번달' 버튼 -->
-      <button
-        class="btn btn-sm rounded-3 text-nowrap custom-btn"
-        @click="goToNow"
-      >
-        이번달
-      </button>
-    </div>
-    <!-- 검색 박스 -->
-    <div class="d-flex gap-1 me-2">
-      <SearchBox
-        v-if="isSearch"
-        @update-money="moneyFilter"
-        @update-content="contentFilter"
-        @update-asset="assetFilter"
-      >
-      </SearchBox>
-      <!-- 검색 버튼 -->
-      <button
-        class="btn btn-sm rounded-circle custom-btn"
-        @click="switchSearch"
-      >
-        <i
-          class="fa-solid"
-          :class="isSearch ? 'fa-xmark' : 'fa-magnifying-glass'"
-        ></i>
-      </button>
-    </div>
-  </div>
-  <!-- 거래 내역 테이블 -->
-  <TableLayout :tabs="tabs" @update-tab="updateTab">
-    <table class="table table-hover mb-0">
-      <thead>
-        <tr v-if="selectedTransactions.length === 0">
-          <th>
-            <input
-              type="checkbox"
-              :disabled="filteredTransactionsByType.length === 0"
-              :checked="allSelected"
-              @change="toggleSelectAll"
-            />
-          </th>
-          <th>날짜</th>
-          <th>자산</th>
-          <th>분류</th>
-          <th>내용</th>
-          <th>금액</th>
-        </tr>
-        <tr v-else class="custom-selected">
-          <th>
-            <input
-              type="checkbox"
-              :checked="allSelected"
-              @change="toggleSelectAll"
-            />
-          </th>
-          <th colspan="4" class="text-white">
-            {{ selectedTransactions.length }}건 선택
-          </th>
-          <th class="p-0 align-middle">
-            <button
-              class="btn btn-sm text-white"
-              @click="deleteSelectedTransactions"
-            >
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </th>
-        </tr>
-      </thead>
-      <tbody v-if="user && filteredTransactionsByType.length > 0">
-        <tr
-          v-for="tr in filteredTransactionsByType"
-          :key="tr.id"
-          :class="{ 'selected-row': selectedTransactions.includes(tr.id) }"
+  <div class="container" style="width: 1000px">
+    <h5 class="my-3 custom-header">거래 내역</h5>
+    <!-- 거래 내역 헤더: 년월 이동 pagination + '이번달' 버튼 + 검색 버튼 -->
+    <div class="d-flex justify-content-between mb-3 fixed-height">
+      <div class="d-flex flex-nowrap me-2 gap-1">
+        <!-- 년월 이동 pagination -->
+        <ul class="pagination pagination-sm mb-0 custom-pagination">
+          <li class="page-item" @click="shiftYear(-1)">
+            <a class="page-link" href="#"
+              ><i class="fa-solid fa-angles-left"></i
+            ></a>
+          </li>
+          <li class="page-item" @click="shiftMonth(-1)">
+            <a class="page-link" href="#"
+              ><i class="fa-solid fa-angle-left"></i
+            ></a>
+          </li>
+          <li class="page-item text-nowrap">
+            <a class="page-link" href="#">{{ formattedDate }}</a>
+          </li>
+          <li class="page-item" @click="shiftMonth(1)">
+            <a class="page-link" href="#"
+              ><i class="fa-solid fa-angle-right"></i
+            ></a>
+          </li>
+          <li class="page-item" @click="shiftYear(1)">
+            <a class="page-link" href="#"
+              ><i class="fa-solid fa-angles-right"></i
+            ></a>
+          </li>
+        </ul>
+        <!-- '이번달' 버튼 -->
+        <button
+          class="btn btn-sm rounded-3 text-nowrap custom-btn"
+          @click="goToNow"
         >
-          <td>
-            <input
-              type="checkbox"
-              :value="tr.id"
-              v-model="selectedTransactions"
-            />
-          </td>
-          <td>{{ tr.date }}</td>
-          <td>{{ asset(tr.asset_type, tr.assetId) }}</td>
-          <td>{{ tr.category }}</td>
-          <td>{{ tr.name }}</td>
-          <td>{{ tr.amount.toLocaleString() }}원</td>
-        </tr>
-      </tbody>
-      <tbody v-else>
-        <tr>
-          <td colspan="6" class="text-center">데이터가 없습니다.</td>
-        </tr>
-      </tbody>
-    </table>
-  </TableLayout>
+          이번달
+        </button>
+      </div>
+
+      <!-- 검색 박스 -->
+      <div class="d-flex gap-1 me-2">
+        <!-- <div class="search-box-wrapper" :class="{ expanded: isSearch }"> -->
+        <SearchBox
+          v-if="isSearch"
+          @update-money="moneyFilter"
+          @update-content="contentFilter"
+          @update-asset="assetFilter"
+        >
+        </SearchBox>
+        <!-- </div> -->
+        <!-- 검색 버튼 -->
+        <button
+          class="btn btn-sm rounded-circle custom-btn"
+          style="width: 2rem"
+          @click="switchSearch"
+        >
+          <i
+            class="fa-solid"
+            :class="isSearch ? 'fa-xmark' : 'fa-magnifying-glass'"
+          ></i>
+        </button>
+      </div>
+    </div>
+    <!-- 거래 내역 테이블 -->
+    <TableLayout :tabs="tabs" @update-tab="updateTab">
+      <div class="transaction-table-wrapper">
+        <!-- <table class="table table-hover mb-0"> -->
+        <table class="transaction-table">
+          <thead>
+            <tr v-if="selectedTransactions.length === 0">
+              <th>
+                <input
+                  type="checkbox"
+                  :disabled="filteredTransactionsByType.length === 0"
+                  :checked="allSelected"
+                  @change="toggleSelectAll"
+                />
+              </th>
+              <th>날짜</th>
+              <th>자산</th>
+              <th>분류</th>
+              <th>내용</th>
+              <th>금액</th>
+            </tr>
+            <tr v-else class="custom-selected">
+              <th>
+                <input
+                  type="checkbox"
+                  :checked="allSelected"
+                  @change="toggleSelectAll"
+                />
+              </th>
+              <th colspan="4" class="text-white">
+                {{ selectedTransactions.length }}건 선택
+              </th>
+              <th class="py-0 align-middle">
+                <button
+                  class="btn btn-sm text-white"
+                  @click="deleteSelectedTransactions"
+                >
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody v-if="user && filteredTransactionsByType.length > 0">
+            <tr
+              v-for="tr in filteredTransactionsByType"
+              :key="tr.id"
+              :class="{ 'selected-row': selectedTransactions.includes(tr.id) }"
+            >
+              <td>
+                <input
+                  type="checkbox"
+                  :value="tr.id"
+                  v-model="selectedTransactions"
+                />
+              </td>
+              <td>{{ tr.date }}</td>
+              <td>{{ asset(tr.asset_type, tr.assetId) }}</td>
+              <td>{{ tr.category }}</td>
+              <td>{{ tr.name }}</td>
+              <td>{{ tr.amount.toLocaleString() }}원</td>
+            </tr>
+          </tbody>
+          <tbody v-else>
+            <tr>
+              <td colspan="6" class="text-center">데이터가 없습니다.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </TableLayout>
+  </div>
 </template>
 
 <script setup>
@@ -380,6 +389,15 @@ const toggleSelectAll = () => {
 </script>
 
 <style scoped>
+/* 섹션 헤더 */
+.custom-header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2b2b2b;
+  margin-bottom: 2rem;
+  border-left: 5px solid #ffd95a;
+  padding-left: 0.75rem;
+}
 /* pagination 스타일 조정 */
 .custom-pagination .page-link {
   color: #333;
@@ -410,4 +428,58 @@ tr.custom-selected th {
 tr.selected-row td {
   background-color: #fff8e1;
 }
+/* 테이블 디자인 + 헤더 고정 후 높이 고정 */
+.transaction-table-wrapper {
+  max-height: 500px;
+  overflow-y: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+}
+
+.transaction-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  background-color: #fff;
+}
+
+.transaction-table thead {
+  background-color: #f9f9f9;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.transaction-table th,
+.transaction-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+  white-space: nowrap;
+}
+
+.transaction-table tbody tr:hover {
+  background-color: #f6f8ff;
+  transition: background-color 0.2s ease;
+}
+
+.transaction-table td:last-child,
+.transaction-table th:last-child {
+  text-align: right;
+}
+
+.transaction-table input[type='checkbox'] {
+  transform: scale(1.2);
+}
+
+/* 옆으로 펼쳐지는 효과 */
+/* .search-box-wrapper {
+  overflow: hidden;
+  width: 0;
+  transition: width 0.4s ease;
+}
+.search-box-wrapper.expanded {
+  width: 30rem;
+} */
 </style>
