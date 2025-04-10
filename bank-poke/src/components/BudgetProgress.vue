@@ -27,7 +27,9 @@
             >
               <div class="fs-5 fw-bold">{{ usedPercent }}%</div>
               <div class="small">
-                전체 예산: {{ formatCurrency(chartStore.totalBudget) }}<br />
+                전체 예산: {{ formatCurrency(chartStore.totalBudget) }}
+              </div>
+              <div class="small fw-bold">
                 남은 예산: {{ formatCurrency(chartStore.remaining) }}
               </div>
             </div>
@@ -71,12 +73,16 @@ const usedPercent = computed(() => {
 });
 
 // 도넛 차트 데이터 설정
+const remainingPercent = computed(() => 100 - usedPercent.value);
 const chartData = computed(() => ({
   labels: ['사용', '남음'],
   datasets: [
     {
-      data: [usedPercent.value, 100 - usedPercent.value],
-      backgroundColor: ['#36a2eb', '#d3d3d3'],
+      data: [usedPercent.value, remainingPercent.value],
+      backgroundColor: [
+        remainingPercent.value <= 0 ? '#ff4d4f' : '#36a2eb', // 사용: 빨강 or 파랑
+        '#d3d3d3', // 남은 부분은 항상 회색
+      ],
       borderWidth: 0,
     },
   ],
@@ -126,3 +132,13 @@ watch(
   }
 );
 </script>
+
+<style scoped>
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+</style>

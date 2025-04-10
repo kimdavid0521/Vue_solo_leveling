@@ -3,7 +3,7 @@
     <div class="row mb-4">
       <!-- 왼쪽: 도넛 차트 (수입 비율) -->
       <div class="col-12 col-md-5 mb-3 mb-md-0">
-        <div class="card shadow-sm p-3 h-100">
+        <div class="card shadow-sm p-3 h-100 hover-lift">
           <h5 class="card-title text-center fw-bold">카테고리별 수입 비율</h5>
           <!-- 도넛 차트 영역 -->
           <div class="ratio ratio-1x1" style="max-width: 100%; height: 20rem">
@@ -18,7 +18,7 @@
 
       <!-- 오른쪽: 수입 분석 요약 -->
       <div class="col-12 col-md-7">
-        <div class="card shadow-sm p-3 h-100">
+        <div class="card shadow-sm p-3 h-100 hover-lift">
           <div class="mb-5">
             <h5 class="text-center mb-3 fw-bold">수입 분석</h5>
             <!-- 카테고리별 수입 목록 -->
@@ -116,3 +116,13 @@ watch(
   }
 );
 </script>
+
+<style scoped>
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+</style>
