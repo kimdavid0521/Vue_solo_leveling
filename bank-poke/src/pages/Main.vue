@@ -1,12 +1,8 @@
 <template>
   <div>
-
-
     <!-- 테이블 상단 네비게이션 바 -->
     <TableLayout :tabs="tabs" @update-tab="updateTab" />
     <Calender :currentPage="currentTab" @update-summary="updateSummary" />
-
-
 
     <div
       class="dropup"
@@ -14,7 +10,7 @@
       @click="toggleDropdown"
     >
       <button class="btn btn-secondary dropdown-toggle">
-        {{ selectedCategory || '+' }}
+        {{ selectedCategory || "+" }}
       </button>
       <ul class="dropdown-menu" :class="{ show: dropdownOpen }">
         <li>
@@ -37,19 +33,20 @@
 </template>
 
 <script setup>
-
 import { ref, computed, isRef } from "vue";
 import axios from "axios";
 import Calender from "@/components/Calender.vue";
 import AddExpenseModal from "@/components/AddExpenseModal.vue";
 import TableLayout from "@/components/TableLayout.vue";
+import { useAuthStore } from "@/stores/auth";
 
-
+// 유저 정보 받아오기
+const authStore = useAuthStore();
 const expenses = ref([]);
 const showModal = ref(false);
 const dropdownOpen = ref(false);
-const selectedCategory = ref('');
-const userId = 2;
+const selectedCategory = ref("");
+
 const currentTab = ref("전체");
 // const summary = ref({ income: 0, expenses: 0, total: 0 });
 // const summaryCount = ref({ incomeCount: 0, expenseCount: 0, totalCount: 0 });
@@ -103,6 +100,10 @@ const addExpense = () => {
 // api 연결
 const saveExpense = async (newExpense) => {
   try {
+    const userId = authStore.user?.id;
+    if (!userId) {
+      console.log("유저 정보가 없습니다");
+    }
     // 유저 정보 가져오기
     const res = await axios.get(`http://localhost:3000/users/${userId}`);
     const userData = res.data;
@@ -169,7 +170,7 @@ const saveExpense = async (newExpense) => {
       showModal.value = false;
     }
   } catch (error) {
-    console.error('저장 실패', error);
+    console.error("저장 실패", error);
   }
 };
 

@@ -58,9 +58,7 @@
         {
           "id": 2,
           "name": "sdasd",
-
           "date": "2025-04-09",
-
           "time": "13:30",
           "category": "dsd",
           "sub_category": "dsd",
@@ -86,7 +84,6 @@
           "addTotal": true,
           "asset_type": "bank",
           "isRepeat": false
-
         },
         {
           "name": "태영이 밥먹고싶음",
@@ -115,7 +112,6 @@
           "time": "20:10",
           "asset_type": "card",
           "addTotal": true,
-
           "id": 4,
           "isRepeat": false
         },
@@ -1142,10 +1138,9 @@
           "isRepeat": false,
           "interval": "daily",
           "id": 68
-
         }
       ],
-     "fixCost": [
+      "fixCost": [
         {
           "id": 1,
           "date": {
@@ -1345,6 +1340,139 @@
             "sub_categories": [
               "환급",
               "기타 수입"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "cec3",
+      "username": "김테스트",
+      "nickname": "테스트김",
+      "email": "abcd1234@naver.com",
+      "password": "abcd1234",
+      "isPremium": false,
+      "asset_group": {
+        "card": [],
+        "account": [
+          {
+            "id": 1744258929857,
+            "name": "김계좌",
+            "balance": 1200,
+            "type": "은행",
+            "group": "입출금"
+          }
+        ],
+        "etc": []
+      },
+      "setting": [
+        {
+          "currency": "kr",
+          "weekStart": "Monday",
+          "monthStart": 1,
+          "monthlyBudget": {
+            "Jan": 0,
+            "Feb": 0,
+            "Mar": 0,
+            "Apr": 0,
+            "May": 0,
+            "Jun": 0,
+            "Jul": 0,
+            "Aug": 0,
+            "Sep": 0,
+            "Oct": 0,
+            "Nov": 0,
+            "Dec": 0
+          }
+        }
+      ],
+      "transactions": [],
+      "fixCost": [],
+      "together_bank": [],
+      "category": {
+        "expense": [
+          {
+            "main_category": "식비",
+            "sub_categories": [
+              "외식",
+              "마트",
+              "카페",
+              "배달"
+            ]
+          },
+          {
+            "main_category": "교통비",
+            "sub_categories": [
+              "버스",
+              "지하철",
+              "택시",
+              "기타"
+            ]
+          },
+          {
+            "main_category": "주거/통신",
+            "sub_categories": [
+              "월세",
+              "관리비",
+              "인터넷",
+              "휴대폰"
+            ]
+          },
+          {
+            "main_category": "생활",
+            "sub_categories": [
+              "세탁",
+              "청소",
+              "생필품"
+            ]
+          },
+          {
+            "main_category": "기타",
+            "sub_categories": [
+              "기타 지출"
+            ]
+          }
+        ],
+        "income": [
+          {
+            "id": 1,
+            "main_category": "급여",
+            "sub_categories": [
+              "월급",
+              "상여금"
+            ]
+          },
+          {
+            "id": 2,
+            "main_category": "용돈",
+            "sub_categories": [
+              "부모님",
+              "친척",
+              "기타"
+            ]
+          },
+          {
+            "id": 3,
+            "main_category": "투자수익",
+            "sub_categories": [
+              "주식",
+              "코인",
+              "이자"
+            ]
+          },
+          {
+            "id": 4,
+            "main_category": "기타",
+            "sub_categories": [
+              "환급",
+              "기타 수입"
+            ]
+          },
+          {
+            "main_category": "김대분류",
+            "sub_categories": [
+              "안녕",
+              "안녕2"
             ]
           }
         ]

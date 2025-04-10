@@ -164,6 +164,10 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import axios from "axios";
+import { useAuthStore } from "@/stores/auth";
+
+// 유저 정보 받아오기
+const authStore = useAuthStore();
 const emit = defineEmits(["close", "save"]);
 
 const name = ref("");
@@ -189,7 +193,11 @@ const interval = ref("");
 
 onMounted(async () => {
   try {
-    const res = await axios.get("http://localhost:3000/users/2");
+    const userId = authStore.user?.id;
+    if (!userId) {
+      console.log("유저 정보가 없습니다");
+    }
+    const res = await axios.get(`http://localhost:3000/users/${userId}`);
     assetGroup.value = res.data.asset_group;
     categoryGroup.value = res.data.category;
   } catch (err) {

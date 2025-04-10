@@ -2,31 +2,31 @@
   <div class="container">
     <div class="milcho-calendar-container">
       <!-- ✅ 월 요약 -->
-      <div class="text-center my-4">
-        <!-- <h4>{{ currentMonth }}</h4> -->
+      <!-- <div class="text-center my-4"> -->
+      <!-- <h4>{{ currentMonth }}</h4> -->
 
-        <!-- 전체 -->
-        <p v-if="pageProps.currentPage === '전체'">
+      <!-- 전체 -->
+      <!-- <p v-if="pageProps.currentPage === '전체'">
           총합:
           <strong>{{ handleMonthSummary.total.toLocaleString() }}</strong>
           수입:
           {{ handleMonthSummary.income.toLocaleString() }}
           지출:
           {{ handleMonthSummary.expense.toLocaleString() }}
-        </p>
+        </p> -->
 
-        <!-- 수입만 -->
-        <p v-else-if="pageProps.currentPage === '수입'">
+      <!-- 수입만 -->
+      <!-- <p v-else-if="pageProps.currentPage === '수입'">
           총 수입:
           <strong>{{ handleMonthSummary.income.toLocaleString() }}</strong>
-        </p>
+        </p> -->
 
-        <!-- 지출만 -->
-        <p v-else-if="pageProps.currentPage === '지출'">
+      <!-- 지출만 -->
+      <!-- <p v-else-if="pageProps.currentPage === '지출'">
           총 지출:
           <strong>{{ handleMonthSummary.expense.toLocaleString() }}</strong>
-        </p>
-      </div>
+        </p> -->
+      <!-- </div> -->
 
       <!-- ✅ 달력 -->
       <FullCalendar
@@ -102,6 +102,10 @@ import timeGridPlugin from "@fullcalendar/timegrid"; // 시간 그리드 플러�
 import interactionPlugin from "@fullcalendar/interaction";
 import { Offcanvas } from "bootstrap";
 import axios from "axios";
+import { useAuthStore } from "@/stores/auth";
+
+// 유저 id(정보) 가져오기
+const authStore = useAuthStore();
 
 const calendarRef = ref(false);
 // 현재 페이지 변수 받아오기
@@ -164,7 +168,12 @@ const events = ref([]);
 // 날짜 변경될때마다 일정 api 호출
 onMounted(async () => {
   try {
-    const response = await axios.get("http://localhost:3000/users/2");
+    const userId = authStore.user?.id;
+    if (!userId) {
+      console.log("유저 정보가 없습니다");
+      return;
+    }
+    const response = await axios.get(`http://localhost:3000/users/${userId}`);
     const transData = response.data.transactions;
 
     const convertedData = transData.map((t) => ({
