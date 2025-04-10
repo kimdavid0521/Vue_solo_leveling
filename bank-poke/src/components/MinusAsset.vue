@@ -79,14 +79,19 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useAssetStore } from '@/stores/assetStore';
+import { useAuthStore } from '@/stores/auth';
 
 const store = useAssetStore();
-const userId = 1;
+
+const auth = useAuthStore();
+const userId = computed(() => auth.user?.id);
 
 const showForm = ref(false);
 const confirmAsset = ref(null);
 
-const currentUser = computed(() => store.users.find((u) => u.id == userId));
+const currentUser = computed(() =>
+  store.users.find((u) => u.id == userId.value)
+);
 
 const allAssets = computed(() => {
   const group = currentUser.value?.asset_group || {};
@@ -106,7 +111,7 @@ const deleteAsset = async () => {
   if (!asset) return;
 
   // 자산 삭제 및 연결된 거래 내역 정리
-  await store.deleteAsset(userId, asset.type, asset.id);
+  await store.deleteAsset(userId.value, asset.type, asset.id);
 
   // 초기화
   confirmAsset.value = null;
