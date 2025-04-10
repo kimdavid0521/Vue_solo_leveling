@@ -205,6 +205,120 @@
           }
         ]
       }
+    },
+    {
+      "id": "cb63",
+      "username": "1",
+      "nickname": "1",
+      "email": "1@naver.com",
+      "password": "1",
+      "isPremium": false,
+      "asset_group": {
+        "card": [],
+        "account": [],
+        "etc": []
+      },
+      "setting": [
+        {
+          "currency": "kr",
+          "weekStart": "Monday",
+          "monthStart": 1,
+          "monthlyBudget": {
+            "Jan": 100000,
+            "Feb": 0,
+            "Mar": 100000,
+            "Apr": 1000000,
+            "May": 100000,
+            "Jun": 0,
+            "Jul": 100000,
+            "Aug": 0,
+            "Sep": 0,
+            "Oct": 0,
+            "Nov": 0,
+            "Dec": 0
+          }
+        }
+      ],
+      "transactions": [],
+      "fixCost": [],
+      "together_bank": [],
+      "category": {
+        "expense": [
+          {
+            "main_category": "식비",
+            "sub_categories": [
+              "외식",
+              "마트",
+              "카페",
+              "배달"
+            ]
+          },
+          {
+            "main_category": "교통비",
+            "sub_categories": [
+              "버스",
+              "지하철",
+              "택시",
+              "기타"
+            ]
+          },
+          {
+            "main_category": "주거/통신",
+            "sub_categories": [
+              "월세",
+              "관리비",
+              "인터넷",
+              "휴대폰"
+            ]
+          },
+          {
+            "main_category": "생활",
+            "sub_categories": [
+              "세탁",
+              "청소",
+              "생필품"
+            ]
+          },
+          {
+            "main_category": "기타",
+            "sub_categories": [
+              "기타 지출"
+            ]
+          }
+        ],
+        "income": [
+          {
+            "main_category": "급여",
+            "sub_categories": [
+              "월급",
+              "상여금"
+            ]
+          },
+          {
+            "main_category": "용돈",
+            "sub_categories": [
+              "부모님",
+              "친척",
+              "기타"
+            ]
+          },
+          {
+            "main_category": "투자수익",
+            "sub_categories": [
+              "주식",
+              "코인",
+              "이자"
+            ]
+          },
+          {
+            "main_category": "기타",
+            "sub_categories": [
+              "환급",
+              "기타 수입"
+            ]
+          }
+        ]
+      }
     }
   ]
 }

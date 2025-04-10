@@ -21,7 +21,7 @@
             placeholder="Type here to confirm"
           />
         </div>
-
+        <!-- 모달 푸터 -->
         <div class="modal-footer border-0">
           <button
             class="btn btn-danger w-100"

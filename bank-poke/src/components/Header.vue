@@ -20,7 +20,7 @@
           BankPoke
         </RouterLink>
 
-        <!-- 토글 버튼 (항상 로고 옆에 고정됨) -->
+        <!-- 토글 버튼 -->
         <button
           class="navbar-toggler ms-2"
           type="button"
@@ -32,7 +32,7 @@
         </button>
       </div>
 
-      <!-- 중앙: 메뉴 -->
+        <!-- 중앙: 메뉴 -->
       <div
         class="collapse navbar-collapse justify-content-center"
         :class="{ show: isOpen }"

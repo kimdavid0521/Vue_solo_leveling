@@ -1,6 +1,7 @@
 <!-- ✅ 이렇게만 유지하세요 -->
 <template>
   <form @submit.prevent>
+    <!-- 비밀번호 찾기 타이틀 -->
     <div class="text-center mb-3">
       <div class="main-title mb-1">비밀번호를 잊으셨나요?</div>
       <p class="sub-title text-secondary">
@@ -8,6 +9,7 @@
       </p>
     </div>
 
+    <!-- 이메일 입력 필드 -->
     <div class="mb-3 mt-3">
       <input
         class="form-control"
@@ -18,6 +20,7 @@
       />
     </div>
 
+    <!-- 인증 코드 보내기 버튼 -->
     <div class="d-grid mt">
       <button
         type="button"
@@ -26,8 +29,9 @@
       >
         인증 코드 보내기
       </button>
-    </div>
+    </div>  
 
+    <!-- 로그인으로 돌아가기 버튼 -->
     <div class="text-center">
       <button
         type="button"
