@@ -166,16 +166,19 @@ import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 import { useAuthStore } from "@/stores/auth";
 
+// 오늘 날짜
+const today = new Date();
+const currentTime = today.toTimeString().slice(0, 5);
 // 유저 정보 받아오기
 const authStore = useAuthStore();
 const emit = defineEmits(["close", "save"]);
 
 const name = ref("");
 const amount = ref(0);
-const date = ref("");
-const startDate = ref("");
+const date = ref(today.toISOString().split("T")[0]);
+const startDate = ref(today.toISOString().split("T")[0]);
 const endDate = ref("");
-const time = ref("");
+const time = ref(currentTime);
 const memo = ref("");
 const inInclude = ref(true);
 const selectedAssetType = ref(""); // 자산 타입
