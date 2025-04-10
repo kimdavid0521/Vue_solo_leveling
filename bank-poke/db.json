@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "id": 2,
+      "id": "2",
       "username": "dks",
       "nickname": "asdasd",
       "email": "SDas@naver.com",
@@ -58,7 +58,9 @@
         {
           "id": 2,
           "name": "sdasd",
-          "date": "230-231023",
+
+          "date": "2025-04-09",
+
           "time": "13:30",
           "category": "dsd",
           "sub_category": "dsd",
@@ -82,28 +84,66 @@
           "memo": "3월 월급",
           "addTotal": true,
           "asset_type": "bank"
+
+        },
+        {
+          "name": "태영이 밥먹고싶음",
+          "date": "2025-04-09",
+          "category": 2,
+          "sub_category": "버스",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 120000,
+          "memo": "영광이형이랑 밥먹을까?",
+          "time": "19:08",
+          "asset_type": "card",
+          "addTotal": true,
+          "id": 4
+        },
+        {
+          "name": "강영광",
+          "date": "2025-04-09",
+          "category": 2,
+          "sub_category": "버스",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 5000,
+          "memo": "교통비",
+          "time": "20:10",
+          "asset_type": "card",
+          "addTotal": true,
+          "id": 4
+
         }
       ],
-      "fixCost": [
+     "fixCost": [
         {
           "id": 1,
-          "startDate": "2025-03-10",
+          "date": {
+            "startDate": "2025-03-10",
+            "endDate": "2026-04-09"
+          },
           "name": "넷플릭스",
           "memo": "넷플릭스 결제",
           "category": "넷플릭스",
           "sub_category": "넷플릭스 결제",
           "amount": 1232,
-          "interval": "month",
-          "endDate": "2026-04-09",
-          "type": "expense"
+          "interval": "month", 
+          "type": "expense",
+          "assetId": 1,
+          "asset_type": "card",
+          "time": "20:10"
         }
       ],
-
       "together_bank": [
         {
           "id": 1,
           "master_user_id": 1,
-          "members_id": [2, 3, 4],
+          "members_id": [
+            2,
+            3,
+            4
+          ],
           "total_balance": 3082894,
           "history": [
             {
@@ -121,49 +161,84 @@
           {
             "id": 1,
             "main_category": "식비",
-            "sub_categories": ["외식", "마트", "카페", "배달"]
+            "sub_categories": [
+              "외식",
+              "마트",
+              "카페",
+              "배달"
+            ]
           },
           {
             "id": 2,
             "main_category": "교통비",
-            "sub_categories": ["버스", "지하철", "택시", "기타"]
+            "sub_categories": [
+              "버스",
+              "지하철",
+              "택시",
+              "기타"
+            ]
           },
           {
             "id": 3,
             "main_category": "주거/통신",
-            "sub_categories": ["월세", "관리비", "인터넷", "휴대폰"]
+            "sub_categories": [
+              "월세",
+              "관리비",
+              "인터넷",
+              "휴대폰"
+            ]
           },
           {
             "id": 4,
             "main_category": "생활",
-            "sub_categories": ["세탁", "청소", "생필품"]
+            "sub_categories": [
+              "세탁",
+              "청소",
+              "생필품"
+            ]
           },
           {
             "id": 5,
             "main_category": "기타",
-            "sub_categories": ["기타 지출"]
+            "sub_categories": [
+              "기타 지출"
+            ]
           }
         ],
         "income": [
           {
             "id": 1,
             "main_category": "급여",
-            "sub_categories": ["월급", "상여금"]
+            "sub_categories": [
+              "월급",
+              "상여금"
+            ]
           },
           {
             "id": 2,
             "main_category": "용돈",
-            "sub_categories": ["부모님", "친척", "기타"]
+            "sub_categories": [
+              "부모님",
+              "친척",
+              "기타"
+            ]
           },
           {
             "id": 3,
             "main_category": "투자수익",
-            "sub_categories": ["주식", "코인", "이자"]
+            "sub_categories": [
+              "주식",
+              "코인",
+              "이자"
+            ]
           },
           {
             "id": 4,
             "main_category": "기타",
-            "sub_categories": ["환급", "기타 수입"]
+            "sub_categories": [
+              "환급",
+              "기타 수입"
+            ]
           }
         ]
       }
