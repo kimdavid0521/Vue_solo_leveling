@@ -2,31 +2,31 @@
   <div class="container">
     <div class="milcho-calendar-container">
       <!-- ✅ 월 요약 -->
-      <div class="text-center my-4">
-        <!-- <h4>{{ currentMonth }}</h4> -->
+      <!-- <div class="text-center my-4"> -->
+      <!-- <h4>{{ currentMonth }}</h4> -->
 
-        <!-- 전체 -->
-        <p v-if="pageProps.currentPage === '전체'">
+      <!-- 전체 -->
+      <!-- <p v-if="pageProps.currentPage === '전체'">
           총합:
           <strong>{{ handleMonthSummary.total.toLocaleString() }}</strong>
           수입:
           {{ handleMonthSummary.income.toLocaleString() }}
           지출:
           {{ handleMonthSummary.expense.toLocaleString() }}
-        </p>
+        </p> -->
 
-        <!-- 수입만 -->
-        <p v-else-if="pageProps.currentPage === '수입'">
+      <!-- 수입만 -->
+      <!-- <p v-else-if="pageProps.currentPage === '수입'">
           총 수입:
           <strong>{{ handleMonthSummary.income.toLocaleString() }}</strong>
-        </p>
+        </p> -->
 
-        <!-- 지출만 -->
-        <p v-else-if="pageProps.currentPage === '지출'">
+      <!-- 지출만 -->
+      <!-- <p v-else-if="pageProps.currentPage === '지출'">
           총 지출:
           <strong>{{ handleMonthSummary.expense.toLocaleString() }}</strong>
-        </p>
-      </div>
+        </p> -->
+      <!-- </div> -->
 
       <!-- ✅ 달력 -->
       <FullCalendar
@@ -73,21 +73,89 @@
             <li
               v-for="event in filteredSelectedDateEvents"
               :key="event.id"
-              class="list-group-item"
+              class="list-group-item d-flex justify-content-between align-items-center"
               :class="{
                 'bg-danger': event.type === 'expense',
                 'bg-primary': event.type === 'income',
               }"
             >
-              {{
-                new Date(event.start).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
-              }}
-              - {{ event.name }} : {{ event.amount.toLocaleString() }}원
+              <div>
+                {{
+                  new Date(event.start).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                }}
+                - {{ event.name }} : {{ event.amount.toLocaleString() }}원
+              </div>
+              <div class="btn-group">
+                <button
+                  class="btn btn-light btn-sm"
+                  @click="openEditModal(event)"
+                >
+                  수정
+                </button>
+                <button
+                  class="btn btn-danger btn-sm"
+                  @click="deleteEvent(event.id)"
+                >
+                  삭제
+                </button>
+              </div>
             </li>
           </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 모달 -->
+    <!-- ✅ 수정 모달 -->
+    <div
+      class="modal fade"
+      id="editModal"
+      tabindex="-1"
+      aria-labelledby="editModalLabel"
+      aria-hidden="true"
+      ref="editModalRef"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModalLabel">내역 수정</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label>이름</label>
+              <input v-model="editEvent.name" class="form-control" />
+            </div>
+            <div class="mb-3">
+              <label>금액</label>
+              <input
+                v-model.number="editEvent.amount"
+                type="number"
+                class="form-control"
+              />
+            </div>
+            <div class="mb-3">
+              <label>시간</label>
+              <input
+                v-model="editEvent.start"
+                type="datetime-local"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              취소
+            </button>
+            <button class="btn btn-primary" @click="submitEdit">저장</button>
+          </div>
         </div>
       </div>
     </div>
@@ -102,6 +170,101 @@ import timeGridPlugin from "@fullcalendar/timegrid"; // 시간 그리드 플러�
 import interactionPlugin from "@fullcalendar/interaction";
 import { Offcanvas } from "bootstrap";
 import axios from "axios";
+import { useAuthStore } from "@/stores/auth";
+import { Modal } from "bootstrap";
+
+const userAuth = useAuthStore();
+
+const editEvent = ref({
+  id: null,
+  name: "",
+  amount: 0,
+  start: "",
+});
+
+const editModalRef = ref(null);
+let editModalInstance = null;
+
+onMounted(() => {
+  editModalInstance = new Modal(editModalRef.value);
+});
+
+const openEditModal = (event) => {
+  editEvent.value = { ...event };
+  editEvent.value.start = new Date(event.start).toISOString().slice(0, 16);
+  editModalInstance.show();
+};
+
+// 내역 업데이트 함수
+const submitEdit = async () => {
+  const userId = userAuth.user?.id;
+  if (!userId) {
+    console.log("유저 정보가 없습니다");
+    return;
+  }
+  try {
+    const userResponse = await axios.get(
+      `http://localhost:3000/users/${userId}`
+    );
+    const user = userResponse.data;
+
+    // 해당 트랜잭션 수정
+    const updateTransactions = user.transactions.map((t) => {
+      if (t.id == editEvent.value.id) {
+        return {
+          ...t,
+          name: editEvent.value.name,
+          amount: editEvent.value.amount,
+          date: new Date(editEvent.value.start).toISOString().slice(0, 10),
+          time: new Date(editEvent.value.start).toTimeString().slice(0, 5),
+        };
+      }
+      return t;
+    });
+
+    await axios.patch(`http://localhost:3000/users/${userId}`, {
+      transactions: updateTransactions,
+    });
+
+    editModalInstance.hide();
+    await fetchEvents(); // 이벤트 목록 다시 가져오기
+  } catch (err) {
+    console.error("수정 실패", err);
+  }
+};
+
+// 내역 삭제 함수
+const deleteEvent = async (transactionId) => {
+  const userId = userAuth.user?.id;
+  if (!userId) {
+    console.log("유저 정보가 없습니다");
+    return;
+  }
+
+  if (!confirm("정말 삭제하시겠습니까?")) return;
+  try {
+    const userResponse = await axios.get(
+      `http://localhost:3000/users/${userId}`
+    );
+    const user = userResponse.data;
+
+    // 트랜잭션에서 해당 항목 제거하기
+    const updateTransactions = user.transactions.filter(
+      (t) => t.id !== transactionId
+    );
+
+    // 변경된 transaction으로 patch 요청
+    await axios.patch(`http://localhost:3000/users/${userId}`, {
+      transactions: updateTransactions,
+    });
+
+    await fetchEvents();
+  } catch (err) {
+    console.error("삭제 실패", err);
+  }
+};
+// 유저 id(정보) 가져오기
+const authStore = useAuthStore();
 
 const calendarRef = ref(false);
 // 현재 페이지 변수 받아오기
@@ -164,7 +327,12 @@ const events = ref([]);
 // 날짜 변경될때마다 일정 api 호출
 onMounted(async () => {
   try {
-    const response = await axios.get("http://localhost:3000/users/2");
+    const userId = authStore.user?.id;
+    if (!userId) {
+      console.log("유저 정보가 없습니다");
+      return;
+    }
+    const response = await axios.get(`http://localhost:3000/users/${userId}`);
     const transData = response.data.transactions;
 
     const convertedData = transData.map((t) => ({
