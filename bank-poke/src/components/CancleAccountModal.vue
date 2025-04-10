@@ -21,7 +21,7 @@
             placeholder="Type here to confirm"
           />
         </div>
-
+        <!-- 모달 푸터 -->
         <div class="modal-footer border-0">
           <button
             class="btn btn-danger w-100"
@@ -60,28 +60,50 @@ function onModalHidden() {
   if (backdrop) backdrop.remove();
 
   // 추후 id삭제 기능 추가
+
   router.push('/');
 }
 
-// 회원 탈퇴 버튼 클릭 ㅣㅅ
-const cancleAccount = () => {
-  // 1) 입력값이 이메일과 다른지 확인
+// 회원 탈퇴 버튼 클릭 시
+const cancleAccount = async () => {
   if (inputValue.value !== confirmText.value) {
     alert('입력한 글자가 일치하지 않습니다.');
     return;
   }
 
-  // 2) 실제 탈퇴처리 로직 (스토어나 서버에 반영 등)
-  alert('회원 탈퇴가 완료되었습니다.');
+  try {
+    // 1단계: 이메일로 유저 검색
+    const res = await fetch(`/api/users?email=${confirmText.value}`);
+    const users = await res.json();
 
-  // 3) 모달 닫기
-  const modalEl = document.getElementById('cancleAccountModal');
-  const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+    if (!users.length) {
+      alert('해당 이메일의 사용자를 찾을 수 없습니다.');
+      return;
+    }
 
-  // 닫히는 순간(‘hidden.bs.modal’)에 라우터 이동
-  modalEl.removeEventListener('hidden.bs.modal', onModalHidden);
-  modalEl.addEventListener('hidden.bs.modal', onModalHidden);
+    const userId = users[0].id;
 
-  modalInstance.hide();
+    // 2단계: 삭제 요청
+    await fetch(`/api/users/${userId}`, {
+      method: 'DELETE',
+    });
+
+    // 3단계: 스토어 정리
+    authStore.clearUser();
+
+    alert('회원 탈퇴가 완료되었습니다.');
+
+    // 4단계: 모달 닫기
+    const modalEl = document.getElementById('cancleAccountModal');
+    const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+    modalEl.removeEventListener('hidden.bs.modal', onModalHidden);
+    modalEl.addEventListener('hidden.bs.modal', onModalHidden);
+
+    modalInstance.hide();
+  } catch (err) {
+    console.error('탈퇴 실패:', err);
+    alert('탈퇴 중 문제가 발생했습니다.');
+  }
 };
 </script>

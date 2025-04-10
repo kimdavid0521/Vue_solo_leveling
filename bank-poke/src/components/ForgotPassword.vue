@@ -1,45 +1,47 @@
+<!-- ✅ 이렇게만 유지하세요 -->
 <template>
-  <div class="container">
-    <form action="/action_page.php">
-      <div class="text-center">
-        <!-- 비밀번호 찾기 타이틀 -->
-        <div class="main-title mb-1">비밀번호를 잊으셨나요?</div>
-        <p class="sub-title text-secondary">
-          비밀번호를 찾으려면 이메일 주소를 입력하세요.
-        </p>
-      </div>
-      <!-- 이메일 입력 -->
-      <div class="mb-3 mt-3">
-        <input
-          class="form-control border-danger"
-          type="email"
-          autofocus
-          placeholder="이메일 주소 입력"
-          v-model="email"
-        />
-      </div>
-      <!-- 인증 코드 보내기 버튼 -->
-      <div class="d-grid">
-        <button
-          type="button"
-          class="btn btn-light btn-block text-secondary"
-          @click="checkEmail"
-        >
-          인증 코드 보내기
-        </button>
-      </div>
-      <!-- 로그인으로 돌아가기 버튼 -->
-      <div class="text-center">
-        <button
-          type="button"
-          class="btn btn-link sub-title text-secondary pt-3"
-          @click.prevent="$emit('back')"
-        >
-          로그인으로 돌아가기
-        </button>
-      </div>
-    </form>
-  </div>
+  <form @submit.prevent>
+    <!-- 비밀번호 찾기 타이틀 -->
+    <div class="text-center mb-3">
+      <div class="main-title mb-1">비밀번호를 잊으셨나요?</div>
+      <p class="sub-title text-secondary">
+        비밀번호를 찾으려면 이메일 주소를 입력하세요.
+      </p>
+    </div>
+
+    <!-- 이메일 입력 필드 -->
+    <div class="mb-3 mt-3">
+      <input
+        class="form-control"
+        type="email"
+        autofocus
+        placeholder="이메일 주소 입력"
+        v-model="email"
+      />
+    </div>
+
+    <!-- 인증 코드 보내기 버튼 -->
+    <div class="d-grid mt">
+      <button
+        type="button"
+        class="btn btn-light btn-block text-secondary"
+        @click="checkEmail"
+      >
+        인증 코드 보내기
+      </button>
+    </div>  
+
+    <!-- 로그인으로 돌아가기 버튼 -->
+    <div class="text-center">
+      <button
+        type="button"
+        class="btn btn-link sub-title text-secondary pt-3"
+        @click.prevent="$emit('back')"
+      >
+        로그인으로 돌아가기
+      </button>
+    </div>
+  </form>
 </template>
 
 <script setup>
@@ -82,41 +84,30 @@ const checkEmail = async () => {
 </script>
 
 <style scoped>
-.container {
-  min-height: 100vh;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f9f9f9;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-}
-
 .main-title {
-  font-size: 1rem;
-  font-weight: lighter;
-  color: #242323;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #2b2b2b;
 }
 
 .sub-title {
-  font-size: 0.8rem;
-  font-weight: lighter;
+  font-size: 0.9rem;
+  font-weight: 300;
   color: #555555;
-}
-
-form {
-  width: 100%;
-  max-width: 400px; /* 폼 너비 제한 */
-  padding: 2rem;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 input.form-control:focus {
   outline: none;
   box-shadow: none;
+}
+
+.btn-light {
+  background-color: #ffd95a;
+  font-weight: bold;
+  color: #2b2b2b;
+}
+
+.btn-light:hover {
+  background-color: #ffc436;
 }
 </style>

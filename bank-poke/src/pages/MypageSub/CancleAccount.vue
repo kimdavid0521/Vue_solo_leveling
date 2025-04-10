@@ -85,3 +85,57 @@ const handleDeleteAccount = async () => {
   modalInstance.show();
 };
 </script>
+<style scoped>
+/* 전체 영역 정렬 */
+
+/* 타이틀 */
+h4 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2b2b2b;
+  margin-bottom: 2rem;
+  border-left: 5px solid #ffd95a;
+  padding-left: 0.75rem;
+}
+
+/* 입력 필드 */
+input.form-control {
+  font-size: 0.95rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 6px;
+}
+
+input.form-control:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.2);
+  outline: none;
+}
+
+/* 탈퇴 버튼 */
+.btn-dark,
+.btn-outline-secondary {
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+}
+
+.btn-dark {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+}
+
+.btn-dark:hover {
+  background-color: #c82333;
+}
+
+.btn-outline-secondary {
+  border-color: #ccc;
+  color: #555;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #eee;
+  color: #333;
+}
+</style>

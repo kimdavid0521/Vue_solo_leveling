@@ -1,17 +1,10 @@
-<!-- 수정사항
-    1. 알림 데이터 추가
-    2. 월 소비금 계산 방식 변경
-
-    알림 기능
-    1. 월 소비금이 예산을 초과했을 때 알림 추가
-    2. 카드 결제 예정일이 3일 남았을 때 알림 추가
-    3. 고정지출이 3일 남았을 때 알림 추가
--->
 <template>
-  <div class="container">
-    <div class="dropdown">
-      <button class="btn position-relative" data-bs-toggle="dropdown">
+  <div class="container mt-4">
+    <div class="alarm-wrapper position-relative" ref="dropdownRef">
+      <!-- 토글 버튼 -->
+      <button class="btn position-relative" @click="toggleDropdown">
         <i class="fa-solid fa-bell fs-4"></i>
+        <!-- 알림 배지 -->
         <span
           class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill"
           v-if="unreadCount > 0"
@@ -19,14 +12,19 @@
           {{ unreadCount }}
         </span>
       </button>
-      <ul class="dropdown-menu">
+
+      <!-- 드롭다운 목록 (Vue 제어) -->
+      <ul class="alarm-dropdown" v-if="isOpen">
+        <!-- 읽지 않은 알림들 -->
         <li
-          v-for="item in unreadAlarms"
+          v-for="(item, index) in unreadAlarms"
           :key="item.index"
           @click="markAsRead(item.index)"
+          class="dropdown-item"
         >
-          <a class="dropdown-item" href="#">{{ item.message }}</a>
+          {{ item.message }}
         </li>
+        <!-- 알림 없을 때 -->
         <li v-if="unreadAlarms.length === 0" class="dropdown-item text-muted">
           읽지 않은 알림이 없습니다
         </li>
@@ -34,9 +32,8 @@
     </div>
   </div>
 </template>
-
 <script setup>
-import { ref, computed, watchEffect } from 'vue';
+import { ref, computed, watchEffect, onMounted, onBeforeUnmount } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 
 // 1. 상태 선언 정리
@@ -69,6 +66,7 @@ const budget = ref(
 const unreadCount = computed(
   () => alarm.value.filter((item) => !item.read).length
 );
+
 // 알림 목록 출력
 const unreadAlarms = computed(() =>
   alarm.value
@@ -193,4 +191,60 @@ watchEffect(() => {
     }
   });
 });
+// 드롭다운 열림 제어
+const isOpen = ref(false);
+function toggleDropdown() {
+  isOpen.value = !isOpen.value;
+}
+const dropdownRef = ref(null);
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside);
+});
+function handleClickOutside(e) {
+  // dropdownRef 내부를 클릭했다면 무시
+  if (dropdownRef.value?.contains(e.target)) return;
+
+  // 바깥을 클릭했으면 드롭다운 닫기
+  isOpen.value = false;
+}
 </script>
+<style scoped>
+.alarm-wrapper {
+  display: inline-block;
+}
+
+.alarm-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  z-index: 999;
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0;
+}
+
+.dropdown-item {
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background-color: #fff7db;
+}
+
+.text-muted {
+  color: #999;
+}
+</style>
