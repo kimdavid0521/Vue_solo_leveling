@@ -178,40 +178,49 @@ const signUp = async () => {
       category: {
         expense: [
           {
+            id: 1,
             main_category: '식비',
             sub_categories: ['외식', '마트', '카페', '배달'],
           },
           {
+            id: 2,
             main_category: '교통비',
             sub_categories: ['버스', '지하철', '택시', '기타'],
           },
           {
+            id: 3,
             main_category: '주거/통신',
             sub_categories: ['월세', '관리비', '인터넷', '휴대폰'],
           },
           {
+            id: 4,
             main_category: '생활',
             sub_categories: ['세탁', '청소', '생필품'],
           },
           {
+            id: 5,
             main_category: '기타',
             sub_categories: ['기타 지출'],
           },
         ],
         income: [
           {
+            id: 1,
             main_category: '급여',
             sub_categories: ['월급', '상여금'],
           },
           {
+            id: 2,
             main_category: '용돈',
             sub_categories: ['부모님', '친척', '기타'],
           },
           {
+            id: 3,
             main_category: '투자수익',
             sub_categories: ['주식', '코인', '이자'],
           },
           {
+            id: 4,
             main_category: '기타',
             sub_categories: ['환급', '기타 수입'],
           },

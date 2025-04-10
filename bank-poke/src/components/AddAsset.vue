@@ -1,11 +1,12 @@
 <template>
   <div>
     <button
-      class="btn btn-outline-primary rounded-circle mb-2 d-flex justify-content-center align-items-center"
-      style="width: 3em; height: 3em"
+      class="btn btn-outline-primary rounded-circle mb-1 d-flex flex-column justify-content-center align-items-center"
+      style="width: 4em; height: 4em"
       @click="showForm = true"
     >
-      +
+      <i class="fa-solid fa-file-circle-plus"></i>
+      <div style="font-size: 90%; padding-top: 5%">추가</div>
     </button>
   </div>
 
@@ -15,13 +16,13 @@
       v-if="showForm"
       class="modal fade show d-block"
       tabindex="-1"
-      style="background-color: transparent"
+      style="background-color: rgba(0, 0, 0, 0.5)"
     >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content p-4">
           <div class="modal-header">
             <h5 class="modal-title">자산 추가</h5>
-            <button type="button" class="btn-close" @click="cancel"></button>
+            <button type="button" class="btn-close" @click="resetForm"></button>
           </div>
 
           <div class="modal-body d-flex flex-column gap-3">
@@ -114,7 +115,7 @@
           </div>
 
           <div class="modal-footer">
-            <button class="btn btn-secondary" @click="cancel">취소</button>
+            <button class="btn btn-secondary" @click="resetForm">취소</button>
             <button class="btn btn-primary" @click="handleAdd">추가</button>
           </div>
         </div>
@@ -219,6 +220,10 @@ const handleAdd = async () => {
   }
 
   // 초기화
+  resetForm();
+};
+
+const resetForm = () => {
   showForm.value = false;
   cardOrAccountName.value = '';
   sales.value = 0;

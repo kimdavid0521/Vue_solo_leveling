@@ -2,11 +2,12 @@
 <template>
   <div>
     <button
-      class="btn btn-outline-danger rounded-circle mb-1 d-flex justify-content-center align-items-center"
-      style="width: 3em; height: 3em"
+      class="btn btn-outline-danger rounded-circle mb-1 d-flex flex-column justify-content-center align-items-center"
+      style="width: 4em; height: 4em"
       @click="showForm = true"
     >
-      -
+      <i class="fa-solid fa-file-circle-minus"></i>
+      <div style="font-size: 90%; padding-top: 5%">삭제</div>
     </button>
   </div>
 
@@ -16,7 +17,7 @@
       v-if="showForm"
       class="modal fade show d-block"
       tabindex="-1"
-      style="background-color: transparent"
+      style="background-color: rgba(0, 0, 0, 0.5)"
     >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content p-3">

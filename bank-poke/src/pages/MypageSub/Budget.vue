@@ -1,6 +1,6 @@
 <template>
-  <div class="budget-container">
-    <h4 class="section-title">월별 예산 설정</h4>
+  <div class="budget-container mt-4">
+    <h4 class="fw-bold mb-4 section-title">월별 예산 설정</h4>
 
     <!-- 월별 예산 입력 필드 -->
     <div class="row row-cols-1 row-cols-md-2 g-3">
@@ -94,12 +94,8 @@ const saveMonthlyBudget = async () => {
 
 <style scoped>
 .budget-container {
-  max-width: 700px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 2rem;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }
 
 .section-title {

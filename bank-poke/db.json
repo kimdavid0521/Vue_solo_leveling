@@ -4,8 +4,8 @@
       "id": "2",
       "username": "dks",
       "nickname": "asdasd",
-      "email": "SDas@naver.com",
-      "password": "wqqsqa",
+      "email": "123@naver.com",
+      "password": "123",
       "asset_group": {
         "card": [
           {
@@ -1106,60 +1106,9 @@
           "isRepeat": false,
           "interval": "daily",
           "id": 66
-        },
-        {
-          "name": "고정 김태영 지출",
-          "date": "2025-04-23",
-          "category": 1,
-          "sub_category": "마트",
-          "assetId": 1,
-          "type": "expense",
-          "amount": 10000,
-          "memo": "김태영 마트 고정 지출",
-          "time": "01:30",
-          "asset_type": "card",
-          "addTotal": true,
-          "isRepeat": false,
-          "interval": "daily",
-          "id": 67
-        },
-        {
-          "name": "고정 김태영 지출",
-          "date": "2025-04-24",
-          "category": 1,
-          "sub_category": "마트",
-          "assetId": 1,
-          "type": "expense",
-          "amount": 10000,
-          "memo": "김태영 마트 고정 지출",
-          "time": "01:30",
-          "asset_type": "card",
-          "addTotal": true,
-          "isRepeat": false,
-          "interval": "daily",
-          "id": 68
         }
       ],
       "fixCost": [
-        {
-          "id": 1,
-          "date": {
-            "startDate": "2025-03-10",
-            "endDate": "2026-04-09"
-          },
-          "name": "넷플릭스",
-          "memo": "넷플릭스 결제",
-          "category": "넷플릭스",
-          "sub_category": "넷플릭스 결제",
-          "amount": 1232,
-          "interval": "month",
-          "type": "expense",
-          "assetId": 1,
-          "asset_type": "card",
-          "time": "20:10",
-          "isRepeat": true,
-          "addTotal": false
-        },
         {
           "name": "김태영 고정지출",
           "date": {
@@ -1176,27 +1125,8 @@
           "asset_type": "card",
           "addTotal": true,
           "isRepeat": true,
-          "interval": "daily",
+          "interval": "monthly",
           "id": 2
-        },
-        {
-          "name": "",
-          "date": {
-            "startDate": "2025-04-09",
-            "endDate": "2025-04-24"
-          },
-          "category": 2,
-          "sub_category": "지하철",
-          "assetId": 1,
-          "type": "expense",
-          "amount": 12000,
-          "memo": "고정지출 메모",
-          "time": "02:22",
-          "asset_type": "card",
-          "addTotal": true,
-          "isRepeat": true,
-          "interval": "daily",
-          "id": 3
         },
         {
           "name": "김티 고정 지출",
@@ -1216,25 +1146,6 @@
           "isRepeat": true,
           "interval": "daily",
           "id": 4
-        },
-        {
-          "name": "고정 김태영 지출",
-          "date": {
-            "startDate": "2025-04-09",
-            "endDate": "2025-04-24"
-          },
-          "category": 1,
-          "sub_category": "마트",
-          "assetId": 1,
-          "type": "expense",
-          "amount": 10000,
-          "memo": "김태영 마트 고정 지출",
-          "time": "01:30",
-          "asset_type": "card",
-          "addTotal": true,
-          "isRepeat": true,
-          "interval": "daily",
-          "id": 5
         }
       ],
       "together_bank": [
@@ -1346,23 +1257,15 @@
       }
     },
     {
-      "id": "cec3",
-      "username": "김테스트",
-      "nickname": "테스트김",
-      "email": "abcd1234@naver.com",
-      "password": "abcd1234",
+      "id": "66a5",
+      "username": "1",
+      "nickname": "1",
+      "email": "1@naver.com",
+      "password": "1",
       "isPremium": false,
       "asset_group": {
         "card": [],
-        "account": [
-          {
-            "id": 1744258929857,
-            "name": "김계좌",
-            "balance": 1200,
-            "type": "은행",
-            "group": "입출금"
-          }
-        ],
+        "account": [],
         "etc": []
       },
       "setting": [
@@ -1374,7 +1277,7 @@
             "Jan": 0,
             "Feb": 0,
             "Mar": 0,
-            "Apr": 0,
+            "Apr": 10000,
             "May": 0,
             "Jun": 0,
             "Jul": 0,
@@ -1763,6 +1666,7 @@
             ]
           },
           {
+            "id": 3,
             "main_category": "주거/통신",
             "sub_categories": [
               "월세",
@@ -1772,7 +1676,7 @@
             ]
           },
           {
-            "id": 3,
+            "id": 4,
             "main_category": "생활",
             "sub_categories": [
               "세탁",
@@ -1781,7 +1685,7 @@
             ]
           },
           {
-            "id": 4,
+            "id": 5,
             "main_category": "기타",
             "sub_categories": [
               "기타 지출"
@@ -1821,14 +1725,6 @@
             "sub_categories": [
               "환급",
               "기타 수입"
-            ]
-          },
-          {
-            "id": 5,
-            "main_category": "김대분류",
-            "sub_categories": [
-              "안녕",
-              "안녕2"
             ]
           }
         ]

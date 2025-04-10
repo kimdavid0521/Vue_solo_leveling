@@ -27,7 +27,7 @@
       @click="toggleDropdown"
     >
       <button class="btn btn-secondary dropdown-toggle">
-        {{ selectedCategory || "+" }}
+        {{ selectedCategory || '+' }}
       </button>
       <ul class="dropdown-menu" :class="{ show: dropdownOpen }">
         <li>
@@ -54,6 +54,7 @@
 </template>
 
 <script setup>
+
 import { ref, computed, isRef, nextTick } from "vue";
 import axios from "axios";
 import Calender from "@/components/Calender.vue";
@@ -61,16 +62,18 @@ import AddExpenseModal from "@/components/AddExpenseModal.vue";
 import TableLayout from "@/components/TableLayout.vue";
 import { useAuthStore } from "@/stores/auth";
 
+
 // 유저 정보 받아오기
 const authStore = useAuthStore();
 const expenses = ref([]);
 const showModal = ref(false);
 const dropdownOpen = ref(false);
-const selectedCategory = ref("");
+const selectedCategory = ref('');
 
 const currentTab = ref("전체");
 const calendarRef = ref(null);
 const showToast = ref(false);
+
 // 페이지 이동 함수
 const updateTab = (current) => {
   currentTab.value = current;
@@ -88,17 +91,17 @@ const updateSummary = ({ summary: newSummary, countSummary: newCount }) => {
 // 탭 데이터
 const tabs = computed(() => [
   {
-    name: "전체",
+    name: '전체',
     count: summaryCount.value.totalCount,
     amount: summary.value.total,
   },
   {
-    name: "수입",
+    name: '수입',
     count: summaryCount.value.incomeCount,
     amount: summary.value.income,
   },
   {
-    name: "지출",
+    name: '지출',
     count: summaryCount.value.expenseCount,
     amount: summary.value.expense,
   },
@@ -113,7 +116,7 @@ const saveExpense = async (newExpense) => {
   try {
     const userId = authStore.user?.id;
     if (!userId) {
-      console.log("유저 정보가 없습니다");
+      console.log('유저 정보가 없습니다');
     }
     // 유저 정보 가져오기
     const res = await axios.get(`http://localhost:3000/users/${userId}`);
@@ -146,7 +149,7 @@ const saveExpense = async (newExpense) => {
         userData.transactions.push({
           ...newExpense,
           id: userData.transactions.length + 1,
-          date: recurDate.toISOString().split("T")[0],
+          date: recurDate.toISOString().split('T')[0],
           isRepeat: false,
         });
       }
@@ -157,8 +160,10 @@ const saveExpense = async (newExpense) => {
         transactions: userData.transactions,
       });
 
+
       console.log("고정 지출 저장 완료");
       window.location.reload();
+
     } else {
       // 거래 배열 없으면 초기화
       if (!Array.isArray(userData.transactions)) {
@@ -177,11 +182,13 @@ const saveExpense = async (newExpense) => {
         transactions: userData.transactions,
       });
 
+
       console.log("거래 내역 저장 완료");
       window.location.reload();
+
     }
   } catch (error) {
-    console.error("저장 실패", error);
+    console.error('저장 실패', error);
   }
 };
 
@@ -199,20 +206,20 @@ function generateRepeatDates(startDate, endDate, interval) {
     dates.push(new Date(current));
 
     switch (interval) {
-      case "daily":
+      case 'daily':
         current.setDate(current.getDate() + 1);
         break;
-      case "weekly":
+      case 'weekly':
         current.setDate(current.getDate() + 7);
         break;
-      case "monthly":
+      case 'monthly':
         current.setMonth(current.getMonth() + 1);
         break;
-      case "yearly":
+      case 'yearly':
         current.setFullYear(current.getFullYear() + 1);
         break;
       default:
-        throw new Error("지원하지 않는 인터벌 기간입니다.");
+        throw new Error('지원하지 않는 인터벌 기간입니다.');
     }
   }
   return dates;
