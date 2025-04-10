@@ -3,11 +3,12 @@
   <div>
     <!-- 수정 버튼 -->
     <button
-      class="btn btn-outline-success rounded-circle mb-1 d-flex justify-content-center align-items-center"
-      style="width: 3em; height: 3em"
+      class="btn btn-outline-success rounded-circle mb-1 d-flex flex-column justify-content-center align-items-center"
+      style="width: 4em; height: 4em"
       @click="showForm = true"
     >
-      c
+      <i class="fa-solid fa-pen-to-square"></i>
+      <div style="font-size: 90%; padding-top: 5%">수정</div>
     </button>
 
     <!-- 자산 선택 모달 -->
