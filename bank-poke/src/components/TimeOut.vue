@@ -11,7 +11,7 @@ import { useRouter } from 'vue-router';
 const props = defineProps({
   initialTime: {
     type: Number,
-    default: 60 * 60, // 60분 (초 단위)
+    default: 1 * 5, // 60분 (초 단위)
   },
 });
 

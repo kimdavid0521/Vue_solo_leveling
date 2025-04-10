@@ -39,6 +39,7 @@
             <div>
               <label class="form-label">이름</label>
               <input
+                id="asset-name"
                 v-model="cardOrAccountName"
                 class="form-control"
                 required
@@ -58,6 +59,7 @@
             <div v-if="assetType === 'card'">
               <label class="form-label">실적</label>
               <input
+                id="sales"
                 type="number"
                 v-model.number="sales"
                 class="form-control"
@@ -68,7 +70,12 @@
             <!-- 연동 계좌 -->
             <div v-if="assetType === 'card'">
               <label class="form-label">연동 계좌</label>
-              <select v-model="linkedAccountId" class="form-select" required>
+              <select
+                id="linked-account"
+                v-model="linkedAccountId"
+                class="form-select"
+                required
+              >
                 <option disabled value="">계좌를 선택하세요</option>
                 <option
                   v-for="account in currentUser?.asset_group?.account || []"
@@ -84,6 +91,7 @@
             <div v-if="assetType === 'card' && isCheck === false">
               <label class="form-label">결제일 (일 단위)</label>
               <input
+                id="due-day"
                 type="number"
                 min="1"
                 max="31"
@@ -118,9 +126,13 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useAssetStore } from '@/stores/assetStore.js';
+import { useAuthStore } from '@/stores/auth';
+import { nextTick } from 'vue';
 
 const store = useAssetStore();
-const userId = 1;
+
+const auth = useAuthStore();
+const userId = computed(() => auth.user?.id);
 
 const showForm = ref(false);
 const cardOrAccountName = ref('');
@@ -130,14 +142,48 @@ const isCheck = ref(true);
 const dueDay = ref(1);
 const linkedAccountId = ref('');
 
-const currentUser = computed(() => store.users.find((u) => u.id == userId));
+const currentUser = computed(() =>
+  store.users.find((u) => u.id == userId.value)
+);
 
 const handleAdd = async () => {
-  const newId = Date.now();
+  // 기본 유효성 검사
+  if (!assetType.value) {
+    alert('자산 유형을 선택해주세요.');
+    return;
+  }
+
+  if (!cardOrAccountName.value.trim()) {
+    alert('이름은 필수 항목입니다.');
+    await nextTick();
+    document.querySelector('#asset-name')?.focus();
+    return;
+  }
 
   if (assetType.value === 'card') {
+    if (!linkedAccountId.value) {
+      alert('카드는 연동 계좌 선택이 필요합니다.');
+      await nextTick();
+      document.querySelector('#linked-account')?.focus();
+      return;
+    }
+
+    if (sales.value < 0) {
+      alert('실적은 0 이상이어야 합니다.');
+      await nextTick();
+      document.querySelector('#sales')?.focus();
+      return;
+    }
+
+    if (!isCheck.value && (dueDay.value < 1 || dueDay.value > 31)) {
+      alert('신용카드의 결제일은 1~31 사이여야 합니다.');
+      await nextTick();
+      document.querySelector('#due-day')?.focus();
+      return;
+    }
+
     const newCard = {
-      id: newId,
+      id: Date.now(),
       name: cardOrAccountName.value,
       sales_achievements: sales.value,
       isCheck: isCheck.value,
@@ -150,19 +196,26 @@ const handleAdd = async () => {
       newCard.dueDate = now.toISOString().slice(0, 10);
     }
 
-    await store.addCard(userId, newCard);
-  } else if (assetType.value === 'account') {
-    await store.addAccount(userId, {
-      id: newId,
+    await store.addCard(userId.value, newCard);
+  } else if (assetType.value === 'account' || assetType.value === 'etc') {
+    if (sales.value < 0) {
+      alert('초기 자본은 0 이상이어야 합니다.');
+      await nextTick();
+      document.querySelector('#sales')?.focus();
+      return;
+    }
+
+    const assetData = {
+      id: Date.now(),
       name: cardOrAccountName.value,
       balance: sales.value,
-    });
-  } else if (assetType.value === 'etc') {
-    await store.addEtc(userId, {
-      id: newId,
-      name: cardOrAccountName.value,
-      balance: sales.value,
-    });
+    };
+
+    if (assetType.value === 'account') {
+      await store.addAccount(userId.value, assetData);
+    } else {
+      await store.addEtc(userId.value, assetData);
+    }
   }
 
   // 초기화
@@ -173,9 +226,5 @@ const handleAdd = async () => {
   dueDay.value = 1;
   assetType.value = '';
   linkedAccountId.value = '';
-};
-
-const cancel = () => {
-  showForm.value = false;
 };
 </script>

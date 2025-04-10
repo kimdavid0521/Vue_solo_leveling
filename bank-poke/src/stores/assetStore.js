@@ -2,14 +2,10 @@ import { defineStore } from 'pinia';
 import { reactive, ref, computed } from 'vue';
 import axios from 'axios';
 
-export const useAssetStore = defineStore('mockUser', () => {
-  // 서버 주소
-  const BASEURI = 'http://localhost:3000';
-
+export const useAssetStore = defineStore('assetUser', () => {
   // 상태 정의
   const states = reactive({
     users: [],
-    bank: [],
     isLoading: false,
   });
 
@@ -17,7 +13,6 @@ export const useAssetStore = defineStore('mockUser', () => {
 
   // Getters
   const users = computed(() => states.users);
-  const bank = computed(() => states.bank);
   const isLoading = computed(() => states.isLoading);
 
   // 선택된 사용자 가져오기
@@ -29,7 +24,7 @@ export const useAssetStore = defineStore('mockUser', () => {
   const fetchUsers = async () => {
     states.isLoading = true;
     try {
-      const { data } = await axios.get(`${BASEURI}/users`);
+      const { data } = await axios.get(`/api/users`);
       states.users = data;
     } catch (error) {
       alert('사용자 불러오기 실패: ' + error.message);
@@ -53,7 +48,7 @@ export const useAssetStore = defineStore('mockUser', () => {
     states.isLoading = true;
     try {
       const user = states.users.find((u) => u.id == userId);
-      if (!user) throw new Error('사용자를 찾을 수 없습니다');
+      if (!user) throw new Error('커드 사용자를 찾을 수 없습니다');
 
       const assetGroup = user.asset_group || {};
       const currentCards = assetGroup.card || [];
@@ -71,10 +66,7 @@ export const useAssetStore = defineStore('mockUser', () => {
         },
       };
 
-      const response = await axios.put(
-        `${BASEURI}/users/${userId}`,
-        updatedUser
-      );
+      const response = await axios.put(`/api/users/${userId}`, updatedUser);
       if (response.status === 200) {
         await fetchUsers();
         if (successCallback) successCallback();
@@ -93,7 +85,7 @@ export const useAssetStore = defineStore('mockUser', () => {
     states.isLoading = true;
     try {
       const user = states.users.find((u) => u.id == userId);
-      if (!user) throw new Error('사용자를 찾을 수 없습니다');
+      if (!user) throw new Error('계좌 사용자를를 찾을 수 없습니다');
 
       const assetGroup = user.asset_group || {};
       const currentAccounts = assetGroup.account || [];
@@ -112,10 +104,7 @@ export const useAssetStore = defineStore('mockUser', () => {
         },
       };
 
-      const response = await axios.put(
-        `${BASEURI}/users/${userId}`,
-        updatedUser
-      );
+      const response = await axios.put(`/api/users/${userId}`, updatedUser);
       if (response.status === 200) {
         await fetchUsers();
         if (successCallback) successCallback();
@@ -134,7 +123,7 @@ export const useAssetStore = defineStore('mockUser', () => {
     states.isLoading = true;
     try {
       const user = states.users.find((u) => u.id == userId);
-      if (!user) throw new Error('사용자를 찾을 수 없습니다');
+      if (!user) throw new Error('기타 사용자를 찾을 수 없습니다');
 
       const assetGroup = user.asset_group || {};
       const currentEtc = assetGroup.etc || [];
@@ -147,10 +136,7 @@ export const useAssetStore = defineStore('mockUser', () => {
         },
       };
 
-      const response = await axios.put(
-        `${BASEURI}/users/${userId}`,
-        updatedUser
-      );
+      const response = await axios.put(`/api/users/${userId}`, updatedUser);
       if (response.status === 200) {
         await fetchUsers();
         if (successCallback) successCallback();
@@ -201,10 +187,7 @@ export const useAssetStore = defineStore('mockUser', () => {
         transactions: updatedTransactions,
       };
 
-      const response = await axios.put(
-        `${BASEURI}/users/${userId}`,
-        updatedUser
-      );
+      const response = await axios.put(`/api/users/${userId}`, updatedUser);
       if (response.status === 200) {
         await fetchUsers();
         if (successCallback) successCallback();
@@ -218,10 +201,46 @@ export const useAssetStore = defineStore('mockUser', () => {
     }
   };
 
+  // 자산 수정
+  const updateAsset = async (userId, assetData, successCallback) => {
+    states.isLoading = true;
+    try {
+      const user = states.users.find((u) => u.id == userId);
+      if (!user) throw new Error('사용자를 찾을 수 없습니다');
+
+      const assetGroup = user.asset_group || {};
+      const assetType = assetData.type;
+      const assets = assetGroup[assetType] || [];
+
+      const updatedAssets = assets.map((asset) =>
+        asset.id === assetData.id ? { ...asset, ...assetData } : asset
+      );
+
+      const updatedUser = {
+        ...user,
+        asset_group: {
+          ...assetGroup,
+          [assetType]: updatedAssets,
+        },
+      };
+
+      const response = await axios.put(`/api/users/${userId}`, updatedUser);
+      if (response.status === 200) {
+        await fetchUsers();
+        if (successCallback) successCallback();
+      } else {
+        alert('자산 수정 실패');
+      }
+    } catch (error) {
+      alert('에러: ' + error.message);
+    } finally {
+      states.isLoading = false;
+    }
+  };
+
   return {
     // 상태
     users,
-    bank,
     isLoading,
 
     // 선택된 사용자
@@ -234,5 +253,6 @@ export const useAssetStore = defineStore('mockUser', () => {
     addAccount,
     addEtc,
     deleteAsset,
+    updateAsset,
   };
 });

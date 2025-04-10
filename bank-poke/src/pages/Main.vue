@@ -1,8 +1,12 @@
 <template>
   <div>
+
+
     <!-- 테이블 상단 네비게이션 바 -->
     <TableLayout :tabs="tabs" @update-tab="updateTab" />
     <Calender :currentPage="currentTab" @update-summary="updateSummary" />
+
+
 
     <div
       class="dropup"
@@ -10,7 +14,7 @@
       @click="toggleDropdown"
     >
       <button class="btn btn-secondary dropdown-toggle">
-        {{ selectedCategory || "+" }}
+        {{ selectedCategory || '+' }}
       </button>
       <ul class="dropdown-menu" :class="{ show: dropdownOpen }">
         <li>
@@ -33,16 +37,18 @@
 </template>
 
 <script setup>
+
 import { ref, computed, isRef } from "vue";
 import axios from "axios";
 import Calender from "@/components/Calender.vue";
 import AddExpenseModal from "@/components/AddExpenseModal.vue";
 import TableLayout from "@/components/TableLayout.vue";
 
+
 const expenses = ref([]);
 const showModal = ref(false);
 const dropdownOpen = ref(false);
-const selectedCategory = ref("");
+const selectedCategory = ref('');
 const userId = 2;
 const currentTab = ref("전체");
 // const summary = ref({ income: 0, expenses: 0, total: 0 });
@@ -163,7 +169,7 @@ const saveExpense = async (newExpense) => {
       showModal.value = false;
     }
   } catch (error) {
-    console.error("저장 실패", error);
+    console.error('저장 실패', error);
   }
 };
 

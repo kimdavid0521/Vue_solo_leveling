@@ -147,15 +147,22 @@
 <script setup>
 import { onMounted, computed } from 'vue';
 import { useAssetStore } from '@/stores/assetStore.js';
+import { useAuthStore } from '@/stores/auth';
 
 const store = useAssetStore();
-const userId = 1;
 
-// 컴포넌트 마운트 시 사용자 데이터 불러오기
-onMounted(() => store.fetchUsers());
+const auth = useAuthStore();
+const userId = computed(() => auth.user?.id);
+
+// 사용자 데이터 불러오기
+onMounted(() => {
+  store.fetchUsers();
+});
 
 // 현재 사용자 정보
-const user = computed(() => store.users.find((u) => u.id == userId) || null);
+const user = computed(
+  () => store.users.find((u) => u.id == userId.value) || null
+);
 
 // 거래 금액 계산 (수입: +, 지출: -)
 const calcAmount = (tx) => {
@@ -186,7 +193,7 @@ const getCardTransactionSumByAccountId = (accountId, isCheck) => {
   });
 };
 
-// 현금 잔액 계산 (기본 잔액 + 거래 내역)
+// 현금 잔액 계산 -> 거래 내역
 const cashValue = computed(() => {
   const base = user.value?.asset_group?.cash?.balance || 0;
   const sum = getTransactionSum({ filterFn: (tx) => tx.asset_type === 'cash' });
@@ -284,7 +291,7 @@ const uncategorizedTransactions = computed(() =>
   (user.value?.transactions || []).filter((tx) => !tx.asset_type)
 );
 
-// 총 자산 (0 이상인 자산만 포함)
+// 총 자산 (양수 자산만 포함)
 const totalAsset = computed(() =>
   [
     cashValue.value,

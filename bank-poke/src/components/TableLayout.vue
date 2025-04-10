@@ -4,6 +4,7 @@
       <!-- 각 탭 추가 -->
       <li
         class="nav-item"
+        :class="currentTab !== tab.name ? 'bgColorSky shadow-sm' : ''"
         v-for="tab in tabs"
         :key="tab.label"
         @click="updateTab(tab.name)"
@@ -35,9 +36,9 @@
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
-const currentTab = ref("전체");
-const emit = defineEmits(["update-tab"]);
+import { ref } from 'vue';
+const currentTab = ref('전체');
+const emit = defineEmits(['update-tab']);
 
 defineProps({
   tabs: Array,
@@ -46,7 +47,7 @@ defineProps({
 // 현재 클릭된 탭 이름 부모로 전달
 const updateTab = (current) => {
   currentTab.value = current;
-  emit("update-tab", current);
+  emit('update-tab', current);
 };
 </script>
 <style scoped>
@@ -58,5 +59,11 @@ const updateTab = (current) => {
 }
 .textRed {
   color: #ff4e50;
+}
+.bgColorSky {
+  background-color: #edf2fa;
+}
+.bgColorSky > a:hover {
+  background-color: #d9e7fd;
 }
 </style>

@@ -58,7 +58,9 @@
         {
           "id": 2,
           "name": "sdasd",
+
           "date": "2025-04-09",
+
           "time": "13:30",
           "category": "dsd",
           "sub_category": "dsd",
@@ -84,6 +86,7 @@
           "addTotal": true,
           "asset_type": "bank",
           "isRepeat": false
+
         },
         {
           "name": "태영이 밥먹고싶음",
@@ -112,6 +115,7 @@
           "time": "20:10",
           "asset_type": "card",
           "addTotal": true,
+
           "id": 4,
           "isRepeat": false
         },
@@ -1138,9 +1142,10 @@
           "isRepeat": false,
           "interval": "daily",
           "id": 68
+
         }
       ],
-      "fixCost": [
+     "fixCost": [
         {
           "id": 1,
           "date": {
