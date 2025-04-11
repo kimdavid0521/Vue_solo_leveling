@@ -273,6 +273,7 @@ const selectedCategoryType = ref("");
 const selectedSubCategory = ref("");
 const memo = ref("");
 const inInclude = ref(true);
+const originalName = ref(""); // 판별용 원본 이름
 
 // API로부터 받아올 데이터
 const assetGroup = ref({});
@@ -321,8 +322,10 @@ onMounted(() => {
 });
 
 const openEditModal = (event) => {
+  originalName.value = event.name;
   editEvent.value = { ...event };
   editEvent.value.start = new Date(event.start).toISOString().slice(0, 16);
+
   editModalInstance.show();
 };
 
@@ -339,21 +342,35 @@ const submitEdit = async () => {
       `http://localhost:3000/users/${userId}`
     );
     const user = userResponse.data;
+
     const isRepeat = editEvent.value.isRepeat;
-    const targetName = editEvent.value.name;
+    const original = originalName.value;
 
     const updateTransactions = user.transactions.map((t) => {
-      // 반복 여부 확인해서 이름 필터링으로 모든 트랜잭션 수정 반영
       const updateType = isRepeat
-        ? t.name === targetName
+        ? t.name === original
         : t.id === editEvent.value.id;
+
       if (updateType) {
+        const newEventDate = new Date(editEvent.value.start);
+        let updatedDate;
+
+        if (isRepeat) {
+          // 원래 날짜 유지하면서 시간만 수정
+          updatedDate = new Date(`${t.date}T${t.time}`);
+          updatedDate.setHours(newEventDate.getHours());
+          updatedDate.setMinutes(newEventDate.getMinutes());
+        } else {
+          // 날짜와 시간 모두 수정
+          updatedDate = newEventDate;
+        }
+
         return {
           ...t,
           name: editEvent.value.name,
           amount: editEvent.value.amount,
-          date: new Date(editEvent.value.start).toISOString().slice(0, 10),
-          time: new Date(editEvent.value.start).toTimeString().slice(0, 5),
+          date: updatedDate.toISOString().slice(0, 10),
+          time: updatedDate.toTimeString().slice(0, 5),
           assetType: selectedAssetType.value,
           assetId: selectedAssetId.value,
           payType: selectedPayType.value,
@@ -363,6 +380,7 @@ const submitEdit = async () => {
           include: inInclude.value,
         };
       }
+
       return t;
     });
 
@@ -370,7 +388,11 @@ const submitEdit = async () => {
       transactions: updateTransactions,
     });
 
-    editModalInstance.hide();
+    // store에 반영 후 새로고침 없이 갱신 가능
+    // await userAuth.fetchUser();
+    // editModalInstance.hide();
+    // toast.success("수정 완료!");
+
     window.location.reload();
   } catch (err) {
     console.error("수정 실패", err);
