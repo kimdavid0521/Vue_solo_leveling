@@ -77,8 +77,11 @@ const registerFree = async () => {
       return;
     }
 
+    const userRes = await fetch(`/api/users/${userId}`);
+    const freshUser = await userRes.json();
+
     // 유저 상태 업데이트 (프론트엔드)
-    authStore.setUser({ ...authStore.user, isPremium: false });
+    authStore.setUser({ ...freshUser, isPremium: false });
 
     // 백엔드(DB)에도 업데이트 요청 보내기 (json-server 등 사용 시)
     await fetch(`/api/users/${userId}`, {
