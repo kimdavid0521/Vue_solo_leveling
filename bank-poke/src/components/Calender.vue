@@ -42,11 +42,11 @@
           <h1 class="offcanvas-title">
             {{ selectedDate }}일의
             {{
-              pageProps.currentPage === '수입'
-                ? '수입'
-                : pageProps.currentPage === '지출'
-                ? '지출'
-                : '내역'
+              pageProps.currentPage === "수입"
+                ? "수입"
+                : pageProps.currentPage === "지출"
+                ? "지출"
+                : "내역"
             }}
           </h1>
           <button
@@ -59,11 +59,11 @@
           <div v-if="filteredSelectedDateEvents.length === 0">
             <p>
               {{
-                pageProps.currentPage === '수입'
-                  ? '수입 내역이 없습니다.'
-                  : pageProps.currentPage === '지출'
-                  ? '지출 내역이 없습니다.'
-                  : '내역이 없습니다.'
+                pageProps.currentPage === "수입"
+                  ? "수입 내역이 없습니다."
+                  : pageProps.currentPage === "지출"
+                  ? "지출 내역이 없습니다."
+                  : "내역이 없습니다."
               }}
             </p>
           </div>
@@ -81,8 +81,8 @@
               <div>
                 {{
                   new Date(event.start).toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit',
+                    hour: "2-digit",
+                    minute: "2-digit",
                   })
                 }}
                 - {{ event.name }} : {{ event.amount.toLocaleString() }}원
@@ -96,7 +96,7 @@
                 </button>
                 <button
                   class="btn btn-danger btn-sm"
-                  @click="deleteEvent(event.id)"
+                  @click="deleteEvent(event)"
                 >
                   삭제
                 </button>
@@ -247,23 +247,23 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watchEffect, watch } from 'vue';
-import FullCalendar from '@fullcalendar/vue3';
-import dayGridPlugin from '@fullcalendar/daygrid'; // 날짜
-import timeGridPlugin from '@fullcalendar/timegrid'; // 시간 그리드 플러그인
-import interactionPlugin from '@fullcalendar/interaction';
-import { Offcanvas } from 'bootstrap';
-import axios from 'axios';
-import { useAuthStore } from '@/stores/auth';
-import { Modal } from 'bootstrap';
+import { ref, computed, onMounted, watchEffect, watch } from "vue";
+import FullCalendar from "@fullcalendar/vue3";
+import dayGridPlugin from "@fullcalendar/daygrid"; // 날짜
+import timeGridPlugin from "@fullcalendar/timegrid"; // 시간 그리드 플러그인
+import interactionPlugin from "@fullcalendar/interaction";
+import { Offcanvas } from "bootstrap";
+import axios from "axios";
+import { useAuthStore } from "@/stores/auth";
+import { Modal } from "bootstrap";
 
 const userAuth = useAuthStore();
 const calendarRef = ref();
 const editEvent = ref({
   id: null,
-  name: '',
+  name: "",
   amount: 0,
-  start: '',
+  start: "",
 });
 
 const selectedAssetType = ref("");
@@ -273,6 +273,7 @@ const selectedCategoryType = ref("");
 const selectedSubCategory = ref("");
 const memo = ref("");
 const inInclude = ref(true);
+const originalName = ref(""); // 판별용 원본 이름
 
 // API로부터 받아올 데이터
 const assetGroup = ref({});
@@ -321,8 +322,10 @@ onMounted(() => {
 });
 
 const openEditModal = (event) => {
+  originalName.value = event.name;
   editEvent.value = { ...event };
   editEvent.value.start = new Date(event.start).toISOString().slice(0, 16);
+
   editModalInstance.show();
 };
 
@@ -340,14 +343,34 @@ const submitEdit = async () => {
     );
     const user = userResponse.data;
 
+    const isRepeat = editEvent.value.isRepeat;
+    const original = originalName.value;
+
     const updateTransactions = user.transactions.map((t) => {
-      if (t.id == editEvent.value.id) {
+      const updateType = isRepeat
+        ? t.name === original
+        : t.id === editEvent.value.id;
+
+      if (updateType) {
+        const newEventDate = new Date(editEvent.value.start);
+        let updatedDate;
+
+        if (isRepeat) {
+          // 원래 날짜 유지하면서 시간만 수정
+          updatedDate = new Date(`${t.date}T${t.time}`);
+          updatedDate.setHours(newEventDate.getHours());
+          updatedDate.setMinutes(newEventDate.getMinutes());
+        } else {
+          // 날짜와 시간 모두 수정
+          updatedDate = newEventDate;
+        }
+
         return {
           ...t,
           name: editEvent.value.name,
           amount: editEvent.value.amount,
-          date: new Date(editEvent.value.start).toISOString().slice(0, 10),
-          time: new Date(editEvent.value.start).toTimeString().slice(0, 5),
+          date: updatedDate.toISOString().slice(0, 10),
+          time: updatedDate.toTimeString().slice(0, 5),
           assetType: selectedAssetType.value,
           assetId: selectedAssetId.value,
           payType: selectedPayType.value,
@@ -357,6 +380,7 @@ const submitEdit = async () => {
           include: inInclude.value,
         };
       }
+
       return t;
     });
 
@@ -364,15 +388,19 @@ const submitEdit = async () => {
       transactions: updateTransactions,
     });
 
-    editModalInstance.hide();
+    // store에 반영 후 새로고침 없이 갱신 가능
+    // await userAuth.fetchUser();
+    // editModalInstance.hide();
+    // toast.success("수정 완료!");
+
     window.location.reload();
   } catch (err) {
-    console.error('수정 실패', err);
+    console.error("수정 실패", err);
   }
 };
 
 // 내역 삭제 함수
-const deleteEvent = async (transactionId) => {
+const deleteEvent = async (transaction) => {
   const userId = userAuth.user?.id;
   if (!userId) {
     console.log("유저 정보가 없습니다");
@@ -386,10 +414,28 @@ const deleteEvent = async (transactionId) => {
     );
     const user = userResponse.data;
 
-    // 트랜잭션에서 해당 항목 제거하기
-    const updateTransactions = user.transactions.filter(
-      (t) => t.id !== transactionId
-    );
+    const isRepeat = transaction.isRepeat;
+    const targetName = transaction.name;
+    const today = new Date().toISOString().slice(0, 10);
+
+    let updateTransactions;
+    if (isRepeat) {
+      updateTransactions = user.transactions.filter((t) => {
+        // 현재 날짜 이후로 생성되어있는 같은 이름의 고정지출 항목 제거
+        const isSameName = t.name === targetName;
+        const isFuture = t.date >= today;
+        return !(isSameName && isFuture);
+      });
+    } else {
+      updateTransactions = user.transactions.filter(
+        (t) => t.id !== transaction.id
+      );
+    }
+
+    // 트랜잭션에서 해당 항목 제거하기(구 버전 고정지출 여부 미반영)
+    // const updateTransactions = user.transactions.filter(
+    //   (t) => t.id !== transactionId
+    // );
 
     // 변경된 transaction으로 patch 요청
     await axios.patch(`http://localhost:3000/users/${userId}`, {
@@ -398,7 +444,7 @@ const deleteEvent = async (transactionId) => {
 
     window.location.reload();
   } catch (err) {
-    console.error('삭제 실패', err);
+    console.error("삭제 실패", err);
   }
 };
 // 유저 id(정보) 가져오기
@@ -411,15 +457,15 @@ const pageProps = defineProps({
 
 const currentDate = ref(new Date());
 // 사용자가 클릭한 날짜
-const selectedDate = ref('');
+const selectedDate = ref("");
 
 const currentMonth = computed(() => {
   const year = currentDate.value.getFullYear();
-  const month = String(currentDate.value.getMonth() + 1).padStart(2, '0');
+  const month = String(currentDate.value.getMonth() + 1).padStart(2, "0");
   return `${year}-${month}`;
 });
 const handleDatesSet = (info) => {
-  console.log('handledataset', info);
+  console.log("handledataset", info);
   // 이 값이 바뀌면 month값도 변하게끔 만듬
   const viewDate = info.view.currentStart;
   currentDate.value = new Date(viewDate);
@@ -466,7 +512,7 @@ onMounted(async () => {
   try {
     const userId = authStore.user?.id;
     if (!userId) {
-      console.log('유저 정보가 없습니다');
+      console.log("유저 정보가 없습니다");
       return;
     }
     const response = await axios.get(`http://localhost:3000/users/${userId}`);
@@ -490,7 +536,7 @@ onMounted(async () => {
         .sort((a, b) => new Date(a.start) - new Date(b.start));
     }
   } catch (error) {
-    console.error('API 연결 에러:', error);
+    console.error("API 연결 에러:", error);
   }
 });
 
@@ -539,7 +585,7 @@ const handleDateClick = (info) => {
     .filter((e) => e.start.startsWith(info.dateStr))
     .sort((a, b) => new Date(a.start) - new Date(b.start));
 
-  const offcanvasElement = document.getElementById('demo');
+  const offcanvasElement = document.getElementById("demo");
 
   // 기존 인스턴스를 닫고 새로 생성
   if (offcanvasInstance) {
@@ -552,11 +598,11 @@ const handleDateClick = (info) => {
 
 const calendarOptions = {
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
-  initialView: 'dayGridMonth',
+  initialView: "dayGridMonth",
   headerToolbar: {
-    left: 'prev,next',
-    center: 'title',
-    right: 'today',
+    left: "prev,next",
+    center: "title",
+    right: "today",
     // 월별, 주별, 일별로 보기 버튼
   },
   // views: {
@@ -583,51 +629,49 @@ const calendarOptions = {
 
   dayMaxEvents: false,
   dayMaxEventRows: false,
-
   height: "auto",
   width: "auto",
-
   datesSet: handleDatesSet,
 
   eventContent(arg) {
     if (arg.event.extendedProps.isSummary) {
       const { total, incomeTotal, expenseTotal } = arg.event.extendedProps;
 
-      const container = document.createElement('div');
-      container.style.fontWeight = 'bold';
-      container.style.backgroundColor = 'white';
+      const container = document.createElement("div");
+      container.style.fontWeight = "bold";
+      container.style.backgroundColor = "white";
 
       const currentPage = pageProps.currentPage;
 
-      if (currentPage === '전체') {
-        const totalText = document.createElement('div');
-        totalText.style.color = 'black';
-        totalText.textContent = `${total >= 0 ? '+' : '-'}${Math.abs(
+      if (currentPage === "전체") {
+        const totalText = document.createElement("div");
+        totalText.style.color = "black";
+        totalText.textContent = `${total >= 0 ? "+" : "-"}${Math.abs(
           total
         ).toLocaleString()}`;
 
-        const incomeText = document.createElement('div');
-        incomeText.style.color = 'blue';
+        const incomeText = document.createElement("div");
+        incomeText.style.color = "blue";
         incomeText.textContent = `+${incomeTotal.toLocaleString()}`;
 
-        const expenseText = document.createElement('div');
-        expenseText.style.color = 'red';
+        const expenseText = document.createElement("div");
+        expenseText.style.color = "red";
         expenseText.textContent = `-${expenseTotal.toLocaleString()}`;
 
         container.appendChild(totalText);
         container.appendChild(incomeText);
         container.appendChild(expenseText);
-      } else if (currentPage === '수입') {
+      } else if (currentPage === "수입") {
         if (incomeTotal > 0) {
-          const incomeText = document.createElement('div');
-          incomeText.style.color = 'blue';
+          const incomeText = document.createElement("div");
+          incomeText.style.color = "blue";
           incomeText.textContent = `+${incomeTotal.toLocaleString()}`;
           container.appendChild(incomeText);
         }
-      } else if (currentPage === '지출') {
+      } else if (currentPage === "지출") {
         if (expenseTotal > 0) {
-          const expenseText = document.createElement('div');
-          expenseText.style.color = 'red';
+          const expenseText = document.createElement("div");
+          expenseText.style.color = "red";
           expenseText.textContent = `-${expenseTotal.toLocaleString()}`;
           container.appendChild(expenseText);
         }
@@ -639,11 +683,11 @@ const calendarOptions = {
 };
 
 // 총합을 상위 컴포넌트로 전달
-const emit = defineEmits(['update-summary']);
+const emit = defineEmits(["update-summary"]);
 
 // 처음 마운트 되었을때나 값이 변경될때 emit
 watchEffect(() => {
-  emit('update-summary', {
+  emit("update-summary", {
     summary: handleMonthSummary.value,
     countSummary: handleMonthCountSummary.value,
   });
@@ -655,10 +699,10 @@ const filteredSelectedDateEvents = computed(() => {
 
   let filtered = selectedDateEvents.value;
 
-  if (pageProps.currentPage === '수입') {
-    filtered = filtered.filter((e) => e.type === 'income');
-  } else if (pageProps.currentPage === '지출') {
-    filtered = filtered.filter((e) => e.type === 'expense');
+  if (pageProps.currentPage === "수입") {
+    filtered = filtered.filter((e) => e.type === "income");
+  } else if (pageProps.currentPage === "지출") {
+    filtered = filtered.filter((e) => e.type === "expense");
   }
 
   return filtered;
@@ -682,7 +726,7 @@ defineExpose({
   max-width: 1000px;
   margin: 0 auto;
   padding: 2rem;
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
 }
 
 .milcho-calendar-container {
