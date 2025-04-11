@@ -94,20 +94,10 @@
             <label class="form-label">소비 타입</label>
             <select v-model="selectedPayType" class="form-select">
               <option disabled value="">소비 타입 선택</option>
-              <option value="expense">지출</option>
-              <option value="income">수입</option>
+              <option value="expense">소비</option>
+              <option value="income">입금</option>
             </select>
           </div>
-
-          <!-- <div class="mb-3">
-            <label class="form-label">상위 카테고리</label>
-            <select v-model="selcetedCategoryType" class="form-select">
-              <option disabled value="">카테고리 선택</option>
-              <option value="card">카드</option>
-              <option value="account">계좌</option>
-              <option value="etc">기타</option>
-            </select>
-          </div> -->
 
           <div class="mb-3">
             <label class="form-label">상위 카테고리 선택</label>
@@ -162,32 +152,30 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import axios from 'axios';
-import { useAuthStore } from '@/stores/auth';
+import { ref, computed, onMounted } from "vue";
+import axios from "axios";
+import { useAuthStore } from "@/stores/auth";
 
 // 오늘 날짜
 const today = new Date();
 const currentTime = today.toTimeString().slice(0, 5);
 // 유저 정보 받아오기
 const authStore = useAuthStore();
-const emit = defineEmits(['close', 'save']);
+const emit = defineEmits(["close", "save"]);
 
-const name = ref('');
+const name = ref("");
 const amount = ref(0);
-
 const date = ref(today.toISOString().split("T")[0]);
 const startDate = ref(today.toISOString().split("T")[0]);
 const endDate = ref("");
 const time = ref(currentTime);
 const memo = ref("");
-
 const inInclude = ref(true);
-const selectedAssetType = ref(''); // 자산 타입
-const selectedAssetId = ref(''); // 자산 id
-const selectedPayType = ref(''); // 소비 분류 타입 : 소비인지 입금인지
-const selcetedCategoryType = ref(''); // 선택된 대분류 카테고리
-const selectedSubCategory = ref(''); // 소분류 카테고리
+const selectedAssetType = ref(""); // 자산 타입
+const selectedAssetId = ref(""); // 자산 id
+const selectedPayType = ref(""); // 소비 분류 타입 : 소비인지 입금인지
+const selcetedCategoryType = ref(""); // 선택된 대분류 카테고리
+const selectedSubCategory = ref(""); // 소분류 카테고리
 const assetGroup = ref({ card: [], account: [], etc: [] });
 const categoryGroup = ref({ expense: [], income: [] });
 const category = ref("");
@@ -199,16 +187,15 @@ const addTotal = ref("");
 // 고정 지출 여부 체크
 const isRepeat = ref(false);
 // 반복 주기
-const interval = ref('');
+const interval = ref("");
 
 onMounted(async () => {
   try {
     const userId = authStore.user?.id;
     if (!userId) {
-      console.log('유저 정보가 없습니다');
+      console.log("유저 정보가 없습니다");
     }
-    console.log(userId);
-    const res = await axios.get(`http://localhost:3000/users/${userId}`);
+    const res = await axios.get(`/api/users/${userId}`);
     assetGroup.value = res.data.asset_group;
     categoryGroup.value = res.data.category;
   } catch (err) {
@@ -235,7 +222,7 @@ const subCategoryOptions = computed(() => {
 });
 
 const handleSave = () => {
-  emit('save', {
+  emit("save", {
     name: name.value,
     date: isRepeat.value
       ? { startDate: startDate.value, endDate: endDate.value }
@@ -253,21 +240,19 @@ const handleSave = () => {
     ...(isRepeat.value && { interval: interval.value }), // 인터벌 값 제어
   });
 
-  name.value = '';
-  amount.value = 0;
-  date.value = '';
-  startDate.value = '';
-  endDate.value = '';
-  time.value = '';
-  memo.value = '';
-  inInclude.value = true;
-  selectedAssetType.value = '';
-  selectedAssetId.value = '';
-  selectedPayType.value = '';
-  selcetedCategoryType.value = '';
-  selectedSubCategory.value = '';
-  isRepeat.value = false;
-  interval.value = '';
+  name.value = "";
+  date.value = "";
+  category.value = "";
+  sub_category.value = "";
+  assetId.value = "";
+  type.value = "";
+  amount.value = "";
+  memo.value = "";
+  time.value = "";
+  asset_type.value = "";
+  addTotal.value = "";
+  isRepeat.value = "";
+  interval.value = "";
 };
 </script>
 

@@ -306,7 +306,7 @@ onMounted(async () => {
       return;
     }
 
-    const res = await axios.get(`http://localhost:3000/users/${userId}`);
+    const res = await axios.get(`/api/users/${userId}`);
     assetGroup.value = res.data.asset_group;
     categoryGroup.value = res.data.category;
   } catch (err) {
@@ -356,9 +356,7 @@ const submitEdit = async () => {
   }
 
   try {
-    const userResponse = await axios.get(
-      `http://localhost:3000/users/${userId}`
-    );
+    const userResponse = await axios.get(`/api/users/${userId}`);
     const user = userResponse.data;
 
     const isRepeat = editEvent.value.isRepeat;
@@ -402,7 +400,7 @@ const submitEdit = async () => {
       return t;
     });
 
-    await axios.patch(`http://localhost:3000/users/${userId}`, {
+    await axios.patch(`/api/users/${userId}`, {
       transactions: updateTransactions,
     });
 
@@ -427,9 +425,7 @@ const deleteEvent = async (transaction) => {
 
   if (!confirm("정말 삭제하시겠습니까?")) return;
   try {
-    const userResponse = await axios.get(
-      `http://localhost:3000/users/${userId}`
-    );
+    const userResponse = await axios.get(`/api/users/${userId}`);
     const user = userResponse.data;
 
     const isRepeat = transaction.isRepeat;
@@ -456,7 +452,7 @@ const deleteEvent = async (transaction) => {
     // );
 
     // 변경된 transaction으로 patch 요청
-    await axios.patch(`http://localhost:3000/users/${userId}`, {
+    await axios.patch(`/api/users/${userId}`, {
       transactions: updateTransactions,
     });
 
@@ -533,7 +529,7 @@ onMounted(async () => {
       console.log("유저 정보가 없습니다");
       return;
     }
-    const response = await axios.get(`http://localhost:3000/users/${userId}`);
+    const response = await axios.get(`/api/users/${userId}`);
     const transData = response.data.transactions;
 
     const convertedData = transData.map((t) => ({
