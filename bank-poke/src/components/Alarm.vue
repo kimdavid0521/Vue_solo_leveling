@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-4">
+  <div class="container mt-2">
     <div class="alarm-wrapper position-relative" ref="dropdownRef">
       <!-- 토글 버튼 -->
       <button class="btn position-relative" @click="toggleDropdown">
