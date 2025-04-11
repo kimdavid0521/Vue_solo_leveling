@@ -1,11 +1,28 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-white px-4 py-2">
+  <nav
+    class="navbar navbar-expand-lg navbar-light bg-white px-4 py-2 border-bottom"
+  >
     <div
-      class="container-fluid d-flex align-items-center justify-content-between"
+      class="container-fluid d-flex justify-content-between align-items-center"
     >
-      <!-- 왼쪽: 로고 + 토글 버튼 -->
-      <div class="d-flex align-items-center me-auto">
-        <!-- 로고 -->
+      <!-- 왼쪽: 로고 (pc 화면) -->
+      <div class="d-flex align-items-center">
+        <RouterLink
+          to="/main"
+          class="navbar-brand d-none d-lg-flex align-items-center fw-bold text-dark me-auto"
+        >
+          <img
+            src="../assets/bankPoke.png"
+            alt="logo"
+            width="40"
+            height="40"
+            class="me-3"
+          />
+          <span class="fs-4 fw-bold">BankPoke</span>
+        </RouterLink>
+      </div>
+      <!-- 왼쪽: 로고 (모바일 화면) -->
+      <div class="d-flex align-items-center me-auto d-lg-none gap-3">
         <RouterLink
           to="/main"
           class="navbar-brand d-flex align-items-center fw-bold text-dark"
@@ -13,16 +30,42 @@
           <img
             src="../assets/bankPoke.png"
             alt="logo"
-            width="24"
-            height="24"
-            class="me-2"
+            width="32"
+            height="32"
+            class="me-3"
           />
-          BankPoke
+          <span class="fs-5 fw-bold">BankPoke</span>
         </RouterLink>
+      </div>
 
-        <!-- 토글 버튼 -->
+      <!-- 가운데: 메뉴 항목 (PC 전용) -->
+      <div class="d-mone d-lg-block">
+        <ul class="navbar-nav flex-row justify-content-center d-none d-lg-flex">
+          <li
+            class="nav-item mx-3"
+            v-for="(item, index) in menuItems"
+            :key="index"
+          >
+            <RouterLink
+              :to="item.path"
+              class="nav-link fw-bold text-secondary"
+              active-class="active"
+              exact-active-class="active"
+            >
+              {{ item.label }}
+            </RouterLink>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 오른쪽: 알림 + 마이페이지 + 토글 -->
+      <div class="d-flex align-items-center gap-3">
+        <Alarm />
+        <MyAccount class="mb-1 mt-1" />
+
+        <!-- 토글 버튼 (모바일 전용) -->
         <button
-          class="navbar-toggler ms-2"
+          class="navbar-toggler d-lg-none"
           type="button"
           @click="toggleNav"
           :aria-expanded="isOpen"
@@ -31,75 +74,26 @@
           <span class="navbar-toggler-icon"></span>
         </button>
       </div>
-
-      <!-- 중앙: 메뉴 -->
-      <div
-        class="collapse navbar-collapse justify-content-center"
-        :class="{ show: isOpen }"
-      >
-        <ul class="navbar-nav mb-2 mb-lg-0">
-          <li class="nav-item me-3">
-            <RouterLink
-              to="/main"
-              class="nav-link fw-bold text-secondary"
-              active-class="active"
-              exact-active-class="active"
-              @click="closeNavbar"
-            >
-              <i class="fa-solid fa-calendar-days"></i> 가계부
-            </RouterLink>
-          </li>
-          <li class="nav-item me-3">
-            <RouterLink
-              to="/transaction-list"
-              class="nav-link fw-bold text-secondary"
-              active-class="active"
-              exact-active-class="active"
-              @click="closeNavbar"
-            >
-              <i class="fa-solid fa-receipt"></i> 거래 내역
-            </RouterLink>
-          </li>
-          <li class="nav-item me-3">
-            <template v-if="authStore.user?.isPremium">
-              <RouterLink
-                to="/analyze"
-                class="nav-link fw-bold text-secondary"
-                active-class="active"
-                exact-active-class="active"
-                @click="closeNavbar"
-              >
-                <i class="fa-solid fa-chart-line me-1"></i> 분석
-              </RouterLink>
-            </template>
-            <template v-else>
-              <span
-                class="nav-link text-muted d-flex fw-bold align-items-center"
-                style="cursor: not-allowed"
-              >
-                <i class="fa-solid fa-lock me-1"></i> 분석
-              </span>
-            </template>
-          </li>
-          <li class="nav-item me-3">
-            <RouterLink
-              to="/asset"
-              class="nav-link fw-bold text-secondary"
-              active-class="active"
-              exact-active-class="active"
-              @click="closeNavbar"
-            >
-              <i class="fa-solid fa-wallet"></i> 자산
-            </RouterLink>
-          </li>
-        </ul>
-      </div>
-
-      <!-- 오른쪽: 알림 + 마이페이지 -->
-      <div class="d-flex align-items-center gap-3 ms-3">
-        <Alarm class="mb-3" />
-        <MyAccount class="mb-3 mt-3" />
-      </div>
+    </div>
+    <!-- 모바일 메뉴 토글 (모바일 전용) -->
+    <div class="d-lg-none collapse navbar-collapse" :class="{ show: isOpen }">
+      <ul class="navbar-nav text-center d-lg-none">
+        <li
+          class="nav-item my-2"
+          v-for="(item, index) in menuItems"
+          :key="'mobile-' + index"
+        >
+          <RouterLink
+            :to="item.path"
+            class="nav-link fw-bold text-secondary"
+            active-class="active"
+            exact-active-class="active"
+            @click="closeNavbar"
+          >
+            {{ item.label }}
+          </RouterLink>
+        </li>
+      </ul>
     </div>
   </nav>
 </template>
@@ -125,6 +119,12 @@ function toggleNav() {
 function closeNavbar() {
   isOpen.value = false;
 }
+const menuItems = [
+  { path: '/main', label: '가계부' },
+  { path: '/transaction-list', label: '거래 내역' },
+  { path: '/analyze', label: '분석' },
+  { path: '/asset', label: '자산' },
+];
 </script>
 
 <style scoped>
@@ -135,6 +135,9 @@ function closeNavbar() {
   font-weight: bold;
   color: #ffd95a !important;
   border-bottom: 2px solid #ffd95a;
+}
+.navbar-brand img {
+  object-fit: contain;
 }
 .nav-link.text-muted {
   opacity: 0.6;
