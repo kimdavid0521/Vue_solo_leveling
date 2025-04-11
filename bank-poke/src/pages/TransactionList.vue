@@ -48,6 +48,7 @@
           @update-money="moneyFilter"
           @update-content="contentFilter"
           @update-asset="assetFilter"
+          @update-category="categoryFilter"
         >
         </SearchBox>
         <!-- </div> -->
@@ -128,9 +129,9 @@
                   v-model="selectedTransactions"
                 />
               </td>
-              <td>{{ tr.date }}</td>
+              <td>{{ tr.date }} {{ tr.time }}</td>
               <td>{{ asset(tr.asset_type, tr.assetId) }}</td>
-              <td>{{ tr.category }}</td>
+              <td>{{ tr.mainCategory }}</td>
               <td>{{ tr.name }}</td>
               <td>{{ tr.amount.toLocaleString() }}원</td>
             </tr>
@@ -147,9 +148,7 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive } from "vue";
-// import { useUserStore } from '@/stores/user.js';
-
+import { ref, computed, reactive } from 'vue';
 import { useAuthStore } from '@/stores/auth.js';
 import TableLayout from '@/components/TableLayout.vue';
 import SearchBox from '@/components/SearchBox.vue';
@@ -161,7 +160,6 @@ import { saveAs } from 'file-saver';
 // const { state, deleteTransactions } = useAuthStore();
 const authStore = useAuthStore();
 const user = computed(() => authStore.user);
-console.log(user.value);
 
 // 선택된 거래 내역 id 리스트
 const selectedTransactions = ref([]);
@@ -182,6 +180,8 @@ const searchText = ref("");
 
 // 선택된 자산 필터
 const assetSelected = ref(null);
+
+const selectedCategories = ref();
 
 // 이벤트 발생마다 자식으로부터 데이터 받아옴
 const updateTab = (current) => {
@@ -205,6 +205,11 @@ const contentFilter = (content) => {
 // 이벤트 발생마다 자식으로부터 데이터 받아옴
 const assetFilter = (asset) => {
   assetSelected.value = asset;
+  selectedTransactions.value = []; // 선택 초기화
+};
+
+const categoryFilter = (categories) => {
+  selectedCategories.value = categories;
   selectedTransactions.value = []; // 선택 초기화
 };
 
@@ -317,15 +322,42 @@ const filteredTransactions = computed(() => {
           return true;
         return false;
       })
+      // 5. 카테고리 필터
+      .filter((ts) => {
+        if (
+          !selectedCategories.value ||
+          Object.keys(selectedCategories.value).length === 0
+        )
+          return true;
+
+        const selected = selectedCategories.value?.[ts.type];
+
+        if (!selected || Object.keys(selected).length === 0) return false;
+        if (!selected[ts.category]) return false;
+
+        return selected[ts.category].has(ts.sub_category);
+      })
   );
 });
 
-// 필터링된 거래내역에서 전체/수입/지출 필터하여 랜더링
+// 필터링된 거래내역에서 전체/수입/지출 필터하여 랜더링 + 내림차순 정렬
 const filteredTransactionsByType = computed(() => {
-  return filteredTransactions.value.filter((ts) => {
-    if (currentTab.value === "수입") return ts.type === "income";
-    else if (currentTab.value === "지출") return ts.type === "expense";
-    return true;
+  const transactions = filteredTransactions.value
+    .filter((ts) => {
+      if (currentTab.value === '수입') return ts.type === 'income';
+      else if (currentTab.value === '지출') return ts.type === 'expense';
+      return true;
+    })
+    .map((ts) => ({
+      ...ts,
+      mainCategory: user.value.category?.[ts.type].find(
+        (item) => item.id === ts.category
+      )?.main_category,
+    }));
+  return transactions.sort((a, b) => {
+    const dateA = new Date(`${a.date}T${a.time}`);
+    const dateB = new Date(`${b.date}T${b.time}`);
+    return dateB - dateA;
   });
 });
 
@@ -345,7 +377,8 @@ const switchSearch = () => {
   if (!isSearch.value) {
     moneyLimit.minMoney = null;
     moneyLimit.maxMoney = null;
-    searchText.value = "";
+    searchText.value = '';
+    selectedCategories.value = null;
   }
   selectedTransactions.value = []; // 선택 초기화
 };
