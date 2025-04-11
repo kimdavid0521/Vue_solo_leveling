@@ -2,13 +2,13 @@
   <div class="container py-4">
     <!-- 년/월 선택 -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <button class="btn btn-outline-primary" @click="prevMonth">
+      <button class="btn btn-outline-warning" @click="prevMonth">
         &#8592;
       </button>
       <h3 style="cursor: pointer">
         {{ displayDate }}
       </h3>
-      <button class="btn btn-outline-primary" @click="nextMonth">
+      <button class="btn btn-outline-warning" @click="nextMonth">
         &#8594;
       </button>
     </div>

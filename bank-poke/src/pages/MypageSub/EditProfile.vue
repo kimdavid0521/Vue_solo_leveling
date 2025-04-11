@@ -1,5 +1,5 @@
 <template>
-  <div class="edit-profile-container">
+  <div class="edit-profile-container mt-4">
     <h4 class="section-title">회원정보 수정</h4>
     <div class="form-box">
       <!-- 비밀번호 인증 전 -->
@@ -140,7 +140,7 @@ const saveChanges = async () => {
 
 <style scoped>
 .edit-profile-container {
-  max-width: 500px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -157,7 +157,8 @@ const saveChanges = async () => {
   background: white;
   border-radius: 12px;
   padding: 2rem;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  width: 500px;
+  margin: auto auto;
 }
 
 .form-label {

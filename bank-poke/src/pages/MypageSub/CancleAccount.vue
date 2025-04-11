@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container mt-4">
     <h4 class="fw-bold mb-4">회원탈퇴</h4>
 
     <!-- 비밀번호 인증 전 -->
@@ -86,6 +86,10 @@ const handleDeleteAccount = async () => {
 };
 </script>
 <style scoped>
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
 /* 전체 영역 정렬 */
 
 /* 타이틀 */

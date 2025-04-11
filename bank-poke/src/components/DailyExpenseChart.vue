@@ -3,7 +3,7 @@
     <div class="row mb-4 align-items-stretch">
       <!-- 왼쪽: 라인 차트 (일별 누적 지출) -->
       <div class="col-12 col-md-7 mb-3 mb-md-0">
-        <div class="card shadow-sm p-3 h-100">
+        <div class="card shadow-sm p-3 h-100 hover-lift">
           <h5 class="card-title text-center fw-bold">일별 누적 지출</h5>
           <!-- 일별 지출 라인 차트 -->
           <Line v-if="chartData" :data="chartData" :options="chartOptions" />
@@ -12,7 +12,7 @@
 
       <!-- 오른쪽: 지출 요약 정보 -->
       <div class="col-12 col-md-5">
-        <div class="card shadow-sm p-3 h-100">
+        <div class="card shadow-sm p-3 h-100 hover-lift">
           <div class="mb-5">
             <h5 class="text-center mb-3 fw-bold">일별 지출 분석</h5>
             <!-- 지출 통계 정보 -->
@@ -33,7 +33,7 @@
 
 <script setup>
 // Vue 및 Chart.js 관련 기능 import
-import { onMounted, watch, computed } from 'vue';
+import { onMounted, watch, computed, ref } from 'vue';
 import { Line } from 'vue-chartjs';
 import {
   Chart as ChartJS,
@@ -127,3 +127,13 @@ const chartOptions = {
   },
 };
 </script>
+
+<style scoped>
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+</style>

@@ -5,7 +5,6 @@ import { useAuthStore } from '@/stores/auth';
 import { useAssetStore } from '@/stores/assetStore';
 
 export const useChartStore = defineStore('chart', () => {
-  // 차트 데이터 상태 정의
   const chartData = ref(null);
   const totalExpense = ref(0);
   const averageExpense = ref(0);
@@ -20,7 +19,6 @@ export const useChartStore = defineStore('chart', () => {
   const usedPercent = ref(0);
   const remaining = ref(0);
 
-  // 스토어 참조
   const authStore = useAuthStore();
   const assetStore = useAssetStore();
 
@@ -29,8 +27,7 @@ export const useChartStore = defineStore('chart', () => {
     () => assetStore.users.find((u) => u.id === userId.value) || null
   );
 
-  // 카테고리 매핑 함수
-  const mapToMainCategory = (categories, type) => {
+  const mapToMainCategory = (categories) => {
     const map = {};
     categories?.forEach((main) => {
       main.sub_categories.forEach((sub) => {
@@ -40,36 +37,52 @@ export const useChartStore = defineStore('chart', () => {
     return map;
   };
 
-  // 컬러 생성 함수
   const generateColors = (count, baseHue) =>
     Array.from(
       { length: count },
       (_, i) => `hsl(${(baseHue + i * 30) % 360}, 100%, 60%)`
     );
 
-  // 데이터 필터링 함수
   const filterTransactions = (type, year, month) => {
     return (user.value?.transactions ?? []).filter((tx) => {
       const date = dayjs(tx.date);
-      return tx.type === type && date.year() === year && date.month() === month;
+      return (
+        tx.type === type &&
+        date.year() === year &&
+        date.month() === month &&
+        tx.addTotal !== false
+      );
     });
   };
 
-  // 수입 차트 생성
-  const fetchIncomeData = async (year, month) => {
+  const fetchIncomeData = async (year, month, isMain) => {
     try {
       const filtered = filterTransactions('income', year, month);
-      const map = mapToMainCategory(user.value?.category?.income);
+      const categories = user.value?.category?.income || [];
+
+      const categoryMap = {};
+      categories.forEach((cat) => {
+        if (isMain) {
+          categoryMap[cat.id] = cat.main_category;
+        } else {
+          cat.sub_categories.forEach((sub) => {
+            categoryMap[sub] = sub;
+          });
+        }
+      });
 
       const mainTotals = {};
       filtered.forEach((tx) => {
-        const main = map[tx.category] || tx.category;
-        mainTotals[main] = (mainTotals[main] || 0) + tx.amount;
+        const key = isMain ? tx.category : tx.sub_category;
+        const name = categoryMap[key] || '기타';
+        mainTotals[name] = (mainTotals[name] || 0) + tx.amount;
       });
+
       incomeCategorySummary.value = mainTotals;
 
       const labels = Object.keys(mainTotals);
       const data = Object.values(mainTotals);
+
       incomeChartData.value =
         labels.length && data.some((val) => val > 0)
           ? {
@@ -99,11 +112,10 @@ export const useChartStore = defineStore('chart', () => {
     }
   };
 
-  // 지출 차트 생성
-  const fetchExpenseData = async (year, month) => {
+  const fetchExpenseData = async (year, month, isMain = false) => {
     try {
       const filtered = filterTransactions('expense', year, month);
-      const map = mapToMainCategory(user.value?.category?.expense);
+      const categories = user.value?.category?.expense || [];
 
       totalExpense.value = filtered.reduce((sum, tx) => sum + tx.amount, 0);
       transactionCount.value = filtered.length;
@@ -111,15 +123,32 @@ export const useChartStore = defineStore('chart', () => {
         ? Math.round(totalExpense.value / transactionCount.value)
         : 0;
 
+      const categoryMap = {};
+
+      if (isMain) {
+        categories.forEach((cat) => {
+          categoryMap[cat.id] = cat.main_category;
+        });
+      } else {
+        categories.forEach((cat) => {
+          cat.sub_categories.forEach((sub) => {
+            categoryMap[sub] = sub;
+          });
+        });
+      }
+
       const mainTotals = {};
       filtered.forEach((tx) => {
-        const main = map[tx.category] || tx.category;
-        mainTotals[main] = (mainTotals[main] || 0) + tx.amount;
+        const key = isMain ? tx.category : tx.sub_category;
+        const categoryName = categoryMap[key] || '기타';
+        mainTotals[categoryName] = (mainTotals[categoryName] || 0) + tx.amount;
       });
+
       expenseCategorySummary.value = mainTotals;
 
       const labels = Object.keys(mainTotals);
       const data = Object.values(mainTotals);
+
       expenseChartData.value =
         labels.length && data.some((val) => val > 0)
           ? {
@@ -135,7 +164,11 @@ export const useChartStore = defineStore('chart', () => {
           : {
               labels: ['지출 없음'],
               datasets: [
-                { label: '지출 금액', data: [1], backgroundColor: ['#d3d3d3'] },
+                {
+                  label: '지출 금액',
+                  data: [1],
+                  backgroundColor: ['#d3d3d3'],
+                },
               ],
             };
     } catch (err) {
@@ -143,7 +176,6 @@ export const useChartStore = defineStore('chart', () => {
     }
   };
 
-  // 예산 데이터 계산
   const fetchBudgetData = async (year, month) => {
     try {
       const budgetObj = user.value?.setting?.[0]?.monthlyBudget ?? {};
@@ -162,7 +194,6 @@ export const useChartStore = defineStore('chart', () => {
     }
   };
 
-  // 일별 지출 차트 생성
   const fetchDailyExpenseData = async (year, month) => {
     try {
       const filtered = filterTransactions('expense', year, month);
@@ -198,7 +229,6 @@ export const useChartStore = defineStore('chart', () => {
     }
   };
 
-  // 외부로 반환
   return {
     chartData,
     totalExpense,
@@ -215,5 +245,6 @@ export const useChartStore = defineStore('chart', () => {
     fetchExpenseData,
     fetchBudgetData,
     fetchDailyExpenseData,
+    user,
   };
 });

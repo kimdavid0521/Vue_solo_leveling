@@ -400,6 +400,7 @@ const switchSearch = () => {
 };
 
 // 선택된 거래 내역 삭제
+
 const deleteSelectedTransactions = async () => {
   if (!confirm('선택한 거래내역을 삭제하시겠습니까?')) return;
 

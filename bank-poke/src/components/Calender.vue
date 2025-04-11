@@ -2,31 +2,31 @@
   <div class="container">
     <div class="milcho-calendar-container">
       <!-- ✅ 월 요약 -->
-      <div class="text-center my-4">
-        <!-- <h4>{{ currentMonth }}</h4> -->
+      <!-- <div class="text-center my-4"> -->
+      <!-- <h4>{{ currentMonth }}</h4> -->
 
-        <!-- 전체 -->
-        <p v-if="pageProps.currentPage === '전체'">
+      <!-- 전체 -->
+      <!-- <p v-if="pageProps.currentPage === '전체'">
           총합:
           <strong>{{ handleMonthSummary.total.toLocaleString() }}</strong>
           수입:
           {{ handleMonthSummary.income.toLocaleString() }}
           지출:
           {{ handleMonthSummary.expense.toLocaleString() }}
-        </p>
+        </p> -->
 
-        <!-- 수입만 -->
-        <p v-else-if="pageProps.currentPage === '수입'">
+      <!-- 수입만 -->
+      <!-- <p v-else-if="pageProps.currentPage === '수입'">
           총 수입:
           <strong>{{ handleMonthSummary.income.toLocaleString() }}</strong>
-        </p>
+        </p> -->
 
-        <!-- 지출만 -->
-        <p v-else-if="pageProps.currentPage === '지출'">
+      <!-- 지출만 -->
+      <!-- <p v-else-if="pageProps.currentPage === '지출'">
           총 지출:
           <strong>{{ handleMonthSummary.expense.toLocaleString() }}</strong>
-        </p>
-      </div>
+        </p> -->
+      <!-- </div> -->
 
       <!-- ✅ 달력 -->
       <FullCalendar
@@ -37,17 +37,16 @@
         :key="currentPage"
       />
 
-      <!-- ✅ 선택 날짜 상세 -->
       <div class="offcanvas offcanvas-end" id="demo">
         <div class="offcanvas-header">
           <h1 class="offcanvas-title">
             {{ selectedDate }}일의
             {{
-              pageProps.currentPage === "수입"
-                ? "수입"
-                : pageProps.currentPage === "지출"
-                ? "지출"
-                : "내역"
+              pageProps.currentPage === '수입'
+                ? '수입'
+                : pageProps.currentPage === '지출'
+                ? '지출'
+                : '내역'
             }}
           </h1>
           <button
@@ -60,11 +59,11 @@
           <div v-if="filteredSelectedDateEvents.length === 0">
             <p>
               {{
-                pageProps.currentPage === "수입"
-                  ? "수입 내역이 없습니다."
-                  : pageProps.currentPage === "지출"
-                  ? "지출 내역이 없습니다."
-                  : "내역이 없습니다."
+                pageProps.currentPage === '수입'
+                  ? '수입 내역이 없습니다.'
+                  : pageProps.currentPage === '지출'
+                  ? '지출 내역이 없습니다.'
+                  : '내역이 없습니다.'
               }}
             </p>
           </div>
@@ -73,21 +72,174 @@
             <li
               v-for="event in filteredSelectedDateEvents"
               :key="event.id"
-              class="list-group-item"
+              class="list-group-item d-flex justify-content-between align-items-center"
               :class="{
                 'bg-danger': event.type === 'expense',
                 'bg-primary': event.type === 'income',
               }"
             >
-              {{
-                new Date(event.start).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
-              }}
-              - {{ event.name }} : {{ event.amount.toLocaleString() }}원
+              <div>
+                {{
+                  new Date(event.start).toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })
+                }}
+                - {{ event.name }} : {{ event.amount.toLocaleString() }}원
+              </div>
+              <div class="btn-group">
+                <button
+                  class="btn btn-light btn-sm"
+                  @click="openEditModal(event)"
+                >
+                  수정
+                </button>
+                <button
+                  class="btn btn-danger btn-sm"
+                  @click="deleteEvent(event.id)"
+                >
+                  삭제
+                </button>
+              </div>
             </li>
           </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 모달 -->
+    <!-- ✅ 수정 모달 -->
+    <div
+      class="modal fade"
+      id="editModal"
+      tabindex="-1"
+      aria-labelledby="editModalLabel"
+      aria-hidden="true"
+      ref="editModalRef"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModalLabel">내역 수정</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label>이름</label>
+              <input v-model="editEvent.name" class="form-control" />
+            </div>
+            <div class="mb-3">
+              <label>금액</label>
+              <input
+                v-model.number="editEvent.amount"
+                type="number"
+                class="form-control"
+              />
+            </div>
+            <div class="mb-3">
+              <label>시간</label>
+              <input
+                v-model="editEvent.start"
+                type="datetime-local"
+                class="form-control"
+              />
+            </div>
+
+            <!-- 자산 타입 -->
+            <div>
+              <!-- 자산 타입 -->
+              <div class="mb-3">
+                <label class="form-label">자산 타입</label>
+                <select v-model="selectedAssetType" class="form-select">
+                  <option disabled value="">자산 타입 선택</option>
+                  <option value="card">카드</option>
+                  <option value="account">계좌</option>
+                  <option value="etc">기타</option>
+                </select>
+              </div>
+
+              <!-- 자산 선택 -->
+              <div class="mb-3">
+                <label class="form-label">자산 선택</label>
+                <select v-model="selectedAssetId" class="form-select">
+                  <option disabled value="">자산 선택</option>
+                  <option
+                    v-for="asset in filteredAssets"
+                    :key="asset.id"
+                    :value="asset.id"
+                  >
+                    {{ asset.name }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- 소비 타입 -->
+              <div class="mb-3">
+                <label class="form-label">소비 타입</label>
+                <select v-model="selectedPayType" class="form-select">
+                  <option disabled value="">소비 타입 선택</option>
+                  <option value="expense">소비</option>
+                  <option value="income">입금</option>
+                </select>
+              </div>
+
+              <!-- 상위 카테고리 -->
+              <div class="mb-3">
+                <label class="form-label">상위 카테고리 선택</label>
+                <select v-model="selectedCategoryType" class="form-select">
+                  <option disabled value="">상위 카테고리 선택</option>
+                  <option
+                    v-for="category in filterCategory"
+                    :key="category.id"
+                    :value="category.id"
+                  >
+                    {{ category.main_category }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- 하위 카테고리 -->
+              <div class="mb-3">
+                <label class="form-label">하위 카테고리 선택</label>
+                <select v-model="selectedSubCategory" class="form-select">
+                  <option disabled value="">하위 카테고리 선택</option>
+                  <option
+                    v-for="subcategory in subCategoryOptions"
+                    :key="subcategory"
+                    :value="subcategory"
+                  >
+                    {{ subcategory }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <!-- 메모 -->
+            <div class="mb-3">
+              <label class="form-label">메모</label>
+              <input v-model="memo" type="text" class="form-control" />
+            </div>
+
+            <!-- 내역에 추가할지 -->
+            <div class="mb-3">
+              <label class="form-label">내역에 추가할지</label>
+              <input
+                v-model="inInclude"
+                type="checkbox"
+                class="form-check-input"
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              취소
+            </button>
+            <button class="btn btn-primary" @click="submitEdit">저장</button>
+          </div>
         </div>
       </div>
     </div>
@@ -95,13 +247,162 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watchEffect, watch } from "vue";
-import FullCalendar from "@fullcalendar/vue3";
-import dayGridPlugin from "@fullcalendar/daygrid"; // 날짜
-import timeGridPlugin from "@fullcalendar/timegrid"; // 시간 그리드 플러그인
-import interactionPlugin from "@fullcalendar/interaction";
-import { Offcanvas } from "bootstrap";
-import axios from "axios";
+import { ref, computed, onMounted, watchEffect, watch } from 'vue';
+import FullCalendar from '@fullcalendar/vue3';
+import dayGridPlugin from '@fullcalendar/daygrid'; // 날짜
+import timeGridPlugin from '@fullcalendar/timegrid'; // 시간 그리드 플러그인
+import interactionPlugin from '@fullcalendar/interaction';
+import { Offcanvas } from 'bootstrap';
+import axios from 'axios';
+import { useAuthStore } from '@/stores/auth';
+import { Modal } from 'bootstrap';
+
+const userAuth = useAuthStore();
+const calendarRef = ref();
+const editEvent = ref({
+  id: null,
+  name: '',
+  amount: 0,
+  start: '',
+});
+
+const selectedAssetType = ref("");
+const selectedAssetId = ref("");
+const selectedPayType = ref("");
+const selectedCategoryType = ref("");
+const selectedSubCategory = ref("");
+const memo = ref("");
+const inInclude = ref(true);
+
+// API로부터 받아올 데이터
+const assetGroup = ref({});
+const categoryGroup = ref({});
+
+// 마운트 시 데이터 가져오기
+onMounted(async () => {
+  try {
+    const userId = authStore.user?.id;
+    if (!userId) {
+      console.log("유저 정보가 없습니다");
+      return;
+    }
+
+    const res = await axios.get(`http://localhost:3000/users/${userId}`);
+    assetGroup.value = res.data.asset_group;
+    categoryGroup.value = res.data.category;
+  } catch (err) {
+    console.error("데이터 불러오기 실패:", err);
+  }
+});
+
+// 자산 타입에 따라 자산 목록 필터링
+const filteredAssets = computed(() => {
+  return assetGroup.value[selectedAssetType.value] || [];
+});
+
+// 소비/입금 타입에 따라 카테고리 필터링
+const filterCategory = computed(() => {
+  return categoryGroup.value[selectedPayType.value] || [];
+});
+
+// 상위 카테고리에 따라 하위 카테고리 필터링
+const subCategoryOptions = computed(() => {
+  const selected = filterCategory.value.find(
+    (c) => c.id === Number(selectedCategoryType.value)
+  );
+  return selected ? selected.sub_categories : [];
+});
+
+const editModalRef = ref(null);
+let editModalInstance = null;
+
+onMounted(() => {
+  editModalInstance = new Modal(editModalRef.value);
+});
+
+const openEditModal = (event) => {
+  editEvent.value = { ...event };
+  editEvent.value.start = new Date(event.start).toISOString().slice(0, 16);
+  editModalInstance.show();
+};
+
+// 내역 업데이트 함수
+const submitEdit = async () => {
+  const userId = userAuth.user?.id;
+  if (!userId) {
+    console.log("유저 정보가 없습니다");
+    return;
+  }
+
+  try {
+    const userResponse = await axios.get(
+      `http://localhost:3000/users/${userId}`
+    );
+    const user = userResponse.data;
+
+    const updateTransactions = user.transactions.map((t) => {
+      if (t.id == editEvent.value.id) {
+        return {
+          ...t,
+          name: editEvent.value.name,
+          amount: editEvent.value.amount,
+          date: new Date(editEvent.value.start).toISOString().slice(0, 10),
+          time: new Date(editEvent.value.start).toTimeString().slice(0, 5),
+          assetType: selectedAssetType.value,
+          assetId: selectedAssetId.value,
+          payType: selectedPayType.value,
+          categoryType: selectedCategoryType.value,
+          subCategory: selectedSubCategory.value,
+          memo: memo.value,
+          include: inInclude.value,
+        };
+      }
+      return t;
+    });
+
+    await axios.patch(`http://localhost:3000/users/${userId}`, {
+      transactions: updateTransactions,
+    });
+
+    editModalInstance.hide();
+    window.location.reload();
+  } catch (err) {
+    console.error('수정 실패', err);
+  }
+};
+
+// 내역 삭제 함수
+const deleteEvent = async (transactionId) => {
+  const userId = userAuth.user?.id;
+  if (!userId) {
+    console.log("유저 정보가 없습니다");
+    return;
+  }
+
+  if (!confirm("정말 삭제하시겠습니까?")) return;
+  try {
+    const userResponse = await axios.get(
+      `http://localhost:3000/users/${userId}`
+    );
+    const user = userResponse.data;
+
+    // 트랜잭션에서 해당 항목 제거하기
+    const updateTransactions = user.transactions.filter(
+      (t) => t.id !== transactionId
+    );
+
+    // 변경된 transaction으로 patch 요청
+    await axios.patch(`http://localhost:3000/users/${userId}`, {
+      transactions: updateTransactions,
+    });
+
+    window.location.reload();
+  } catch (err) {
+    console.error('삭제 실패', err);
+  }
+};
+// 유저 id(정보) 가져오기
+const authStore = useAuthStore();
 
 // 현재 페이지 변수 받아오기
 const pageProps = defineProps({
@@ -110,15 +411,15 @@ const pageProps = defineProps({
 
 const currentDate = ref(new Date());
 // 사용자가 클릭한 날짜
-const selectedDate = ref("");
+const selectedDate = ref('');
 
 const currentMonth = computed(() => {
   const year = currentDate.value.getFullYear();
-  const month = String(currentDate.value.getMonth() + 1).padStart(2, "0");
+  const month = String(currentDate.value.getMonth() + 1).padStart(2, '0');
   return `${year}-${month}`;
 });
 const handleDatesSet = (info) => {
-  console.log("handledataset", info);
+  console.log('handledataset', info);
   // 이 값이 바뀌면 month값도 변하게끔 만듬
   const viewDate = info.view.currentStart;
   currentDate.value = new Date(viewDate);
@@ -163,7 +464,12 @@ const events = ref([]);
 // 날짜 변경될때마다 일정 api 호출
 onMounted(async () => {
   try {
-    const response = await axios.get("http://localhost:3000/users/2");
+    const userId = authStore.user?.id;
+    if (!userId) {
+      console.log('유저 정보가 없습니다');
+      return;
+    }
+    const response = await axios.get(`http://localhost:3000/users/${userId}`);
     const transData = response.data.transactions;
 
     const convertedData = transData.map((t) => ({
@@ -184,7 +490,7 @@ onMounted(async () => {
         .sort((a, b) => new Date(a.start) - new Date(b.start));
     }
   } catch (error) {
-    console.error("API 연결 에러:", error);
+    console.error('API 연결 에러:', error);
   }
 });
 
@@ -233,7 +539,7 @@ const handleDateClick = (info) => {
     .filter((e) => e.start.startsWith(info.dateStr))
     .sort((a, b) => new Date(a.start) - new Date(b.start));
 
-  const offcanvasElement = document.getElementById("demo");
+  const offcanvasElement = document.getElementById('demo');
 
   // 기존 인스턴스를 닫고 새로 생성
   if (offcanvasInstance) {
@@ -246,11 +552,11 @@ const handleDateClick = (info) => {
 
 const calendarOptions = {
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
-  initialView: "dayGridMonth",
+  initialView: 'dayGridMonth',
   headerToolbar: {
-    left: "prev,next",
-    center: "title",
-    right: "today",
+    left: 'prev,next',
+    center: 'title',
+    right: 'today',
     // 월별, 주별, 일별로 보기 버튼
   },
   // views: {
@@ -277,48 +583,51 @@ const calendarOptions = {
 
   dayMaxEvents: false,
   dayMaxEventRows: false,
+
   height: "auto",
+  width: "auto",
+
   datesSet: handleDatesSet,
 
   eventContent(arg) {
     if (arg.event.extendedProps.isSummary) {
       const { total, incomeTotal, expenseTotal } = arg.event.extendedProps;
 
-      const container = document.createElement("div");
-      container.style.fontWeight = "bold";
-      container.style.backgroundColor = "white";
+      const container = document.createElement('div');
+      container.style.fontWeight = 'bold';
+      container.style.backgroundColor = 'white';
 
       const currentPage = pageProps.currentPage;
 
-      if (currentPage === "전체") {
-        const totalText = document.createElement("div");
-        totalText.style.color = "black";
-        totalText.textContent = `${total >= 0 ? "+" : "-"}${Math.abs(
+      if (currentPage === '전체') {
+        const totalText = document.createElement('div');
+        totalText.style.color = 'black';
+        totalText.textContent = `${total >= 0 ? '+' : '-'}${Math.abs(
           total
         ).toLocaleString()}`;
 
-        const incomeText = document.createElement("div");
-        incomeText.style.color = "blue";
+        const incomeText = document.createElement('div');
+        incomeText.style.color = 'blue';
         incomeText.textContent = `+${incomeTotal.toLocaleString()}`;
 
-        const expenseText = document.createElement("div");
-        expenseText.style.color = "red";
+        const expenseText = document.createElement('div');
+        expenseText.style.color = 'red';
         expenseText.textContent = `-${expenseTotal.toLocaleString()}`;
 
         container.appendChild(totalText);
         container.appendChild(incomeText);
         container.appendChild(expenseText);
-      } else if (currentPage === "수입") {
+      } else if (currentPage === '수입') {
         if (incomeTotal > 0) {
-          const incomeText = document.createElement("div");
-          incomeText.style.color = "blue";
+          const incomeText = document.createElement('div');
+          incomeText.style.color = 'blue';
           incomeText.textContent = `+${incomeTotal.toLocaleString()}`;
           container.appendChild(incomeText);
         }
-      } else if (currentPage === "지출") {
+      } else if (currentPage === '지출') {
         if (expenseTotal > 0) {
-          const expenseText = document.createElement("div");
-          expenseText.style.color = "red";
+          const expenseText = document.createElement('div');
+          expenseText.style.color = 'red';
           expenseText.textContent = `-${expenseTotal.toLocaleString()}`;
           container.appendChild(expenseText);
         }
@@ -330,55 +639,50 @@ const calendarOptions = {
 };
 
 // 총합을 상위 컴포넌트로 전달
-const emit = defineEmits(["update-summary"]);
+const emit = defineEmits(['update-summary']);
 
 // 처음 마운트 되었을때나 값이 변경될때 emit
 watchEffect(() => {
-  emit("update-summary", {
+  emit('update-summary', {
     summary: handleMonthSummary.value,
     countSummary: handleMonthCountSummary.value,
   });
 });
 
-// ✨ 선택된 날짜의 필터링된 수입/지출 이벤트만 보여주기
+// 선택된 날짜의 필터링된 수입/지출 이벤트만 보여주기
 const filteredSelectedDateEvents = computed(() => {
   if (!selectedDate.value) return [];
 
   let filtered = selectedDateEvents.value;
 
-  if (pageProps.currentPage === "수입") {
-    filtered = filtered.filter((e) => e.type === "income");
-  } else if (pageProps.currentPage === "지출") {
-    filtered = filtered.filter((e) => e.type === "expense");
+  if (pageProps.currentPage === '수입') {
+    filtered = filtered.filter((e) => e.type === 'income');
+  } else if (pageProps.currentPage === '지출') {
+    filtered = filtered.filter((e) => e.type === 'expense');
   }
 
   return filtered;
 });
+
+// 켈린더 api 데이터 베이스 다시 불러오기
+function refreshCalendar() {
+  const calendarApi = calendarRef.value?.getApi?.();
+  if (calendarApi) {
+    calendarApi.refetchEvents();
+  }
+}
+
+defineExpose({
+  refreshCalendar,
+});
 </script>
 
-<!-- /* .milcho-custom-calendar {
-  max-width: 800px;
-  height: 600px;
-  margin: 0 auto;
-}
-.fc-event {
-  max-height: 25px !important;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.custom-event {
-  max-height: 25px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-} */ -->
 <style scoped>
 .container {
   max-width: 1000px;
   margin: 0 auto;
   padding: 2rem;
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 .milcho-calendar-container {
@@ -406,7 +710,6 @@ const filteredSelectedDateEvents = computed(() => {
   font-weight: bold;
 }
 
-/* ✅ FullCalendar 스타일 커스터마이징 */
 .milcho-custom-calendar {
   margin-top: 1.5rem;
 }
@@ -428,19 +731,16 @@ const filteredSelectedDateEvents = computed(() => {
   border: none;
 }
 
-/* ✅ 수입 색상 */
 .fc-event.income {
   background-color: #3498db !important;
   color: #fff !important;
 }
 
-/* ✅ 지출 색상 */
 .fc-event.expense {
   background-color: #e74c3c !important;
   color: #fff !important;
 }
 
-/* ✅ Offcanvas 스타일 */
 .offcanvas {
   width: 400px;
   background-color: #fff;
@@ -489,6 +789,67 @@ const filteredSelectedDateEvents = computed(() => {
 .list-group-item:hover {
   transform: translateX(5px);
 }
-</style>
+.modal-content {
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  padding: 1rem;
+  background-color: #fdfdfd;
+}
 
-<!-- </style> -->
+.modal-header {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.modal-title {
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+.form-label,
+label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+  color: #333;
+}
+
+.form-control,
+.form-select {
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease-in-out;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+}
+
+.modal-footer {
+  border-top: none;
+  padding-top: 0;
+}
+
+.btn-primary {
+  background-color: #4a90e2;
+  border-color: #4a90e2;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #3b78c5;
+}
+
+.btn-secondary:hover {
+  background-color: #6c757d;
+  opacity: 0.9;
+}
+
+input[type="checkbox"].form-check-input {
+  transform: scale(1.3);
+  margin-left: 0.5rem;
+}
+</style>

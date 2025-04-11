@@ -83,6 +83,7 @@ const personalLinks = [
   { to: '/mypage/budget', label: '예산 설정' },
   { to: '/mypage/income-category', label: '수입 분류 설정' },
   { to: '/mypage/expense-category', label: '지출 분류 설정' },
+  { to: '/mypage/fixed-expense', label: '고정 지출 설정' },
 ];
 
 const systemLinks = [
