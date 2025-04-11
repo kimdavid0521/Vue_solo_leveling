@@ -72,8 +72,28 @@ import { useAuthStore } from '@/stores/auth';
 import ProPaymentModal from '@/components/ProPaymentModal.vue';
 const authStore = useAuthStore();
 
-const registerFree = () => {
-  authStore.setUser({ ...authStore.user, isPremium: false });
+const registerFree = async () => {
+  try {
+    const userId = authStore.user?.id;
+    if (!userId) {
+      console.error('유저 정보가 없습니다.');
+      return;
+    }
+
+    // 유저 상태 업데이트 (프론트엔드)
+    authStore.setUser({ ...authStore.user, isPremium: false });
+
+    // 백엔드(DB)에도 업데이트 요청 보내기 (json-server 등 사용 시)
+    await fetch(`http://localhost:3000/users/${userId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ isPremium: false }),
+    });
+  } catch (error) {
+    console.error('무료 등록 중 오류 발생:', error);
+  }
 };
 </script>
 
