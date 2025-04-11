@@ -12,7 +12,7 @@
         style="cursor: pointer"
       >
         <div class="d-flex justify-content-between align-items-center">
-          <strong>{{ item.name || '(이름 없음)' }}</strong>
+          <strong>{{ item.name || "(이름 없음)" }}</strong>
           <small
             >{{ item.amount.toLocaleString() }}원 / {{ item.interval }}</small
           >
@@ -21,7 +21,7 @@
     </ul>
 
     <div v-if="selectedFixCost" class="card p-4">
-      <h5>✏️ 수정: {{ selectedFixCost.name || '(이름 없음)' }}</h5>
+      <h5>✏️ 수정: {{ selectedFixCost.name || "(이름 없음)" }}</h5>
 
       <div class="mb-3">
         <label class="form-label">이름</label>
@@ -86,10 +86,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useAuthStore } from '@/stores/auth';
-import axios from 'axios';
-import { useRouter } from 'vue-router';
+import { ref, onMounted } from "vue";
+import { useAuthStore } from "@/stores/auth";
+import axios from "axios";
+import { useRouter } from "vue-router";
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -101,11 +101,11 @@ const selectedFixCost = ref(null);
 onMounted(async () => {
   userId.value = authStore.user?.id;
   if (!userId.value) {
-    alert('로그인이 필요합니다.');
-    return router.push('/login');
+    alert("로그인이 필요합니다.");
+    return router.push("/login");
   }
 
-  const res = await axios.get(`http://localhost:3000/users/${userId.value}`);
+  const res = await axios.get(`/api/users/${userId.value}`);
   fixCostList.value = res.data.fixCost || [];
 });
 
@@ -119,33 +119,33 @@ const saveFixCost = async () => {
   );
 
   try {
-    await axios.patch(`http://localhost:3000/users/${userId.value}`, {
+    await axios.patch(`/api/users/${userId.value}`, {
       fixCost: updated,
     });
     fixCostList.value = updated;
     selectedFixCost.value = null;
-    alert('수정 완료!');
+    alert("수정 완료!");
   } catch (err) {
     console.error(err);
-    alert('수정 실패');
+    alert("수정 실패");
   }
 };
 
 const deleteFixCost = async (id) => {
-  if (!confirm('정말 삭제하시겠어요?')) return;
+  if (!confirm("정말 삭제하시겠어요?")) return;
 
   const updated = fixCostList.value.filter((item) => item.id !== id);
 
   try {
-    await axios.patch(`http://localhost:3000/users/${userId.value}`, {
+    await axios.patch(`/api/users/${userId.value}`, {
       fixCost: updated,
     });
     fixCostList.value = updated;
     selectedFixCost.value = null;
-    alert('삭제 완료!');
+    alert("삭제 완료!");
   } catch (err) {
     console.error(err);
-    alert('삭제 실패');
+    alert("삭제 실패");
   }
 };
 </script>

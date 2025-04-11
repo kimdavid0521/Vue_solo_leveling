@@ -22,7 +22,7 @@
             :disabled="!authStore.user || !authStore.user.isPremium"
             @click="registerFree"
           >
-            {{ authStore.user?.isPremium ? 'Free 이용하기' : '나의 현재 플랜' }}
+            {{ authStore.user?.isPremium ? "Free 이용하기" : "나의 현재 플랜" }}
           </button>
           <ul class="list-unstyled">
             <li>✔️ 거래 내역 입력</li>
@@ -46,7 +46,7 @@
             data-bs-toggle="modal"
             data-bs-target="#paymentModal"
           >
-            {{ authStore.user?.isPremium ? '나의 현재 플랜' : 'Pro 이용하기' }}
+            {{ authStore.user?.isPremium ? "나의 현재 플랜" : "Pro 이용하기" }}
           </button>
           <ul class="list-unstyled">
             <li>✔️ 거래 내역 입력</li>
@@ -65,15 +65,15 @@
 </template>
 
 <script setup>
-import { useAuthStore } from '@/stores/auth';
-import ProPaymentModal from '@/components/ProPaymentModal.vue';
+import { useAuthStore } from "@/stores/auth";
+import ProPaymentModal from "@/components/ProPaymentModal.vue";
 const authStore = useAuthStore();
 
 const registerFree = async () => {
   try {
     const userId = authStore.user?.id;
     if (!userId) {
-      console.error('유저 정보가 없습니다.');
+      console.error("유저 정보가 없습니다.");
       return;
     }
 
@@ -81,15 +81,15 @@ const registerFree = async () => {
     authStore.setUser({ ...authStore.user, isPremium: false });
 
     // 백엔드(DB)에도 업데이트 요청 보내기 (json-server 등 사용 시)
-    await fetch(`http://localhost:3000/users/${userId}`, {
-      method: 'PATCH',
+    await fetch(`/api/users/${userId}`, {
+      method: "PATCH",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ isPremium: false }),
     });
   } catch (error) {
-    console.error('무료 등록 중 오류 발생:', error);
+    console.error("무료 등록 중 오류 발생:", error);
   }
 };
 </script>

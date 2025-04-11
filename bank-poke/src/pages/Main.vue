@@ -56,15 +56,13 @@
 </template>
 
 <script setup>
-
-import { ref, computed, isRef,nextTick } from 'vue';
-import axios from 'axios';
-import Calender from '@/components/Calender.vue';
-import AddExpenseModal from '@/components/AddExpenseModal.vue';
-import TableLayout from '@/components/TableLayout.vue';
-import { useAuthStore } from '@/stores/auth';
-import { useRouter } from 'vue-router';
-
+import { ref, computed, isRef, nextTick } from "vue";
+import axios from "axios";
+import Calender from "@/components/Calender.vue";
+import AddExpenseModal from "@/components/AddExpenseModal.vue";
+import TableLayout from "@/components/TableLayout.vue";
+import { useAuthStore } from "@/stores/auth";
+import { useRouter } from "vue-router";
 
 // 유저 정보 받아오기
 const authStore = useAuthStore();
@@ -122,7 +120,7 @@ const saveExpense = async (newExpense) => {
       console.log("유저 정보가 없습니다");
     }
     // 유저 정보 가져오기
-    const res = await axios.get(`http://localhost:3000/users/${userId}`);
+    const res = await axios.get(`/api/users/${userId}`);
     const userData = res.data;
 
     if (newExpense.isRepeat) {
@@ -158,7 +156,7 @@ const saveExpense = async (newExpense) => {
       }
 
       // 고정 지출이랑 그에따른 지출 저장
-      await axios.patch(`http://localhost:3000/users/${userId}`, {
+      await axios.patch(`/api/users/${userId}`, {
         fixCost: userData.fixCost,
         transactions: userData.transactions,
       });
@@ -180,7 +178,7 @@ const saveExpense = async (newExpense) => {
       userData.transactions.push(newExpense);
 
       // 서버에 patch요청으로 저장
-      await axios.patch(`http://localhost:3000/users/${userId}`, {
+      await axios.patch(`/api/users/${userId}`, {
         transactions: userData.transactions,
       });
       authStore.setUser(userData);
