@@ -33,7 +33,7 @@
 
 <script setup>
 // Vue 및 Chart.js 관련 기능 import
-import { onMounted, watch, computed } from 'vue';
+import { onMounted, watch, computed, ref } from 'vue';
 import { Line } from 'vue-chartjs';
 import {
   Chart as ChartJS,
