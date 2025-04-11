@@ -32,7 +32,7 @@
         </button>
       </div>
 
-        <!-- 중앙: 메뉴 -->
+      <!-- 중앙: 메뉴 -->
       <div
         class="collapse navbar-collapse justify-content-center"
         :class="{ show: isOpen }"
@@ -46,7 +46,7 @@
               exact-active-class="active"
               @click="closeNavbar"
             >
-              가계부
+              <i class="fa-solid fa-calendar-days"></i> 가계부
             </RouterLink>
           </li>
           <li class="nav-item me-3">
@@ -57,19 +57,29 @@
               exact-active-class="active"
               @click="closeNavbar"
             >
-              거래 내역
+              <i class="fa-solid fa-receipt"></i> 거래 내역
             </RouterLink>
           </li>
           <li class="nav-item me-3">
-            <RouterLink
-              to="/analyze"
-              class="nav-link fw-bold text-secondary"
-              active-class="active"
-              exact-active-class="active"
-              @click="closeNavbar"
-            >
-              분석
-            </RouterLink>
+            <template v-if="authStore.user?.isPremium">
+              <RouterLink
+                to="/analyze"
+                class="nav-link fw-bold text-secondary"
+                active-class="active"
+                exact-active-class="active"
+                @click="closeNavbar"
+              >
+                <i class="fa-solid fa-chart-line me-1"></i> 분석
+              </RouterLink>
+            </template>
+            <template v-else>
+              <span
+                class="nav-link text-muted d-flex fw-bold align-items-center"
+                style="cursor: not-allowed"
+              >
+                <i class="fa-solid fa-lock me-1"></i> 분석
+              </span>
+            </template>
           </li>
           <li class="nav-item me-3">
             <RouterLink
@@ -79,7 +89,7 @@
               exact-active-class="active"
               @click="closeNavbar"
             >
-              자산
+              <i class="fa-solid fa-wallet"></i> 자산
             </RouterLink>
           </li>
         </ul>
@@ -99,6 +109,9 @@ import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import Alarm from './Alarm.vue';
 import MyAccount from './MyAccount.vue';
+import { useAuthStore } from '@/stores/auth';
+
+const authStore = useAuthStore();
 
 // 열림/닫힘 상태
 const isOpen = ref(false);
@@ -122,5 +135,8 @@ function closeNavbar() {
   font-weight: bold;
   color: #ffd95a !important;
   border-bottom: 2px solid #ffd95a;
+}
+.nav-link.text-muted {
+  opacity: 0.6;
 }
 </style>
