@@ -27,9 +27,9 @@
             {{ authStore.user?.isPremium ? 'Free 이용하기' : '나의 현재 플랜' }}
           </button>
           <ul class="list-unstyled">
-            <li>✔️ 통계 자료 제공</li>
             <li>✔️ 거래 내역 입력</li>
-            <li>✔️ 예산 정리</li>
+            <li>✔️ 거래 내역 보기</li>
+            <li>✔️ 예산 설정</li>
           </ul>
         </div>
 
@@ -53,11 +53,11 @@
             {{ authStore.user?.isPremium ? '나의 현재 플랜' : 'Pro 이용하기' }}
           </button>
           <ul class="list-unstyled">
-            <li>✔️ 통계 자료 및 그래프 제공</li>
-            <li>✔️ 통계 자료 CSV 파일 제공</li>
             <li>✔️ 거래 내역 입력</li>
-            <li>✔️ 예산 정리</li>
-            <li>✔️ 모임통장 기능 오픈</li>
+            <li>✔️ 거래 내역 보기</li>
+            <li>✔️ 예산 설정</li>
+            <li>✔️ 분석 자료 및 그래프 제공</li>
+            <li>✔️ 거래 내역 CSV 파일 제공</li>
           </ul>
         </div>
       </div>

@@ -8,7 +8,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">지출 추가</h5>
+          <h5 class="modal-title">내역 추가</h5>
           <button
             type="button"
             class="btn-close"
@@ -94,8 +94,8 @@
             <label class="form-label">소비 타입</label>
             <select v-model="selectedPayType" class="form-select">
               <option disabled value="">소비 타입 선택</option>
-              <option value="expense">소비</option>
-              <option value="income">입금</option>
+              <option value="expense">지출</option>
+              <option value="income">수입</option>
             </select>
           </div>
 
@@ -166,17 +166,22 @@ import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import { useAuthStore } from '@/stores/auth';
 
+// 오늘 날짜
+const today = new Date();
+const currentTime = today.toTimeString().slice(0, 5);
 // 유저 정보 받아오기
 const authStore = useAuthStore();
 const emit = defineEmits(['close', 'save']);
 
 const name = ref('');
 const amount = ref(0);
-const date = ref('');
-const startDate = ref('');
-const endDate = ref('');
-const time = ref('');
-const memo = ref('');
+
+const date = ref(today.toISOString().split("T")[0]);
+const startDate = ref(today.toISOString().split("T")[0]);
+const endDate = ref("");
+const time = ref(currentTime);
+const memo = ref("");
+
 const inInclude = ref(true);
 const selectedAssetType = ref(''); // 자산 타입
 const selectedAssetId = ref(''); // 자산 id
@@ -185,7 +190,12 @@ const selcetedCategoryType = ref(''); // 선택된 대분류 카테고리
 const selectedSubCategory = ref(''); // 소분류 카테고리
 const assetGroup = ref({ card: [], account: [], etc: [] });
 const categoryGroup = ref({ expense: [], income: [] });
-
+const category = ref("");
+const sub_category = ref("");
+const assetId = ref("");
+const type = ref("");
+const asset_type = ref("");
+const addTotal = ref("");
 // 고정 지출 여부 체크
 const isRepeat = ref(false);
 // 반복 주기
@@ -275,7 +285,7 @@ const handleSave = () => {
 }
 
 .modal-header {
-  background: #6c63ff;
+  background: #ffd95a;
   color: white;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;

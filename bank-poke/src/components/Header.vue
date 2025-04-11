@@ -103,6 +103,9 @@ import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import Alarm from './Alarm.vue';
 import MyAccount from './MyAccount.vue';
+import { useAuthStore } from '@/stores/auth';
+
+const authStore = useAuthStore();
 
 // 열림/닫힘 상태
 const isOpen = ref(false);
@@ -135,5 +138,8 @@ const menuItems = [
 }
 .navbar-brand img {
   object-fit: contain;
+}
+.nav-link.text-muted {
+  opacity: 0.6;
 }
 </style>

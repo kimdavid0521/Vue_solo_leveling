@@ -17,16 +17,20 @@
         v-if="showForm"
         class="modal fade show d-block"
         tabindex="-1"
-        style="background-color: rgba(0, 0, 0, 0.5)"
+        style="background-color: rgba(0, 0, 0, 0.3)"
       >
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-          <div class="modal-content p-3">
-            <div class="modal-header">
-              <h5 class="modal-title">수정할 자산을 선택하세요</h5>
+          <div
+            class="modal-content border-0 rounded-4 shadow-lg overflow-hidden"
+          >
+            <div class="modal-header bg-light border-0 py-3 px-4">
+              <h5 class="modal-title fw-semibold">수정할 자산을 선택하세요</h5>
               <button class="btn-close" @click="resetForm"></button>
             </div>
-
-            <div class="modal-body" style="max-height: 300px; overflow-y: auto">
+            <div
+              class="modal-body bg-white px-4 py-3"
+              style="max-height: 300px; overflow-y: auto"
+            >
               <ul class="list-group">
                 <li
                   v-for="asset in allAssets"
@@ -51,43 +55,45 @@
         v-if="selectedAsset"
         class="modal fade show d-block"
         tabindex="-1"
-        style="background-color: rgba(0, 0, 0, 0.5)"
+        style="background-color: rgba(0, 0, 0, 0.3)"
       >
         <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content p-4">
-            <div class="modal-header">
-              <h5 class="modal-title">자산 수정</h5>
+          <div
+            class="modal-content border-0 rounded-4 shadow-lg overflow-hidden"
+          >
+            <div class="modal-header bg-light border-0 py-3 px-4">
+              <h5 class="modal-title fw-semibold">자산 수정</h5>
               <button class="btn-close" @click="resetForm"></button>
             </div>
 
-            <div class="modal-body d-flex flex-column gap-3">
+            <div class="modal-body bg-white px-4 py-3 d-flex flex-column gap-3">
               <!-- 카드 수정 -->
               <template v-if="selectedAsset.type === 'card'">
                 <div>
-                  <label class="form-label">카드 이름</label>
+                  <label class="form-label mb-1">카드 이름</label>
                   <input
-                    class="form-control"
+                    class="form-control rounded-3"
                     v-model="selectedAsset.name"
                     required
                   />
                 </div>
 
                 <div>
-                  <label class="form-label">실적</label>
+                  <label class="form-label mb-1">실적</label>
                   <input
                     type="number"
                     v-model.number="selectedAsset.sales_achievements"
-                    class="form-control"
+                    class="form-control rounded-3"
                     min="0"
                     required
                   />
                 </div>
 
                 <div>
-                  <label class="form-label">연동 계좌</label>
+                  <label class="form-label mb-1">연동 계좌</label>
                   <select
                     v-model="selectedAsset.account_id"
-                    class="form-select"
+                    class="form-select rounded-3"
                     required
                   >
                     <option disabled value="">계좌를 선택하세요</option>
@@ -102,13 +108,13 @@
                 </div>
 
                 <div v-if="selectedAsset.isCheck === false">
-                  <label class="form-label">결제일 (일 단위)</label>
+                  <label class="form-label mb-1">결제일 (일 단위)</label>
                   <input
                     type="number"
                     min="1"
                     max="31"
                     v-model.number="selectedAsset.due_day"
-                    class="form-control"
+                    class="form-control rounded-3"
                     required
                   />
                 </div>
@@ -117,20 +123,20 @@
               <!-- 계좌 수정 -->
               <template v-else-if="selectedAsset.type === 'account'">
                 <div>
-                  <label class="form-label">은행 이름</label>
+                  <label class="form-label mb-1">은행 이름</label>
                   <input
-                    class="form-control"
+                    class="form-control rounded-3"
                     v-model="selectedAsset.name"
                     required
                   />
                 </div>
 
                 <div>
-                  <label class="form-label">초기 자본</label>
+                  <label class="form-label mb-1">초기 자본</label>
                   <input
                     type="number"
                     v-model.number="selectedAsset.balance"
-                    class="form-control"
+                    class="form-control rounded-3"
                     min="0"
                     required
                   />
@@ -140,20 +146,20 @@
               <!-- 기타 자산 수정 -->
               <template v-else-if="selectedAsset.type === 'etc'">
                 <div>
-                  <label class="form-label">기타 자산 이름</label>
+                  <label class="form-label mb-1">기타 자산 이름</label>
                   <input
-                    class="form-control"
+                    class="form-control rounded-3"
                     v-model="selectedAsset.name"
                     required
                   />
                 </div>
 
                 <div>
-                  <label class="form-label">금액</label>
+                  <label class="form-label mb-1">금액</label>
                   <input
                     type="number"
                     v-model.number="selectedAsset.balance"
-                    class="form-control"
+                    class="form-control rounded-3"
                     min="0"
                     required
                   />
@@ -161,10 +167,15 @@
               </template>
             </div>
 
-            <div class="modal-footer">
-              <button class="btn btn-secondary" @click="resetForm">취소</button>
+            <div class="modal-footer bg-light border-0 px-4 py-3">
               <button
-                class="btn btn-primary"
+                class="btn btn-outline-secondary rounded-3"
+                @click="resetForm"
+              >
+                취소
+              </button>
+              <button
+                class="btn btn-primary rounded-3 px-4"
                 :disabled="!isFormValid"
                 @click="updateAsset"
               >
@@ -227,6 +238,25 @@ const isFormValid = computed(() => {
 
 const updateAsset = async () => {
   if (!userId.value || !selectedAsset.value) return;
+
+  if (selectedAsset.value.type === 'card' && selectedAsset.value.due_day) {
+    const today = new Date();
+    const dueDateObj = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      selectedAsset.value.due_day
+    );
+
+    // YYYY-MM-DD 문자열로 변환
+    const yyyy = dueDateObj.getFullYear();
+    const mm = String(dueDateObj.getMonth() + 1).padStart(2, '0');
+    const dd = String(dueDateObj.getDate()).padStart(2, '0');
+    selectedAsset.value.dueDate = `${yyyy}-${mm}-${dd}`;
+
+    // due_day는 제거
+    delete selectedAsset.value.due_day;
+  }
+
   await store.updateAsset(userId.value, selectedAsset.value, () => {
     resetForm();
   });

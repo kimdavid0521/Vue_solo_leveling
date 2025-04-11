@@ -76,11 +76,18 @@ const saveMonthlyBudget = async () => {
     };
 
     await fetch(`/api/users/${authStore.user.id}`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(updatedUser),
+      body: JSON.stringify({
+        setting: [
+          {
+            ...authStore.user.setting[0],
+            monthlyBudget: monthlyBudget.value,
+          },
+        ],
+      }),
     });
 
     authStore.setUser(updatedUser);
