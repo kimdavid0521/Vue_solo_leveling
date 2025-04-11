@@ -76,7 +76,7 @@ const authStore = useAuthStore();
 // 로그인된 사용자 정보
 const userId = computed(() => authStore.user?.id);
 const user = computed(
-  () => assetStore.users.find((u) => u.id === userId.value) || null
+  () => assetStore.users.find((u) => u.id == userId.value) || null
 );
 
 // 컴포넌트 마운트 시 사용자와 지출 데이터 로딩
