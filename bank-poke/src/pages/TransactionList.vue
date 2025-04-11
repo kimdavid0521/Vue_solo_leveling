@@ -129,7 +129,7 @@
               </td>
               <td>{{ tr.date }} {{ tr.time }}</td>
               <td>{{ asset(tr.asset_type, tr.assetId) }}</td>
-              <td>{{ tr.category }}</td>
+              <td>{{ tr.mainCategory }}</td>
               <td>{{ tr.name }}</td>
               <td>{{ tr.amount.toLocaleString() }}원</td>
             </tr>
@@ -339,11 +339,18 @@ const filteredTransactions = computed(() => {
 
 // 필터링된 거래내역에서 전체/수입/지출 필터하여 랜더링 + 내림차순 정렬
 const filteredTransactionsByType = computed(() => {
-  const transactions = filteredTransactions.value.filter((ts) => {
-    if (currentTab.value === '수입') return ts.type === 'income';
-    else if (currentTab.value === '지출') return ts.type === 'expense';
-    return true;
-  });
+  const transactions = filteredTransactions.value
+    .filter((ts) => {
+      if (currentTab.value === '수입') return ts.type === 'income';
+      else if (currentTab.value === '지출') return ts.type === 'expense';
+      return true;
+    })
+    .map((ts) => ({
+      ...ts,
+      mainCategory: user.value.category?.[ts.type].find(
+        (item) => item.id === ts.category
+      )?.main_category,
+    }));
   return transactions.sort((a, b) => {
     const dateA = new Date(`${a.date}T${a.time}`);
     const dateB = new Date(`${b.date}T${b.time}`);
