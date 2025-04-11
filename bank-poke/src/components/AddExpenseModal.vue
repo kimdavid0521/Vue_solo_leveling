@@ -8,7 +8,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">지출 추가</h5>
+          <h5 class="modal-title">내역 추가</h5>
           <button
             type="button"
             class="btn-close"
@@ -16,6 +16,26 @@
           ></button>
         </div>
         <div class="modal-body">
+          <!-- 고정 지출 여부 -->
+          <div class="mb-3">
+            <label class="form-label">고정 지출 여부</label>
+            <input
+              v-model="isRepeat"
+              type="checkbox"
+              class="form-check-input"
+            />
+          </div>
+          <!-- 고정 지출 반복 주기 -->
+          <div v-if="isRepeat" class="mb-3">
+            <label class="form-label">반복 주기</label>
+            <select v-model="interval" class="form-select">
+              <option disabled value="">주기 선택</option>
+              <option value="daily">매일</option>
+              <option value="weekly">매주</option>
+              <option value="monthly">매월</option>
+              <option value="yearly">매년</option>
+            </select>
+          </div>
           <div class="mb-3">
             <label class="form-label">지출 이름</label>
             <input v-model="name" type="text" class="form-control" />
@@ -24,9 +44,22 @@
             <label class="form-label">금액</label>
             <input v-model.number="amount" type="number" class="form-control" />
           </div>
-          <div class="mb-3">
+          <!-- 고정 지출이라면 시작날짜와 종료날짜로 변경 -->
+          <div class="mb-3" v-if="!isRepeat">
             <label class="form-label">날짜</label>
             <input v-model="date" type="date" class="form-control" />
+          </div>
+
+          <div v-else class="row mb-3">
+            <div class="col">
+              <label class="form-label">시작 날짜</label>
+              <input v-model="startDate" type="date" class="form-control" />
+            </div>
+
+            <div class="col">
+              <label class="form-label">종료 날짜</label>
+              <input v-model="endDate" type="date" class="form-control" />
+            </div>
           </div>
           <div class="mb-3">
             <label class="form-label">시간</label>
@@ -61,8 +94,8 @@
             <label class="form-label">소비 타입</label>
             <select v-model="selectedPayType" class="form-select">
               <option disabled value="">소비 타입 선택</option>
-              <option value="expense">소비</option>
-              <option value="income">입금</option>
+              <option value="expense">지출</option>
+              <option value="income">수입</option>
             </select>
           </div>
 
@@ -129,21 +162,53 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
-import axios from "axios";
-const emit = defineEmits(["close", "save"]);
+import { ref, computed, onMounted } from 'vue';
+import axios from 'axios';
+import { useAuthStore } from '@/stores/auth';
 
-const selectedAssetType = ref(""); // 자산 타입
-const selectedAssetId = ref(""); // 자산 id
-const selectedPayType = ref(""); // 소비 분류 타입 : 소비인지 입금인지
-const selcetedCategoryType = ref(""); // 선택된 대분류 카테고리
-const selectedSubCategory = ref(""); // 소분류 카테고리
+// 오늘 날짜
+const today = new Date();
+const currentTime = today.toTimeString().slice(0, 5);
+// 유저 정보 받아오기
+const authStore = useAuthStore();
+const emit = defineEmits(['close', 'save']);
+
+const name = ref('');
+const amount = ref(0);
+
+const date = ref(today.toISOString().split("T")[0]);
+const startDate = ref(today.toISOString().split("T")[0]);
+const endDate = ref("");
+const time = ref(currentTime);
+const memo = ref("");
+
+const inInclude = ref(true);
+const selectedAssetType = ref(''); // 자산 타입
+const selectedAssetId = ref(''); // 자산 id
+const selectedPayType = ref(''); // 소비 분류 타입 : 소비인지 입금인지
+const selcetedCategoryType = ref(''); // 선택된 대분류 카테고리
+const selectedSubCategory = ref(''); // 소분류 카테고리
 const assetGroup = ref({ card: [], account: [], etc: [] });
 const categoryGroup = ref({ expense: [], income: [] });
+const category = ref("");
+const sub_category = ref("");
+const assetId = ref("");
+const type = ref("");
+const asset_type = ref("");
+const addTotal = ref("");
+// 고정 지출 여부 체크
+const isRepeat = ref(false);
+// 반복 주기
+const interval = ref('');
 
 onMounted(async () => {
   try {
-    const res = await axios.get("http://localhost:3000/users/2");
+    const userId = authStore.user?.id;
+    if (!userId) {
+      console.log('유저 정보가 없습니다');
+    }
+    console.log(userId);
+    const res = await axios.get(`http://localhost:3000/users/${userId}`);
     assetGroup.value = res.data.asset_group;
     categoryGroup.value = res.data.category;
   } catch (err) {
@@ -169,17 +234,12 @@ const subCategoryOptions = computed(() => {
   return selected ? selected.sub_categories : [];
 });
 
-const name = ref("");
-const amount = ref(0);
-const date = ref("");
-const time = ref("");
-const memo = ref("");
-const inInclude = ref(true);
-
 const handleSave = () => {
-  emit("save", {
+  emit('save', {
     name: name.value,
-    date: date.value,
+    date: isRepeat.value
+      ? { startDate: startDate.value, endDate: endDate.value }
+      : date.value,
     category: selcetedCategoryType.value,
     sub_category: selectedSubCategory.value,
     assetId: selectedAssetId.value,
@@ -189,18 +249,127 @@ const handleSave = () => {
     time: time.value,
     asset_type: selectedAssetType.value,
     addTotal: inInclude.value,
+    isRepeat: isRepeat.value,
+    ...(isRepeat.value && { interval: interval.value }), // 인터벌 값 제어
   });
 
-  name.value = "";
-  date.value = "";
-  category.value = "";
-  sub_category.value = "";
-  assetId.value = "";
-  type.value = "";
-  amount.value = "";
-  memo.value = "";
-  time.value = "";
-  asset_type.value = "";
-  addTotal.value = "";
+  name.value = '';
+  amount.value = 0;
+  date.value = '';
+  startDate.value = '';
+  endDate.value = '';
+  time.value = '';
+  memo.value = '';
+  inInclude.value = true;
+  selectedAssetType.value = '';
+  selectedAssetId.value = '';
+  selectedPayType.value = '';
+  selcetedCategoryType.value = '';
+  selectedSubCategory.value = '';
+  isRepeat.value = false;
+  interval.value = '';
 };
 </script>
+
+<style scoped>
+.modal-dialog {
+  max-width: 600px;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.modal-content {
+  background: linear-gradient(to right, #f8f9fa, #ffffff);
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  background: #ffd95a;
+  color: white;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 1.2rem 1.5rem;
+}
+
+.modal-title {
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.btn-close {
+  filter: brightness(100);
+}
+
+.modal-body {
+  padding: 2rem;
+  font-size: 1rem;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.form-control,
+.form-select {
+  border-radius: 12px;
+  border: 1px solid #ced4da;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #6c63ff;
+  box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.25);
+}
+
+.form-check-input {
+  width: 1.2rem;
+  height: 1.2rem;
+  cursor: pointer;
+}
+
+.modal-footer {
+  background: #f1f3f5;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-primary {
+  background-color: #6c63ff;
+  border: none;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #574fd6;
+}
+
+.btn-secondary {
+  background-color: #adb5bd;
+  border: none;
+  font-weight: 600;
+}
+
+.btn-secondary:hover {
+  background-color: #868e96;
+}
+
+@keyframes fadeInUp {
+  0% {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+</style>

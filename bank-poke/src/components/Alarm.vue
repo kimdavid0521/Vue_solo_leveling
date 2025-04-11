@@ -32,6 +32,7 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, computed, watchEffect, onMounted, onBeforeUnmount } from 'vue';
 import { useAuthStore } from '@/stores/auth';
@@ -39,7 +40,7 @@ import { useAuthStore } from '@/stores/auth';
 // 1. 상태 선언 정리
 const authStore = useAuthStore();
 const alarm = ref([]);
-const monthConsumption = ref(10000000);
+const monthConsumption = ref(0);
 // 현재 월을 영어 약어 (Jan ~ Dec)로 가져오기
 const monthNames = [
   'Jan',
@@ -56,11 +57,24 @@ const monthNames = [
   'Dec',
 ];
 const currentMonth = monthNames[new Date().getMonth()];
+const currentYearMonth = new Date().toISOString().slice(0, 7); // 'YYYY-MM'
 
 // 예산 가져오기 (기본값 0)
 const budget = ref(
   authStore.user?.setting?.[0]?.monthlyBudget?.[currentMonth] ?? 0
 );
+
+// 여기서 monthConsumption 계산 로직 추가
+onMounted(() => {
+  const transactions = authStore.user?.transactions ?? [];
+  const expensesThisMonth = transactions.filter(
+    (tx) => tx.type === 'expense' && tx.date?.startsWith(currentYearMonth)
+  );
+  monthConsumption.value = expensesThisMonth.reduce(
+    (sum, tx) => sum + tx.amount,
+    0
+  );
+});
 
 // 알림 관련 상태
 const unreadCount = computed(
@@ -112,27 +126,32 @@ watchEffect(() => {
 });
 
 // 3. 카드 결제 예정일 알림
-const cardList = ref(authStore.user?.card ?? []);
-
+const cardList = computed(() => authStore.user?.asset_group?.card ?? []);
+console.log(cardList.value);
 watchEffect(() => {
   const today = new Date();
+  today.setHours(0, 0, 0, 0); // 자정으로 맞춰서 정확한 비교
 
-  cardList.value.forEach((card) => {
-    if (!card.dueDate) return;
+  cardList.value
+    .filter((card) => card.isCheck === false) // ✅ 체크 안 된 카드만
+    .forEach((card) => {
+      const dueDateStr = card.dueDate; // 또는 card.due_day로 계산해도 됨
+      if (!dueDateStr) return;
 
-    const due = new Date(card.dueDate);
-    due.setHours(0, 0, 0, 0);
-    const diff = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
-    const key = `card-${card.name}-${card.dueDate}`;
+      const dueDate = new Date(dueDateStr);
+      dueDate.setHours(0, 0, 0, 0);
 
-    if (diff <= 3 && diff >= 0 && !cardAlertKeys.value.has(key)) {
-      alarm.value.push({
-        message: `💳 ${card.name} 결제일이 ${diff}일 남았습니다!`,
-        read: false,
-      });
-      cardAlertKeys.value.add(key);
-    }
-  });
+      const diff = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+      const key = `card-${card.id}-${dueDateStr}`;
+
+      if (diff <= 3 && diff >= 0 && !cardAlertKeys.value.has(key)) {
+        alarm.value.push({
+          message: `💳 ${card.name} 카드 결제일이 ${diff}일 남았습니다!`,
+          read: false,
+        });
+        cardAlertKeys.value.add(key);
+      }
+    });
 });
 
 // 4. 고정지출 알림
@@ -174,9 +193,10 @@ watchEffect(() => {
   today.setHours(0, 0, 0, 0);
 
   fixedCostList.value.forEach((item) => {
-    if (item.type !== 'expense' || !item.startDate || !item.interval) return;
+    if (item.type !== 'expense' || !item.date?.startDate || !item.interval)
+      return;
 
-    const nextDue = getNextDueDate(item.startDate, item.interval);
+    const nextDue = getNextDueDate(item.date?.startDate, item.interval);
     if (!nextDue) return;
 
     const diff = Math.ceil((nextDue - today) / (1000 * 60 * 60 * 24));

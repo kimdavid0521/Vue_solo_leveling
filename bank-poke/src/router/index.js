@@ -83,6 +83,10 @@ const router = createRouter({
           path: 'expense-category',
           component: () => import('../pages/MypageSub/ExpenseCategory.vue'), // 지출 분류 설정
         },
+        {
+          path: 'fixed-expense',
+          component: () => import('../pages/MypageSub/FixedExpense.vue'), // 고정 지출 설정
+        },
       ],
     },
 

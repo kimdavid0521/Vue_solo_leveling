@@ -94,9 +94,22 @@ onMounted(async () => {
   }
 });
 
+// 다음 id 가져오기
+function getNextId(categories) {
+  if (categories.length === 0) return 1;
+  // 이미 존재하는 카테고리 중 가장 큰 id를 찾고 +1
+  const maxId = Math.max(...categories.map((cat) => cat.id ?? 0));
+  return maxId + 1;
+}
+
 // 새 카테고리 추가
 const addCategory = () => {
-  expenseCategories.value.push({ main_category: '', sub_categories: [] });
+  const newId = getNextId(expenseCategories.value);
+  expenseCategories.value.push({
+    id: newId,
+    main_category: '',
+    sub_categories: [],
+  });
   selectedCategoryIndex.value = expenseCategories.value.length - 1;
 };
 
