@@ -6,7 +6,7 @@
 </div>
 
 # Bank-Poke
-> **KB It's Your Life 6기 스켈레톤 프로젝트 ** <br/> **개발기간: 2025.04.07 ~ 2025.04.11**
+> KB It's Your Life 6기 스켈레톤 프로젝트  <br/> **개발기간: 2025.04.07 ~ 2025.04.11**
 
 ## 배포 주소
 
@@ -93,11 +93,13 @@ $ npm run dev
 
 ---
 ## 화면 구성 📺
-| 메인 페이지  |  소개 페이지   |
-| :-------------------------------------------: | :------------: |
-|  <img width="329" src="https://user-images.githubusercontent.com/50205887/208036155-a57900f7-c68a-470d-923c-ff3c296ea635.png"/> |  <img width="329" src="https://user-images.githubusercontent.com/50205887/208036645-a76cf400-85bc-4fa2-af72-86d2abf61366.png"/>|  
-| 강좌 소개 페이지   |  강의 영상 페이지   |  
-| <img width="329" src="https://user-images.githubusercontent.com/50205887/208038737-2b32b7d2-25f4-4949-baf5-83b5c02915a3.png"/>   |  <img width="329" src="https://user-images.githubusercontent.com/50205887/208038965-43a6318a-7b05-44bb-97c8-b08b0495fba7.png"/>     |
+| 로그인 페이지  |  가계부 페이지   |
+| :-------------------------------------------: | :------------: | 
+|  ![Image](https://github.com/user-attachments/assets/68b16c1a-6cc3-4024-ba9f-1bdef5d8c7ed) |  ![Image](https://github.com/user-attachments/assets/02f5b711-6f71-44b4-97fc-173f0c6be901)|  
+| 거래내역 페이지   |  분석 페이지   |  
+| ![Image](https://github.com/user-attachments/assets/484603c4-a2f1-41fe-a9aa-f591c34597e2)   |  ![Image](https://github.com/user-attachments/assets/a56c60fd-bf03-4f04-9d67-1ec6203fd68d)     |
+| 자산 페이지   |  마이페이지 페이지   |  
+| ![Image](https://github.com/user-attachments/assets/57a778b7-0c4d-451c-991f-1fa627346b7f)  |  ![Image](https://github.com/user-attachments/assets/8119ad13-84af-4c29-ac2a-7930ac0d2280)     |
 
 ---
 
