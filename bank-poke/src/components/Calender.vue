@@ -40,6 +40,7 @@
       <div class="offcanvas offcanvas-end" id="demo">
         <div class="offcanvas-header">
           <h1 class="offcanvas-title">
+            <i class="fa-solid fa-calendar-days me-2"></i>
             {{ selectedDate }}일의
             {{
               pageProps.currentPage === "수입"
@@ -55,9 +56,14 @@
             data-bs-dismiss="offcanvas"
           ></button>
         </div>
+
         <div class="offcanvas-body">
-          <div v-if="filteredSelectedDateEvents.length === 0">
+          <div
+            v-if="filteredSelectedDateEvents.length === 0"
+            class="no-events-message"
+          >
             <p>
+              <i class="fas fa-info-circle me-2"></i>
               {{
                 pageProps.currentPage === "수입"
                   ? "수입 내역이 없습니다."
@@ -68,37 +74,49 @@
             </p>
           </div>
 
-          <ul v-else class="list-group">
+          <ul v-else class="event-list">
             <li
               v-for="event in filteredSelectedDateEvents"
               :key="event.id"
-              class="list-group-item d-flex justify-content-between align-items-center"
+              class="event-card"
               :class="{
-                'bg-danger': event.type === 'expense',
-                'bg-primary': event.type === 'income',
+                income: event.type === 'income',
+                expense: event.type === 'expense',
               }"
             >
-              <div>
-                {{
-                  new Date(event.start).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })
-                }}
-                - {{ event.name }} : {{ event.amount.toLocaleString() }}원
+              <div class="event-content">
+                <div class="event-time">
+                  <i class="fas fa-clock me-1"></i>
+                  {{
+                    new Date(event.start).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
+                  }}
+                </div>
+                <div class="event-detail">
+                  <span class="fw-bold">{{ event.name }}</span>
+                  <span class="event-amount">
+                    {{ event.amount.toLocaleString() }}원
+                  </span>
+                </div>
               </div>
-              <div class="btn-group">
-                <button
-                  class="btn btn-light btn-sm"
-                  @click="openEditModal(event)"
-                >
-                  수정
+
+              <div class="event-actions">
+                <button class="btn btn-outline-secondary btn-sm" disabled>
+                  {{ event.sub_category }}
                 </button>
                 <button
-                  class="btn btn-danger btn-sm"
+                  class="btn btn-outline-secondary btn-sm"
+                  @click="openEditModal(event)"
+                >
+                  <i class="fas fa-edit me-1"></i>수정
+                </button>
+                <button
+                  class="btn btn-outline-danger btn-sm"
                   @click="deleteEvent(event)"
                 >
-                  삭제
+                  <i class="fas fa-trash-alt me-1"></i>삭제
                 </button>
               </div>
             </li>
@@ -630,9 +648,8 @@ const calendarOptions = {
   dayMaxEvents: false,
   dayMaxEventRows: false,
   height: "auto",
-  width: "auto",
   datesSet: handleDatesSet,
-
+  expandRows: true,
   eventContent(arg) {
     if (arg.event.extendedProps.isSummary) {
       const { total, incomeTotal, expenseTotal } = arg.event.extendedProps;
@@ -729,13 +746,6 @@ defineExpose({
   font-family: "Noto Sans KR", sans-serif;
 }
 
-.milcho-calendar-container {
-  background-color: #f9f9f9;
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
 .text-center h4 {
   font-size: 2rem;
   margin-bottom: 0.5rem;
@@ -755,7 +765,7 @@ defineExpose({
 }
 
 .milcho-custom-calendar {
-  margin-top: 1.5rem;
+  margin-top: 3rem;
 }
 
 .fc-daygrid-event {
@@ -773,16 +783,6 @@ defineExpose({
 
 .fc-event {
   border: none;
-}
-
-.fc-event.income {
-  background-color: #3498db !important;
-  color: #fff !important;
-}
-
-.fc-event.expense {
-  background-color: #e74c3c !important;
-  color: #fff !important;
 }
 
 .offcanvas {
@@ -813,13 +813,19 @@ defineExpose({
 }
 
 .list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
   font-size: 1rem;
   font-weight: 500;
   color: #fff;
   border: none;
-  margin-bottom: 0.5rem;
-  padding: 0.75rem 1rem;
-  transition: transform 0.2s ease;
+  margin-bottom: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
 }
 
 .list-group-item.bg-danger {
@@ -831,8 +837,103 @@ defineExpose({
 }
 
 .list-group-item:hover {
-  transform: translateX(5px);
+  transform: scale(1.02);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
+
+.list-group-item > div:first-child {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-group {
+  flex-shrink: 0;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-group .btn {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s ease;
+}
+
+.btn-group .btn:hover {
+  filter: brightness(90%);
+}
+
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.event-card {
+  background-color: #fff;
+  border-left: 6px solid #ccc;
+  padding: 1rem;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  word-break: break-word;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.event-card.income {
+  border-left-color: #3498db;
+}
+
+.event-card.expense {
+  border-left-color: #e74c3c;
+}
+
+.event-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.event-time {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.event-detail {
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #333;
+}
+
+.event-amount {
+  margin-left: 1rem;
+  font-weight: bold;
+  color: #000;
+  white-space: nowrap;
+}
+
+.event-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.no-events-message {
+  color: #777;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+}
+
 .modal-content {
   border-radius: 1rem;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
@@ -895,5 +996,80 @@ label {
 input[type="checkbox"].form-check-input {
   transform: scale(1.3);
   margin-left: 0.5rem;
+}
+</style>
+
+<style>
+/* 전체 캘린더 배경 및 기본 폰트 */
+.milcho-custom-calendar .fc {
+  background-color: #fff;
+  font-family: "Pretendard", sans-serif;
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* 타이틀 커스텀 (예: 2025 April) */
+.milcho-custom-calendar .fc-toolbar-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2e2e2e;
+}
+
+/* 이전/다음 버튼 커스텀 */
+.milcho-custom-calendar .fc-button {
+  background-color: #4a90e2;
+  border: none;
+  color: #fff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.milcho-custom-calendar .fc-button:hover {
+  background-color: #3a78c2;
+}
+
+/* 요일 헤더 */
+.milcho-custom-calendar .fc-col-header-cell {
+  background-color: #f6f8fa;
+  font-weight: 600;
+  padding: 0.75rem 0;
+  color: #555;
+  border: none;
+}
+
+/* 날짜 셀 */
+.milcho-custom-calendar .fc-daygrid-day {
+  border: none;
+  transition: background 0.2s;
+}
+
+.milcho-custom-calendar .fc-day-today {
+  background-color: #e3f2fd !important;
+  border-radius: 10px;
+}
+
+/* 이벤트 커스텀 */
+.milcho-custom-calendar .fc-event {
+  background-color: #fff;
+  border: none;
+  color: #333;
+  font-size: 0.85rem;
+  padding: 2px 6px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.milcho-custom-calendar .fc-event:hover {
+  transform: scale(1.03);
+}
+
+/* 월간 날짜 상단 숫자 */
+.milcho-custom-calendar .fc-daygrid-day-number {
+  font-weight: 500;
+  color: #333;
+  padding: 0.2rem;
 }
 </style>

@@ -30,10 +30,10 @@
 </template>
 
 <script setup>
-import ForgotPassword from '@/components/ForgotPassword.vue';
-import Signup from '@/components/SignUp.vue';
-import { ref } from 'vue';
-import LoginForm from '@/components/LoginForm.vue';
+import ForgotPassword from "@/components/ForgotPassword.vue";
+import Signup from "@/components/SignUp.vue";
+import { ref } from "vue";
+import LoginForm from "@/components/LoginForm.vue";
 
 // 비밀번호 찾기 페이지 표시 여부
 const isForgot = ref(false);
