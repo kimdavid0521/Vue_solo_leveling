@@ -6,10 +6,25 @@
       "nickname": "1",
       "email": "1@naver.com",
       "password": "1",
-      "isPremium": true,
+      "isPremium": false,
       "asset_group": {
         "card": [],
-        "account": [],
+        "account": [
+          {
+            "id": 1744336764014,
+            "name": "ㅈㅂㄷㄷ",
+            "balance": 0,
+            "type": "은행",
+            "group": "입출금"
+          },
+          {
+            "id": 1744336787689,
+            "name": "ㄴㅁㅇㄴㅁㅇㄴㅁㅇ",
+            "balance": 0,
+            "type": "은행",
+            "group": "입출금"
+          }
+        ],
         "etc": []
       },
       "setting": [
@@ -33,7 +48,38 @@
           }
         }
       ],
-      "transactions": [],
+      "transactions": [
+        {
+          "name": "ㄴㅁㅇ",
+          "date": "2025-04-11",
+          "category": 2,
+          "sub_category": "부모님",
+          "assetId": 1744336764014,
+          "type": "income",
+          "amount": 3213,
+          "memo": "",
+          "time": "11:00",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 1
+        },
+        {
+          "name": "ㅇㄴㅁㅇㄴㅁㅇ",
+          "date": "2025-04-11",
+          "category": 1,
+          "sub_category": "월급",
+          "assetId": 1744336764014,
+          "type": "income",
+          "amount": 321321321,
+          "memo": "",
+          "time": "11:04",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 2
+        }
+      ],
       "fixCost": [],
       "together_bank": [],
       "category": {

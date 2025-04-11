@@ -157,8 +157,10 @@ const saveChanges = async () => {
   background: white;
   border-radius: 12px;
   padding: 2rem;
-  width: 500px;
-  margin: auto auto;
+  width: 100%;
+  max-width: 500px;
+  min-width: 350px;
+  margin: auto;
 }
 
 .form-label {

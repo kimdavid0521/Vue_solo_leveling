@@ -7,11 +7,9 @@
       <!-- 플랜 카드 -->
       <div class="row justify-content-center text-start">
         <!-- Free Plan -->
-        <div
-          class="col-md-5 p-4 m-2 rounded-4 border border-dark shadow-sm bg-white"
-        >
-          <h4 class="fw-bold">Free</h4>
-          <h2 class="fw-bold">
+        <div class="col-md-5 p-4 m-2 plan-card">
+          <h4 class="fw-bold plan-title">Free</h4>
+          <h2 class="fw-bold plan-price">
             0원 <small class="text-muted fs-6">/월</small>
           </h2>
           <button
@@ -34,11 +32,9 @@
         </div>
 
         <!-- Pro Plan -->
-        <div
-          class="col-md-5 p-4 m-2 rounded-4 border border-dark shadow-sm bg-white"
-        >
-          <h4 class="fw-bold">Pro</h4>
-          <h2 class="fw-bold">
+        <div class="col-md-5 p-4 m-2 plan-card">
+          <h4 class="fw-bold plan-title">Pro</h4>
+          <h2 class="fw-bold plan-price">
             1,000원 <small class="text-muted fs-6">/월</small>
           </h2>
           <button
@@ -62,7 +58,8 @@
         </div>
       </div>
     </div>
-    <!-- 모달 컴포넌트를 여기로 이동 -->
+
+    <!-- 모달 -->
     <ProPaymentModal />
   </div>
 </template>
@@ -99,7 +96,6 @@ const registerFree = async () => {
 
 <style scoped>
 .container {
-  /* background-color: #f9f9f9; */
   padding: 3rem;
   border-radius: 1rem;
 }
@@ -173,10 +169,28 @@ const registerFree = async () => {
   color: white;
 }
 
-/* 반응형 */
+/* 반응형 스타일 */
 @media (max-width: 768px) {
   .plan-card {
     margin-bottom: 2rem;
+    padding: 1.5rem;
+  }
+
+  .plan-title {
+    font-size: 1.1rem;
+  }
+
+  .plan-price {
+    font-size: 1.6rem;
+  }
+
+  .plan-card ul {
+    font-size: 0.9rem;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
   }
 }
 </style>
