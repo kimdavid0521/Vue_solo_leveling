@@ -7,11 +7,9 @@
       <!-- 플랜 카드 -->
       <div class="row justify-content-center text-start">
         <!-- Free Plan -->
-        <div
-          class="col-md-5 p-4 m-2 rounded-4 border border-dark shadow-sm bg-white"
-        >
-          <h4 class="fw-bold">Free</h4>
-          <h2 class="fw-bold">
+        <div class="col-md-5 p-4 m-2 plan-card">
+          <h4 class="fw-bold plan-title">Free</h4>
+          <h2 class="fw-bold plan-price">
             0원 <small class="text-muted fs-6">/월</small>
           </h2>
           <button
@@ -24,7 +22,7 @@
             :disabled="!authStore.user || !authStore.user.isPremium"
             @click="registerFree"
           >
-            {{ authStore.user?.isPremium ? 'Free 이용하기' : '나의 현재 플랜' }}
+            {{ authStore.user?.isPremium ? "Free 이용하기" : "나의 현재 플랜" }}
           </button>
           <ul class="list-unstyled">
             <li>✔️ 거래 내역 입력</li>
@@ -34,11 +32,9 @@
         </div>
 
         <!-- Pro Plan -->
-        <div
-          class="col-md-5 p-4 m-2 rounded-4 border border-dark shadow-sm bg-white"
-        >
-          <h4 class="fw-bold">Pro</h4>
-          <h2 class="fw-bold">
+        <div class="col-md-5 p-4 m-2 plan-card">
+          <h4 class="fw-bold plan-title">Pro</h4>
+          <h2 class="fw-bold plan-price">
             1,000원 <small class="text-muted fs-6">/월</small>
           </h2>
           <button
@@ -50,7 +46,7 @@
             data-bs-toggle="modal"
             data-bs-target="#paymentModal"
           >
-            {{ authStore.user?.isPremium ? '나의 현재 플랜' : 'Pro 이용하기' }}
+            {{ authStore.user?.isPremium ? "나의 현재 플랜" : "Pro 이용하기" }}
           </button>
           <ul class="list-unstyled">
             <li>✔️ 거래 내역 입력</li>
@@ -62,24 +58,44 @@
         </div>
       </div>
     </div>
-    <!-- 모달 컴포넌트를 여기로 이동 -->
+
+    <!-- 모달 -->
     <ProPaymentModal />
   </div>
 </template>
 
 <script setup>
-import { useAuthStore } from '@/stores/auth';
-import ProPaymentModal from '@/components/ProPaymentModal.vue';
+import { useAuthStore } from "@/stores/auth";
+import ProPaymentModal from "@/components/ProPaymentModal.vue";
 const authStore = useAuthStore();
 
-const registerFree = () => {
-  authStore.setUser({ ...authStore.user, isPremium: false });
+const registerFree = async () => {
+  try {
+    const userId = authStore.user?.id;
+    if (!userId) {
+      console.error("유저 정보가 없습니다.");
+      return;
+    }
+
+    // 유저 상태 업데이트 (프론트엔드)
+    authStore.setUser({ ...authStore.user, isPremium: false });
+
+    // 백엔드(DB)에도 업데이트 요청 보내기 (json-server 등 사용 시)
+    await fetch(`/api/users/${userId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ isPremium: false }),
+    });
+  } catch (error) {
+    console.error("무료 등록 중 오류 발생:", error);
+  }
 };
 </script>
 
 <style scoped>
 .container {
-  /* background-color: #f9f9f9; */
   padding: 3rem;
   border-radius: 1rem;
 }
@@ -153,10 +169,28 @@ const registerFree = () => {
   color: white;
 }
 
-/* 반응형 */
+/* 반응형 스타일 */
 @media (max-width: 768px) {
   .plan-card {
     margin-bottom: 2rem;
+    padding: 1.5rem;
+  }
+
+  .plan-title {
+    font-size: 1.1rem;
+  }
+
+  .plan-price {
+    font-size: 1.6rem;
+  }
+
+  .plan-card ul {
+    font-size: 0.9rem;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
   }
 }
 </style>

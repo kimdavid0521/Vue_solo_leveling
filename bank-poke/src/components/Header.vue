@@ -46,14 +46,42 @@
             v-for="(item, index) in menuItems"
             :key="index"
           >
-            <RouterLink
-              :to="item.path"
-              class="nav-link fw-bold text-secondary"
-              active-class="active"
-              exact-active-class="active"
-            >
-              {{ item.label }}
-            </RouterLink>
+            <!-- 분석 메뉴만 조건 분기 -->
+            <template v-if="item.path === '/analyze'">
+              <template v-if="authStore.user?.isPremium">
+                <RouterLink
+                  :to="item.path"
+                  class="nav-link fw-bold text-secondary"
+                  active-class="active"
+                  exact-active-class="active"
+                >
+                  <i :class="[item.icon, 'me-1']"></i>
+                  {{ item.label }}
+                </RouterLink>
+              </template>
+              <template v-else>
+                <span
+                  class="nav-link text-muted d-flex fw-bold align-items-center"
+                  style="cursor: not-allowed"
+                >
+                  <i class="fa-solid fa-lock me-1"></i>
+                  {{ item.label }}
+                </span>
+              </template>
+            </template>
+
+            <!-- 나머지 메뉴 -->
+            <template v-else>
+              <RouterLink
+                :to="item.path"
+                class="nav-link fw-bold text-secondary"
+                active-class="active"
+                exact-active-class="active"
+              >
+                <i :class="[item.icon, 'me-1']"></i>
+                {{ item.label }}
+              </RouterLink>
+            </template>
           </li>
         </ul>
       </div>
@@ -120,10 +148,14 @@ function closeNavbar() {
   isOpen.value = false;
 }
 const menuItems = [
-  { path: '/main', label: '가계부' },
-  { path: '/transaction-list', label: '거래 내역' },
-  { path: '/analyze', label: '분석' },
-  { path: '/asset', label: '자산' },
+  { path: '/main', label: '가계부', icon: 'fa-solid fa-calendar-days' },
+  {
+    path: '/transaction-list',
+    label: '거래 내역',
+    icon: 'fa-solid fa-receipt',
+  },
+  { path: '/analyze', label: '분석', icon: 'fa-solid fa-chart-line' },
+  { path: '/asset', label: '자산', icon: 'fa-solid fa-wallet' },
 ];
 </script>
 

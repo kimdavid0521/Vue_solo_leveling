@@ -24,17 +24,11 @@
               hidden
               v-model="isDetail"
               @change="loadExpenseData"
-              :disabled="!user?.isPremium"
             />
             <label for="toggle" class="toggleSwitch">
               <span class="toggleButton"></span>
             </label>
-            <span class="ml-2 toggle-label">
-              더 자세히
-              <span v-if="!user?.isPremium" class="text-muted small"
-                >(Premium Service)</span
-              >
-            </span>
+            <span class="ml-2 toggle-label"> 더 자세히 </span>
           </div>
         </div>
       </div>

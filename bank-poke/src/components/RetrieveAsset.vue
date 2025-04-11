@@ -227,15 +227,46 @@ const getTransactionSum = ({ filterFn = () => true } = {}) => {
 
 // 계좌 ID와 체크카드 여부에 따른 카드 거래 총합
 const getCardTransactionSumByAccountId = (accountId, isCheck) => {
+  const today = new Date();
   const cards =
     user.value?.asset_group?.card?.filter((c) => c.isCheck === isCheck) || [];
   const cardIds = cards.map((c) => String(c.id));
+
   return getTransactionSum({
-    filterFn: (tx) =>
-      tx.asset_type === 'card' &&
-      cardIds.includes(String(tx.assetId)) &&
-      String(cards.find((c) => c.id == tx.assetId)?.account_id) ===
-        String(accountId),
+    filterFn: (tx) => {
+      const card = cards.find((c) => String(c.id) === String(tx.assetId));
+      if (
+        tx.asset_type !== 'card' ||
+        !card ||
+        String(card.account_id) !== String(accountId)
+      ) {
+        return false;
+      }
+
+      const txDate = new Date(tx.date);
+
+      // (1) 미래 거래는 제외
+      if (txDate > today) {
+        return false;
+      }
+
+      if (!isCheck) {
+        const dueDay = parseInt(card.dueDate.split('-')[2], 10);
+
+        // (2) tx.date 기준 결제일 계산
+        const txDueDate =
+          txDate.getDate() < dueDay
+            ? new Date(txDate.getFullYear(), txDate.getMonth(), dueDay)
+            : new Date(txDate.getFullYear(), txDate.getMonth() + 1, dueDay);
+
+        // (3) 결제일이 오늘보다 크면 반영하지 않음
+        if (txDueDate > today) {
+          return false;
+        }
+      }
+
+      return true;
+    },
   });
 };
 

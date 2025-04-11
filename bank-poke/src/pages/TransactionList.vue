@@ -1,5 +1,4 @@
 <template>
-
   <div class="container" style="width: 1000px">
     <h5 class="my-3 custom-header">거래 내역</h5>
     <!-- 거래 내역 헤더: 년월 이동 pagination + '이번달' 버튼 + 검색 버튼 -->
@@ -64,7 +63,7 @@
           ></i>
         </button>
         <button
-          v-if="user.isPremium"
+          v-if="state.user?.isPremium"
           class="btn btn-sm rounded-circle custom-btn"
           style="width: 2rem"
           @click="downloadExcel"
@@ -72,7 +71,6 @@
           <i class="fa-solid fa-file-arrow-down"></i>
         </button>
       </div>
-
     </div>
     <!-- 거래 내역 테이블 -->
     <TableLayout :tabs="tabs" @update-tab="updateTab">
@@ -116,7 +114,7 @@
               </th>
             </tr>
           </thead>
-          <tbody v-if="user && filteredTransactionsByType.length > 0">
+          <tbody v-if="state.user && filteredTransactionsByType.length > 0">
             <tr
               v-for="tr in filteredTransactionsByType"
               :key="tr.id"
@@ -148,7 +146,7 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive } from 'vue';
+import { ref, computed, reactive, onBeforeMount } from 'vue';
 import { useAuthStore } from '@/stores/auth.js';
 import TableLayout from '@/components/TableLayout.vue';
 import SearchBox from '@/components/SearchBox.vue';
@@ -156,10 +154,28 @@ import axios from 'axios';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
-
 // const { state, deleteTransactions } = useAuthStore();
 const authStore = useAuthStore();
-const user = computed(() => authStore.user);
+// const user = computed(() => authStore.user);
+const state = reactive({ user: null });
+
+onBeforeMount(async () => {
+  try {
+    const userId = authStore.user?.id;
+    if (!userId) {
+      console.log('로그인된 유저가 없습니다');
+      return;
+    }
+    const res = await axios.get(`/api/users/${userId}`);
+    if (res.status === 200) {
+      state.user = res.data;
+      return true;
+    }
+    return false;
+  } catch (err) {
+    console.error('데이터 불러오기 실패:', err);
+  }
+});
 
 // 선택된 거래 내역 id 리스트
 const selectedTransactions = ref([]);
@@ -167,7 +183,7 @@ const selectedTransactions = ref([]);
 // 검색 활성화관련 변수
 const isSearch = ref(false);
 // 현재 클릭된 탭 변수
-const currentTab = ref("전체");
+const currentTab = ref('전체');
 
 // 금액 범위
 const moneyLimit = reactive({
@@ -176,7 +192,7 @@ const moneyLimit = reactive({
 });
 
 // 검색된 내용 문자열
-const searchText = ref("");
+const searchText = ref('');
 
 // 선택된 자산 필터
 const assetSelected = ref(null);
@@ -216,38 +232,38 @@ const categoryFilter = (categories) => {
 // 탭 데이터
 const tabs = computed(() => [
   {
-    name: "전체",
-    count: transactionsByType("전체").length,
-    amount: transactionsByType("전체").reduce((sum, t) => sum + t.amount, 0),
+    name: '전체',
+    count: transactionsByType('전체').length,
+    amount: transactionsByType('전체').reduce((sum, t) => sum + t.amount, 0),
   },
   {
-    name: "수입",
-    count: transactionsByType("수입").length,
-    amount: transactionsByType("수입").reduce((sum, t) => sum + t.amount, 0),
+    name: '수입',
+    count: transactionsByType('수입').length,
+    amount: transactionsByType('수입').reduce((sum, t) => sum + t.amount, 0),
   },
   {
-    name: "지출",
-    count: transactionsByType("지출").length,
-    amount: transactionsByType("지출").reduce((sum, t) => sum + t.amount, 0),
+    name: '지출',
+    count: transactionsByType('지출').length,
+    amount: transactionsByType('지출').reduce((sum, t) => sum + t.amount, 0),
   },
 ]);
 
 // 어떤 자산인지 계산하여 반환
 const asset = computed(() => {
   return (type, id) => {
-    if (type === "card") {
-      const card = user.value.asset_group.card.find((c) => c.id === id);
-      return card ? (card.isCheck ? "체크카드" : "신용카드") : "";
-    } else if (type === "cash") {
-      return "현금";
-    } else if (type === "account") {
-      const account = user.value.asset_group.account.find((a) => a.id === id);
-      return account ? account.name : "";
-    } else if (type === "etc") {
-      const assetEtc = user.value.asset_group.etc.find((i) => i.id === id);
-      return assetEtc ? assetEtc.name : "";
+    if (type === 'card') {
+      const card = state.user.asset_group.card.find((c) => c.id === id);
+      return card ? (card.isCheck ? '체크카드' : '신용카드') : '';
+    } else if (type === 'cash') {
+      return '현금';
+    } else if (type === 'account') {
+      const account = state.user.asset_group.account.find((a) => a.id === id);
+      return account ? account.name : '';
+    } else if (type === 'etc') {
+      const assetEtc = state.user.asset_group.etc.find((i) => i.id === id);
+      return assetEtc ? assetEtc.name : '';
     }
-    return "기타";
+    return '기타';
   };
 });
 
@@ -257,7 +273,7 @@ const currentDate = ref(new Date());
 // YYYY-MM 형식으로 포맷
 const formattedDate = computed(() => {
   const year = currentDate.value.getFullYear();
-  const month = String(currentDate.value.getMonth() + 1).padStart(2, "0");
+  const month = String(currentDate.value.getMonth() + 1).padStart(2, '0');
   return `${year}-${month}`;
 });
 
@@ -280,16 +296,16 @@ const goToNow = () => {
 
 // 필터링된 거래내역
 const filteredTransactions = computed(() => {
-  if (!user.value || !user.value.transactions) return [];
+  if (!state.user || !state.user.transactions) return [];
 
   const currentYear = currentDate.value.getFullYear();
   const currentMonth = currentDate.value.getMonth() + 1;
 
   return (
-    user.value.transactions
+    state.user.transactions
       // 1. 년월 필터
       .filter((ts) => {
-        const [year, month] = ts.date.split("-").map(Number); // 현재 yyyy-mm-dd 형식으로 계산
+        const [year, month] = ts.date.split('-').map(Number); // 현재 yyyy-mm-dd 형식으로 계산
         return year === currentYear && month === currentMonth;
       })
       // 2. 금액 범위 필터
@@ -312,7 +328,7 @@ const filteredTransactions = computed(() => {
       // 4. 자산 필터
       .filter((ts) => {
         if (!assetSelected.value) return true;
-        if (assetSelected.value === "cash" && ts.asset_type === "cash")
+        if (assetSelected.value === 'cash' && ts.asset_type === 'cash')
           return true;
         else if (
           assetSelected.value !== null &&
@@ -350,7 +366,7 @@ const filteredTransactionsByType = computed(() => {
     })
     .map((ts) => ({
       ...ts,
-      mainCategory: user.value.category?.[ts.type].find(
+      mainCategory: state.user.category?.[ts.type]?.find(
         (item) => item.id === ts.category
       )?.main_category,
     }));
@@ -364,8 +380,8 @@ const filteredTransactionsByType = computed(() => {
 // 수입/지출/전체의 금액과 거래 수 계산을 위해 타입별 거래 배열 반환
 const transactionsByType = (typeName) => {
   return filteredTransactions.value.filter((ts) => {
-    if (typeName === "수입") return ts.type === "income";
-    if (typeName === "지출") return ts.type === "expense";
+    if (typeName === '수입') return ts.type === 'income';
+    if (typeName === '지출') return ts.type === 'expense';
     return true;
   });
 };
@@ -388,24 +404,23 @@ const switchSearch = () => {
 const deleteSelectedTransactions = async () => {
   if (!confirm('선택한 거래내역을 삭제하시겠습니까?')) return;
 
-
   // deleteTransactions(selectedTransactions.value);
-  if (!user.value) return;
+  if (!state.user) return;
 
   // 1. 삭제된 거래내역 필터링
-  const updatedTransactions = user.value.transactions.filter(
+  const updatedTransactions = state.user.transactions.filter(
     (ts) => !selectedTransactions.value.includes(ts.id)
   );
 
   try {
     // 2. PUT 요청으로 업데이트된 거래내역을 서버에 저장
-    const response = await axios.put(`/api/users/${user.value.id}`, {
-      ...user.value,
+    const response = await axios.put(`/api/users/${state.user.id}`, {
+      ...state.user,
       transactions: updatedTransactions,
     });
 
     if (response.status === 200) {
-      user.value.transactions = updatedTransactions; // 클라이언트 반영
+      state.user.transactions = updatedTransactions; // 클라이언트 반영
       selectedTransactions.value = []; //삭제 후 선택 초기화
       return true;
     }
