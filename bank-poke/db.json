@@ -274,9 +274,1055 @@
           "sub_category": "택시",
           "assetId": 1744268089898,
           "type": "expense",
-          "amount": 1000,
+          "amount": 12000,
+          "memo": "고정지출 메모",
+          "time": "02:22",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 34
+        },
+        {
+          "name": "",
+          "date": "2025-04-23",
+          "category": 2,
+          "sub_category": "지하철",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 12000,
+          "memo": "고정지출 메모",
+          "time": "02:22",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 35
+        },
+        {
+          "name": "",
+          "date": "2025-04-24",
+          "category": 2,
+          "sub_category": "지하철",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 12000,
+          "memo": "고정지출 메모",
+          "time": "02:22",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 36
+        },
+        {
+          "name": "김티 고정 지출",
+          "date": "2025-04-09",
+          "category": 1,
+          "sub_category": "월급",
+          "assetId": 1,
+          "type": "income",
+          "amount": 10000,
+          "memo": "카드 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 37
+        },
+        {
+          "name": "김티 고정 지출",
+          "date": "2025-04-10",
+          "category": 1,
+          "sub_category": "월급",
+          "assetId": 1,
+          "type": "income",
+          "amount": 10000,
+          "memo": "카드 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 38
+        },
+        {
+          "name": "김티 고정 지출",
+          "date": "2025-04-11",
+          "category": 1,
+          "sub_category": "월급",
+          "assetId": 1,
+          "type": "income",
+          "amount": 10000,
+          "memo": "카드 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 39
+        },
+        {
+          "name": "김티 고정 지출",
+          "date": "2025-04-12",
+          "category": 1,
+          "sub_category": "월급",
+          "assetId": 1,
+          "type": "income",
+          "amount": 10000,
+          "memo": "카드 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 40
+        },
+        {
+          "name": "김티 고정 지출",
+          "date": "2025-04-13",
+          "category": 1,
+          "sub_category": "월급",
+          "assetId": 1,
+          "type": "income",
+          "amount": 10000,
+          "memo": "카드 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 41
+        },
+        {
+          "name": "김티 고정 지출",
+          "date": "2025-04-14",
+          "category": 1,
+          "sub_category": "월급",
+          "assetId": 1,
+          "type": "income",
+          "amount": 10000,
+          "memo": "카드 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 42
+        },
+        {
+          "name": "김티 고정 지출",
+          "date": "2025-04-15",
+          "category": 1,
+          "sub_category": "월급",
+          "assetId": 1,
+          "type": "income",
+          "amount": 10000,
+          "memo": "카드 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 43
+        },
+        {
+          "name": "김티 고정 지출",
+          "date": "2025-04-16",
+          "category": 1,
+          "sub_category": "월급",
+          "assetId": 1,
+          "type": "income",
+          "amount": 10000,
+          "memo": "카드 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 44
+        },
+        {
+          "name": "김티 고정 지출",
+          "date": "2025-04-17",
+          "category": 1,
+          "sub_category": "월급",
+          "assetId": 1,
+          "type": "income",
+          "amount": 10000,
+          "memo": "카드 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 45
+        },
+        {
+          "name": "김티 고정 지출",
+          "date": "2025-04-18",
+          "category": 1,
+          "sub_category": "월급",
+          "assetId": 1,
+          "type": "income",
+          "amount": 10000,
+          "memo": "카드 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 46
+        },
+        {
+          "name": "김티 고정 지출",
+          "date": "2025-04-19",
+          "category": 1,
+          "sub_category": "월급",
+          "assetId": 1,
+          "type": "income",
+          "amount": 10000,
+          "memo": "카드 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 47
+        },
+        {
+          "name": "김티 고정 지출",
+          "date": "2025-04-20",
+          "category": 1,
+          "sub_category": "월급",
+          "assetId": 1,
+          "type": "income",
+          "amount": 10000,
+          "memo": "카드 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 48
+        },
+        {
+          "name": "김티 고정 지출",
+          "date": "2025-04-21",
+          "category": 1,
+          "sub_category": "월급",
+          "assetId": 1,
+          "type": "income",
+          "amount": 10000,
+          "memo": "카드 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 49
+        },
+        {
+          "name": "김티 고정 지출",
+          "date": "2025-04-22",
+          "category": 1,
+          "sub_category": "월급",
+          "assetId": 1,
+          "type": "income",
+          "amount": 10000,
+          "memo": "카드 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 50
+        },
+        {
+          "name": "김티 고정 지출",
+          "date": "2025-04-23",
+          "category": 1,
+          "sub_category": "월급",
+          "assetId": 1,
+          "type": "income",
+          "amount": 10000,
+          "memo": "카드 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 51
+        },
+        {
+          "name": "김티 고정 지출",
+          "date": "2025-04-24",
+          "category": 1,
+          "sub_category": "월급",
+          "assetId": 1,
+          "type": "income",
+          "amount": 10000,
+          "memo": "카드 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 52
+        },
+        {
+          "name": "고정 김태영 지출",
+          "date": "2025-04-09",
+          "category": 1,
+          "sub_category": "마트",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 10000,
+          "memo": "김태영 마트 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 53
+        },
+        {
+          "name": "고정 김태영 지출",
+          "date": "2025-04-10",
+          "category": 1,
+          "sub_category": "마트",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 10000,
+          "memo": "김태영 마트 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 54
+        },
+        {
+          "name": "고정 김태영 지출",
+          "date": "2025-04-11",
+          "category": 1,
+          "sub_category": "마트",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 10000,
+          "memo": "김태영 마트 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 55
+        },
+        {
+          "name": "고정 김태영 지출",
+          "date": "2025-04-12",
+          "category": 1,
+          "sub_category": "마트",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 10000,
+          "memo": "김태영 마트 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 56
+        },
+        {
+          "name": "고정 김태영 지출",
+          "date": "2025-04-13",
+          "category": 1,
+          "sub_category": "마트",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 10000,
+          "memo": "김태영 마트 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 57
+        },
+        {
+          "name": "고정 김태영 지출",
+          "date": "2025-04-14",
+          "category": 1,
+          "sub_category": "마트",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 10000,
+          "memo": "김태영 마트 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 58
+        },
+        {
+          "name": "고정 김태영 지출",
+          "date": "2025-04-15",
+          "category": 1,
+          "sub_category": "마트",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 10000,
+          "memo": "김태영 마트 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 59
+        },
+        {
+          "name": "고정 김태영 지출",
+          "date": "2025-04-16",
+          "category": 1,
+          "sub_category": "마트",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 10000,
+          "memo": "김태영 마트 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 60
+        },
+        {
+          "name": "고정 김태영 지출",
+          "date": "2025-04-17",
+          "category": 1,
+          "sub_category": "마트",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 10000,
+          "memo": "김태영 마트 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 61
+        },
+        {
+          "name": "고정 김태영 지출",
+          "date": "2025-04-18",
+          "category": 1,
+          "sub_category": "마트",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 10000,
+          "memo": "김태영 마트 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 62
+        },
+        {
+          "name": "고정 김태영 지출",
+          "date": "2025-04-19",
+          "category": 1,
+          "sub_category": "마트",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 10000,
+          "memo": "김태영 마트 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 63
+        },
+        {
+          "name": "고정 김태영 지출",
+          "date": "2025-04-20",
+          "category": 1,
+          "sub_category": "마트",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 10000,
+          "memo": "김태영 마트 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 64
+        },
+        {
+          "name": "고정 김태영 지출",
+          "date": "2025-04-21",
+          "category": 1,
+          "sub_category": "마트",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 10000,
+          "memo": "김태영 마트 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 65
+        },
+        {
+          "name": "고정 김태영 지출",
+          "date": "2025-04-22",
+          "category": 1,
+          "sub_category": "마트",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 10000,
+          "memo": "김태영 마트 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "interval": "daily",
+          "id": 66
+        }
+      ],
+      "fixCost": [
+        {
+          "name": "김태영 고정지출",
+          "date": {
+            "startDate": "2025-04-09",
+            "endDate": "2025-04-24"
+          },
+          "category": 2,
+          "sub_category": "지하철",
+          "assetId": 1,
+          "type": "expense",
+          "amount": 12000,
+          "memo": "고정지출 메모",
+          "time": "02:22",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": true,
+          "interval": "monthly",
+          "id": 2
+        },
+        {
+          "name": "김티 고정 지출",
+          "date": {
+            "startDate": "2025-04-09",
+            "endDate": "2025-04-24"
+          },
+          "category": 1,
+          "sub_category": "월급",
+          "assetId": 1,
+          "type": "income",
+          "amount": 10000,
+          "memo": "카드 고정 지출",
+          "time": "01:30",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": true,
+          "interval": "daily",
+          "id": 4
+        }
+      ],
+      "together_bank": [
+        {
+          "id": 1,
+          "master_user_id": 1,
+          "members_id": [
+            2,
+            3,
+            4
+          ],
+          "total_balance": 3082894,
+          "history": [
+            {
+              "id": 1,
+              "user_id": 1,
+              "name": "Sdas",
+              "amount": 213123,
+              "type": "income"
+            }
+          ]
+        }
+      ],
+      "category": {
+        "expense": [
+          {
+            "id": 1,
+            "main_category": "식비",
+            "sub_categories": [
+              "외식",
+              "마트",
+              "카페",
+              "배달"
+            ]
+          },
+          {
+            "id": 2,
+            "main_category": "교통비",
+            "sub_categories": [
+              "버스",
+              "지하철",
+              "택시",
+              "기타"
+            ]
+          },
+          {
+            "id": 3,
+            "main_category": "주거/통신",
+            "sub_categories": [
+              "월세",
+              "관리비",
+              "인터넷",
+              "휴대폰"
+            ]
+          },
+          {
+            "id": 4,
+            "main_category": "생활",
+            "sub_categories": [
+              "세탁",
+              "청소",
+              "생필품"
+            ]
+          },
+          {
+            "id": 5,
+            "main_category": "기타",
+            "sub_categories": [
+              "기타 지출"
+            ]
+          }
+        ],
+        "income": [
+          {
+            "id": 1,
+            "main_category": "급여",
+            "sub_categories": [
+              "월급",
+              "상여금"
+            ]
+          },
+          {
+            "id": 2,
+            "main_category": "용돈",
+            "sub_categories": [
+              "부모님",
+              "친척",
+              "기타"
+            ]
+          },
+          {
+            "id": 3,
+            "main_category": "투자수익",
+            "sub_categories": [
+              "주식",
+              "코인",
+              "이자"
+            ]
+          },
+          {
+            "id": 4,
+            "main_category": "기타",
+            "sub_categories": [
+              "환급",
+              "기타 수입"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "66a5",
+      "username": "1",
+      "nickname": "1",
+      "email": "1@naver.com",
+      "password": "1",
+      "isPremium": false,
+      "asset_group": {
+        "card": [],
+        "account": [],
+        "etc": []
+      },
+      "setting": [
+        {
+          "currency": "kr",
+          "weekStart": "Monday",
+          "monthStart": 1,
+          "monthlyBudget": {
+            "Jan": 0,
+            "Feb": 0,
+            "Mar": 0,
+            "Apr": 10000,
+            "May": 0,
+            "Jun": 0,
+            "Jul": 0,
+            "Aug": 0,
+            "Sep": 0,
+            "Oct": 0,
+            "Nov": 0,
+            "Dec": 0
+          }
+        }
+      ],
+      "transactions": [
+        {
+          "name": "김태영 지출",
+          "date": "2025-04-11",
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 12000,
+          "memo": "김지출 계좌지출",
+          "time": "18:45",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 1
+        },
+        {
+          "name": "김태영 거래내역",
+          "date": "2025-04-10",
+          "category": 2,
+          "sub_category": "버스",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 12000,
+          "memo": "교통비 소비",
+          "time": "18:49",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 2
+        },
+        {
+          "name": "김태영지출1",
+          "date": "2025-04-08",
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 12000,
+          "memo": "김태영 지출12",
+          "time": "19:06",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 3
+        },
+        {
+          "name": "ㄴㅇ",
+          "date": "2025-04-09",
+          "category": 2,
+          "sub_category": "버스",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 12,
+          "memo": "ㅌㅊㅌ",
+          "time": "19:08",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 4
+        },
+        {
+          "name": "sdsa",
+          "date": "2025-04-07",
+          "category": 2,
+          "sub_category": "버스",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 99,
+          "memo": "sfsdfs",
+          "time": "19:11",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 5
+        },
+        {
+          "name": "ㅁㅁㅁㅁ",
+          "date": "2025-04-02",
+          "category": 2,
+          "sub_category": "지하철",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 99,
+          "memo": "홀ㄹ",
+          "time": "19:14",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 7
+        },
+        {
+          "name": "aaa",
+          "date": "2025-04-01",
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 12,
+          "memo": "aaa",
+          "time": "19:18",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 7
+        },
+        {
+          "name": "sdsddssd",
+          "date": "2025-04-04",
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 2222,
+          "memo": "zxzczxc",
+          "time": "19:19",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 8
+        },
+        {
+          "name": "ㅗㅗㅗㅗ",
+          "date": "2025-04-17",
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 67567,
+          "memo": "ㅊㄹㅊㅌㅍㅌㅊ",
+          "time": "19:21",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 9
+        },
+        {
+          "name": "ㄴㅁㅇㅁㅇ",
+          "date": "2025-04-23",
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 3243,
+          "memo": "ㄹㄴㅇ",
+          "time": "19:22",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 10
+        },
+        {
+          "name": "ㄹㅇㅇㄴㅁㄹㄴㅇㄹ",
+          "date": "2025-04-20",
+          "category": 2,
+          "sub_category": "버스",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 232323,
+          "memo": "ㅁㄴㅇㄹㅇㄹㅇㄴ",
+          "time": "20:27",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 11
+        },
+        {
+          "name": "dsfsdfsd",
+          "date": "2025-04-26",
+          "category": 2,
+          "sub_category": "지하철",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 3423423,
+          "memo": "sadas",
+          "time": "20:27",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 12
+        },
+        {
+          "name": "gttgrrtgrtgrtg",
+          "date": "2025-04-29",
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 78787878,
+          "memo": "hghgjhgjghhgj",
+          "time": "21:29",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 13
+        },
+        {
+          "name": "ㄷㅈㄱㄷㅈㄱㅈㄷㄱㅈㄷㄱㅈㄷㄱ",
+          "date": "2025-04-24",
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 534534543534,
+          "memo": "ㅇㄴㄹㄴㅇㄹㄴㅇ",
+          "time": "20:31",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 14
+        },
+        {
+          "name": "ㄷㅈㅇㄴㄹㄴㅇ",
+          "date": "2025-04-21",
+          "category": 2,
+          "sub_category": "버스",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 2343243423,
+          "memo": "ㅁㄴㅇㅁㄴㅇㅁ",
+          "time": "19:32",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 15
+        },
+        {
+          "name": "ㄴㅁㅇㄴㅁ",
+          "date": "2025-04-30",
+          "category": 1,
+          "sub_category": "마트",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 2323,
+          "memo": "ㅂㅂㅈㄷㅂㅈ",
+          "time": "20:34",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 16
+        },
+        {
+          "name": "fdsfsdfds",
+          "date": "2025-04-26",
+          "category": 2,
+          "sub_category": "버스",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 34,
+          "memo": "sdfsdf",
+          "time": "19:35",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 17
+        },
+        {
+          "name": "gdsgfgd",
+          "date": "2025-04-27",
+          "category": 2,
+          "sub_category": "지하철",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 23132,
+          "memo": "sadsada",
+          "time": "19:36",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 18
+        },
+        {
+          "name": "wdsda",
+          "date": "2025-04-15",
+          "category": 2,
+          "sub_category": "버스",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 2132,
+          "memo": "asdas",
+          "time": "19:49",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 19
+        },
+        {
+          "name": "wsdsadas",
+          "date": "2025-04-19",
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 21123,
+          "memo": "sadasd",
+          "time": "19:50",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 20
+        },
+        {
+          "name": "",
+          "date": "",
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": "",
           "memo": "",
-          "time": "20:32",
+          "time": "",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": "",
+          "id": 21
+        },
+        {
+          "name": "sadas",
+          "date": "2025-04-12",
+          "category": 2,
+          "sub_category": "택시",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 24342,
+          "memo": "sadasd",
+          "time": "19:52",
+          "asset_type": "account",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 22
+        }
+      ],
+      "fixCost": [
+        {
+          "name": "김매주지출",
+          "date": {
+            "startDate": "2025-04-10",
+            "endDate": "2025-04-16"
+          },
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744258929857,
+          "type": "expense",
+          "amount": 12000,
+          "memo": "김매주지출메모",
+          "time": "16:03",
           "asset_type": "account",
           "addTotal": true,
           "isRepeat": true,
@@ -284,6 +1330,162 @@
           "id": 2
         }
       ],
+      "together_bank": [],
+      "category": {
+        "expense": [
+          {
+            "id": 1,
+            "main_category": "식비",
+            "sub_categories": [
+              "외식",
+              "마트",
+              "카페",
+              "배달"
+            ]
+          },
+          {
+            "id": 2,
+            "main_category": "교통비",
+            "sub_categories": [
+              "버스",
+              "지하철",
+              "택시",
+              "기타"
+            ]
+          },
+          {
+            "id": 3,
+            "main_category": "주거/통신",
+            "sub_categories": [
+              "월세",
+              "관리비",
+              "인터넷",
+              "휴대폰"
+            ]
+          },
+          {
+            "id": 4,
+            "main_category": "생활",
+            "sub_categories": [
+              "세탁",
+              "청소",
+              "생필품"
+            ]
+          },
+          {
+            "id": 5,
+            "main_category": "기타",
+            "sub_categories": [
+              "기타 지출"
+            ]
+          }
+        ],
+        "income": [
+          {
+            "id": 1,
+            "main_category": "급여",
+            "sub_categories": [
+              "월급",
+              "상여금"
+            ]
+          },
+          {
+            "id": 2,
+            "main_category": "용돈",
+            "sub_categories": [
+              "부모님",
+              "친척",
+              "기타"
+            ]
+          },
+          {
+            "id": 3,
+            "main_category": "투자수익",
+            "sub_categories": [
+              "주식",
+              "코인",
+              "이자"
+            ]
+          },
+          {
+            "id": 4,
+            "main_category": "기타",
+            "sub_categories": [
+              "환급",
+              "기타 수입"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "c4f5",
+      "username": "김",
+      "nickname": "태영",
+      "email": "trust00005@naver.com",
+      "password": "abcd1234!",
+      "isPremium": false,
+      "asset_group": {
+        "card": [
+          {
+            "id": 1744276708608,
+            "name": "김태영의 국민은행 카드",
+            "sales_achievements": 120000,
+            "isCheck": true,
+            "account_id": 1744276676324,
+            "minus_balance": 0
+          }
+        ],
+        "account": [
+          {
+            "id": 1744276676324,
+            "name": "김태영의 국민은행 계좌",
+            "balance": 10000000,
+            "type": "은행",
+            "group": "입출금"
+          }
+        ],
+        "etc": []
+      },
+      "setting": [
+        {
+          "currency": "kr",
+          "weekStart": "Monday",
+          "monthStart": 1,
+          "monthlyBudget": {
+            "Jan": 0,
+            "Feb": 0,
+            "Mar": 0,
+            "Apr": 0,
+            "May": 0,
+            "Jun": 0,
+            "Jul": 0,
+            "Aug": 0,
+            "Sep": 0,
+            "Oct": 0,
+            "Nov": 0,
+            "Dec": 0
+          }
+        }
+      ],
+      "transactions": [
+        {
+          "name": "ㄴㅁㅇㅁㄴㅇ",
+          "date": "2025-04-10",
+          "category": 1,
+          "sub_category": "외식",
+          "assetId": 1744276708608,
+          "type": "expense",
+          "amount": 12212,
+          "memo": "ㄴㅁㅇㅁㄴ",
+          "time": "19:24",
+          "asset_type": "card",
+          "addTotal": true,
+          "isRepeat": false,
+          "id": 1
+        }
+      ],
+      "fixCost": [],
       "together_bank": [],
       "category": {
         "expense": [

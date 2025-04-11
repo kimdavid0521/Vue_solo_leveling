@@ -1,4 +1,5 @@
 <template>
+
   <div class="container" style="width: 1000px">
     <h5 class="my-3 custom-header">거래 내역</h5>
     <!-- 거래 내역 헤더: 년월 이동 pagination + '이번달' 버튼 + 검색 버튼 -->
@@ -39,7 +40,7 @@
         </button>
       </div>
 
-      <!-- 검색 박스 -->
+      <!-- 버튼 박스(검색 + 엑셀로 내보내기) -->
       <div class="d-flex gap-1 me-2">
         <!-- <div class="search-box-wrapper" :class="{ expanded: isSearch }"> -->
         <SearchBox
@@ -61,7 +62,16 @@
             :class="isSearch ? 'fa-xmark' : 'fa-magnifying-glass'"
           ></i>
         </button>
+        <button
+          v-if="user.isPremium"
+          class="btn btn-sm rounded-circle custom-btn"
+          style="width: 2rem"
+          @click="downloadExcel"
+        >
+          <i class="fa-solid fa-file-arrow-down"></i>
+        </button>
       </div>
+
     </div>
     <!-- 거래 내역 테이블 -->
     <TableLayout :tabs="tabs" @update-tab="updateTab">
@@ -137,12 +147,16 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive } from 'vue';
+import { ref, computed, reactive } from "vue";
 // import { useUserStore } from '@/stores/user.js';
+
 import { useAuthStore } from '@/stores/auth.js';
 import TableLayout from '@/components/TableLayout.vue';
 import SearchBox from '@/components/SearchBox.vue';
 import axios from 'axios';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+
 
 // const { state, deleteTransactions } = useAuthStore();
 const authStore = useAuthStore();
@@ -155,7 +169,7 @@ const selectedTransactions = ref([]);
 // 검색 활성화관련 변수
 const isSearch = ref(false);
 // 현재 클릭된 탭 변수
-const currentTab = ref('전체');
+const currentTab = ref("전체");
 
 // 금액 범위
 const moneyLimit = reactive({
@@ -164,7 +178,7 @@ const moneyLimit = reactive({
 });
 
 // 검색된 내용 문자열
-const searchText = ref('');
+const searchText = ref("");
 
 // 선택된 자산 필터
 const assetSelected = ref(null);
@@ -197,38 +211,38 @@ const assetFilter = (asset) => {
 // 탭 데이터
 const tabs = computed(() => [
   {
-    name: '전체',
-    count: transactionsByType('전체').length,
-    amount: transactionsByType('전체').reduce((sum, t) => sum + t.amount, 0),
+    name: "전체",
+    count: transactionsByType("전체").length,
+    amount: transactionsByType("전체").reduce((sum, t) => sum + t.amount, 0),
   },
   {
-    name: '수입',
-    count: transactionsByType('수입').length,
-    amount: transactionsByType('수입').reduce((sum, t) => sum + t.amount, 0),
+    name: "수입",
+    count: transactionsByType("수입").length,
+    amount: transactionsByType("수입").reduce((sum, t) => sum + t.amount, 0),
   },
   {
-    name: '지출',
-    count: transactionsByType('지출').length,
-    amount: transactionsByType('지출').reduce((sum, t) => sum + t.amount, 0),
+    name: "지출",
+    count: transactionsByType("지출").length,
+    amount: transactionsByType("지출").reduce((sum, t) => sum + t.amount, 0),
   },
 ]);
 
 // 어떤 자산인지 계산하여 반환
 const asset = computed(() => {
   return (type, id) => {
-    if (type === 'card') {
+    if (type === "card") {
       const card = user.value.asset_group.card.find((c) => c.id === id);
-      return card ? (card.isCheck ? '체크카드' : '신용카드') : '';
-    } else if (type === 'cash') {
-      return '현금';
-    } else if (type === 'account') {
+      return card ? (card.isCheck ? "체크카드" : "신용카드") : "";
+    } else if (type === "cash") {
+      return "현금";
+    } else if (type === "account") {
       const account = user.value.asset_group.account.find((a) => a.id === id);
-      return account ? account.name : '';
-    } else if (type === 'etc') {
+      return account ? account.name : "";
+    } else if (type === "etc") {
       const assetEtc = user.value.asset_group.etc.find((i) => i.id === id);
-      return assetEtc ? assetEtc.name : '';
+      return assetEtc ? assetEtc.name : "";
     }
-    return '기타';
+    return "기타";
   };
 });
 
@@ -238,7 +252,7 @@ const currentDate = ref(new Date());
 // YYYY-MM 형식으로 포맷
 const formattedDate = computed(() => {
   const year = currentDate.value.getFullYear();
-  const month = String(currentDate.value.getMonth() + 1).padStart(2, '0');
+  const month = String(currentDate.value.getMonth() + 1).padStart(2, "0");
   return `${year}-${month}`;
 });
 
@@ -270,7 +284,7 @@ const filteredTransactions = computed(() => {
     user.value.transactions
       // 1. 년월 필터
       .filter((ts) => {
-        const [year, month] = ts.date.split('-').map(Number); // 현재 yyyy-mm-dd 형식으로 계산
+        const [year, month] = ts.date.split("-").map(Number); // 현재 yyyy-mm-dd 형식으로 계산
         return year === currentYear && month === currentMonth;
       })
       // 2. 금액 범위 필터
@@ -293,7 +307,7 @@ const filteredTransactions = computed(() => {
       // 4. 자산 필터
       .filter((ts) => {
         if (!assetSelected.value) return true;
-        if (assetSelected.value === 'cash' && ts.asset_type === 'cash')
+        if (assetSelected.value === "cash" && ts.asset_type === "cash")
           return true;
         else if (
           assetSelected.value !== null &&
@@ -309,8 +323,8 @@ const filteredTransactions = computed(() => {
 // 필터링된 거래내역에서 전체/수입/지출 필터하여 랜더링
 const filteredTransactionsByType = computed(() => {
   return filteredTransactions.value.filter((ts) => {
-    if (currentTab.value === '수입') return ts.type === 'income';
-    else if (currentTab.value === '지출') return ts.type === 'expense';
+    if (currentTab.value === "수입") return ts.type === "income";
+    else if (currentTab.value === "지출") return ts.type === "expense";
     return true;
   });
 });
@@ -318,8 +332,8 @@ const filteredTransactionsByType = computed(() => {
 // 수입/지출/전체의 금액과 거래 수 계산을 위해 타입별 거래 배열 반환
 const transactionsByType = (typeName) => {
   return filteredTransactions.value.filter((ts) => {
-    if (typeName === '수입') return ts.type === 'income';
-    if (typeName === '지출') return ts.type === 'expense';
+    if (typeName === "수입") return ts.type === "income";
+    if (typeName === "지출") return ts.type === "expense";
     return true;
   });
 };
@@ -331,14 +345,16 @@ const switchSearch = () => {
   if (!isSearch.value) {
     moneyLimit.minMoney = null;
     moneyLimit.maxMoney = null;
-    searchText.value = '';
+    searchText.value = "";
   }
   selectedTransactions.value = []; // 선택 초기화
 };
 
 // 선택된 거래 내역 삭제
+
 const deleteSelectedTransactions = async () => {
   if (!confirm('선택한 거래내역을 삭제하시겠습니까?')) return;
+
 
   // deleteTransactions(selectedTransactions.value);
   if (!user.value) return;
@@ -385,6 +401,61 @@ const toggleSelectAll = () => {
   } else {
     selectedTransactions.value = filteredTransactions.value.map((tr) => tr.id);
   }
+};
+
+// 엑셀 파일로 변환하여 저장
+function exportToExcelWithHeader(data, headerMap, fileName = 'data.xlsx') {
+  // Step 1. 기존 JSON 키를 헤더 순서에 맞게 변환
+  const newData = data.map((item) => {
+    const row = {};
+    // 영어로 된 헤더/값 한글로 변환
+    for (const key in headerMap) {
+      if (key === 'asset_type') {
+        row[headerMap[key]] = asset.value(item.asset_type, item.assetId);
+      } else if (key === 'type') {
+        row[headerMap[key]] = item.type === 'income' ? '수입' : '지출';
+      } else if (key == 'date') {
+        row[headerMap[key]] = item[key] + ' ' + item.time;
+      } else {
+        row[headerMap[key]] = item[key];
+      }
+    }
+    return row;
+  });
+
+  const worksheet = XLSX.utils.json_to_sheet(newData, {
+    header: Object.values(headerMap), // 한글 헤더 순서 지정
+  });
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+
+  const excelBuffer = XLSX.write(workbook, {
+    bookType: 'xlsx',
+    type: 'array',
+  });
+
+  const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+  saveAs(blob, fileName);
+}
+
+// 엑셀 다운 버튼 클릭 시 호출
+const downloadExcel = () => {
+  const headerMap = {
+    date: '날짜',
+    asset_type: '자산 유형',
+    category: '분류',
+    sub_category: '소분류',
+    name: '내용',
+    amount: '금액',
+    type: '수입/지출',
+    memo: '메모',
+  };
+  exportToExcelWithHeader(
+    transactionsByType(currentTab.value),
+    headerMap,
+    'user_data.xlsx'
+  );
 };
 </script>
 
