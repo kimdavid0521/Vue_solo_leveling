@@ -37,7 +37,7 @@
             </select>
           </div>
           <div class="mb-3">
-            <label class="form-label">지출 이름</label>
+            <label class="form-label">이름</label>
             <input v-model="name" type="text" class="form-control" />
           </div>
           <div class="mb-3">
@@ -176,11 +176,11 @@ const emit = defineEmits(['close', 'save']);
 const name = ref('');
 const amount = ref(0);
 
-const date = ref(today.toISOString().split("T")[0]);
-const startDate = ref(today.toISOString().split("T")[0]);
-const endDate = ref("");
+const date = ref(today.toISOString().split('T')[0]);
+const startDate = ref(today.toISOString().split('T')[0]);
+const endDate = ref('');
 const time = ref(currentTime);
-const memo = ref("");
+const memo = ref('');
 
 const inInclude = ref(true);
 const selectedAssetType = ref(''); // 자산 타입
@@ -190,12 +190,12 @@ const selcetedCategoryType = ref(''); // 선택된 대분류 카테고리
 const selectedSubCategory = ref(''); // 소분류 카테고리
 const assetGroup = ref({ card: [], account: [], etc: [] });
 const categoryGroup = ref({ expense: [], income: [] });
-const category = ref("");
-const sub_category = ref("");
-const assetId = ref("");
-const type = ref("");
-const asset_type = ref("");
-const addTotal = ref("");
+const category = ref('');
+const sub_category = ref('');
+const assetId = ref('');
+const type = ref('');
+const asset_type = ref('');
+const addTotal = ref('');
 // 고정 지출 여부 체크
 const isRepeat = ref(false);
 // 반복 주기

@@ -63,6 +63,7 @@ const goSubscribe = () => {
 
 const logout = () => {
   isOpen.value = false;
+  authStore.logout();
   router.push('/');
 };
 
