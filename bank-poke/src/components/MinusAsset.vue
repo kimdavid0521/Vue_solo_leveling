@@ -17,16 +17,16 @@
       v-if="showForm"
       class="modal fade show d-block"
       tabindex="-1"
-      style="background-color: rgba(0, 0, 0, 0.5)"
+      style="background-color: rgba(0, 0, 0, 0.3)"
     >
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content p-3">
-          <div class="modal-header">
-            <h5 class="modal-title">자산 삭제</h5>
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+          <div class="modal-header bg-light border-0 py-3 px-4">
+            <h5 class="modal-title fw-semibold">자산 삭제</h5>
             <button class="btn-close" @click="showForm = false"></button>
           </div>
-          <div class="modal-body">
-            <p>삭제할 자산을 선택하세요:</p>
+          <div class="modal-body bg-white px-4 py-3 d-flex flex-column gap-3">
+            <p class="mb-2">삭제할 자산을 선택하세요:</p>
             <ul class="list-group">
               <li
                 v-for="asset in allAssets"
@@ -44,32 +44,35 @@
       </div>
     </div>
   </teleport>
-
-  <!-- 삭제 확인 모달 -->
   <teleport to="body">
     <div
       v-if="confirmAsset"
       class="modal fade show d-block"
       tabindex="-1"
-      style="background-color: transparent"
+      style="background-color: rgba(0, 0, 0, 0.3)"
     >
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content p-3">
-          <div class="modal-header">
-            <h5 class="modal-title">삭제 확인</h5>
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+          <div class="modal-header bg-light border-0 py-3 px-4">
+            <h5 class="modal-title fw-semibold">삭제 확인</h5>
             <button class="btn-close" @click="confirmAsset = null"></button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body bg-white px-4 py-3">
             <p>
               정말로 <strong>{{ confirmAsset.name }}</strong> 자산을
               삭제하시겠습니까?
             </p>
           </div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" @click="confirmAsset = null">
+          <div class="modal-footer bg-light border-0 px-4 py-3">
+            <button
+              class="btn btn-outline-secondary rounded-3"
+              @click="confirmAsset = null"
+            >
               취소
             </button>
-            <button class="btn btn-danger" @click="deleteAsset">삭제</button>
+            <button class="btn btn-danger rounded-3 px-4" @click="deleteAsset">
+              삭제
+            </button>
           </div>
         </div>
       </div>

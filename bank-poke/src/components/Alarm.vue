@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-4">
+  <div class="container mt-2">
     <div class="alarm-wrapper position-relative" ref="dropdownRef">
       <!-- 토글 버튼 -->
       <button class="btn position-relative" @click="toggleDropdown">
@@ -32,6 +32,7 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, computed, watchEffect, onMounted, onBeforeUnmount } from 'vue';
 import { useAuthStore } from '@/stores/auth';
@@ -125,27 +126,32 @@ watchEffect(() => {
 });
 
 // 3. 카드 결제 예정일 알림
-const cardList = ref(authStore.user?.card ?? []);
-
+const cardList = computed(() => authStore.user?.asset_group?.card ?? []);
+console.log(cardList.value);
 watchEffect(() => {
   const today = new Date();
+  today.setHours(0, 0, 0, 0); // 자정으로 맞춰서 정확한 비교
 
-  cardList.value.forEach((card) => {
-    if (!card.dueDate) return;
+  cardList.value
+    .filter((card) => card.isCheck === false) // ✅ 체크 안 된 카드만
+    .forEach((card) => {
+      const dueDateStr = card.dueDate; // 또는 card.due_day로 계산해도 됨
+      if (!dueDateStr) return;
 
-    const due = new Date(card.dueDate);
-    due.setHours(0, 0, 0, 0);
-    const diff = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
-    const key = `card-${card.name}-${card.dueDate}`;
+      const dueDate = new Date(dueDateStr);
+      dueDate.setHours(0, 0, 0, 0);
 
-    if (diff <= 3 && diff >= 0 && !cardAlertKeys.value.has(key)) {
-      alarm.value.push({
-        message: `💳 ${card.name} 결제일이 ${diff}일 남았습니다!`,
-        read: false,
-      });
-      cardAlertKeys.value.add(key);
-    }
-  });
+      const diff = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+      const key = `card-${card.id}-${dueDateStr}`;
+
+      if (diff <= 3 && diff >= 0 && !cardAlertKeys.value.has(key)) {
+        alarm.value.push({
+          message: `💳 ${card.name} 카드 결제일이 ${diff}일 남았습니다!`,
+          read: false,
+        });
+        cardAlertKeys.value.add(key);
+      }
+    });
 });
 
 // 4. 고정지출 알림

@@ -36,7 +36,7 @@
                 {{ asset.name }}
                 <i
                   v-if="asset.children"
-                  class="fa-solid"
+                  class="align-content-center fa-solid"
                   :class="
                     expanded[asset.value] ? 'fa-chevron-up' : 'fa-chevron-down'
                   "
@@ -94,8 +94,123 @@
           class="btn btn-sm rounded-4 custom-btn text-nowrap dropdown-toggle"
           data-bs-toggle="dropdown"
         >
-          분류
+          {{ states.categoryFilter }}
         </button>
+        <!-- 분류 선택창 -->
+        <div class="dropdown-menu p-3" style="width: 300px">
+          <!-- 분류 목록 -->
+          <div>
+            <div
+              v-for="(type, index) in states.categoryList"
+              :key="index"
+              data-bs-auto-close="outside"
+              @click.stop
+            >
+              <!-- 카테고리 유형 (수입/지출) -->
+              <div
+                v-if="type.category?.length !== 0"
+                class="d-flex justify-content-between px-2 py-2 mouseHover"
+                @click.stop="categoryExpand(type)"
+                style="cursor: pointer"
+                :class="expandedType[type.name] ? 'border-bottom' : ''"
+              >
+                {{ type.name }}
+                <i
+                  class="align-content-center fa-solid"
+                  :class="
+                    expandedType[type.name]
+                      ? 'fa-chevron-up'
+                      : 'fa-chevron-down'
+                  "
+                ></i>
+              </div>
+              <!-- 지출/수입 카테고리 -->
+              <div
+                v-if="type.category && expandedType[type.name]"
+                class="ps-4"
+                style="max-height: 200px; overflow-y: auto"
+              >
+                <div
+                  v-for="(ct, index) in type.category"
+                  :key="index"
+                  class="my-2 pe-3"
+                >
+                  <!-- 메인 카테고리 -->
+                  <div
+                    class="d-flex align-items-center"
+                    @click.stop="toggleSubCategory(type.name, ct)"
+                  >
+                    <input
+                      type="checkbox"
+                      class="form-check-input me-2"
+                      :checked="isAllSubCategorySelected(type.name, ct)"
+                      @change.stop="toggleMainCategory(type.name, ct)"
+                    />
+                    <span class="me-2">{{ ct.icon }}</span>
+                    <span class="flex-grow-1" @click.stop="">{{
+                      ct.main_category
+                    }}</span>
+                    <i
+                      v-if="ct.sub_categories?.length"
+                      class="align-content-center fa-solid"
+                      :class="
+                        (
+                          type.name === '지출'
+                            ? expandedSubExpense[ct.id]
+                            : expandedSubIncome[ct.id]
+                        )
+                          ? 'fa-chevron-up'
+                          : 'fa-chevron-down'
+                      "
+                      style="cursor: pointer"
+                    ></i>
+                  </div>
+
+                  <!-- 서브 카테고리 -->
+                  <div
+                    v-if="
+                      type.name === '지출'
+                        ? expandedSubExpense[ct.id]
+                        : expandedSubIncome[ct.id]
+                    "
+                    class="ms-4 my-2"
+                    v-for="(sub, index) in ct.sub_categories"
+                    :key="index"
+                  >
+                    <div class="d-flex align-items-center">
+                      <input
+                        type="checkbox"
+                        class="form-check-input me-2"
+                        :checked="isSubSelected(type.name, ct.id, sub)"
+                        @change.stop="
+                          toggleSubCategoryItem(type.name, ct.id, sub)
+                        "
+                      />
+                      <span>{{ sub }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 버튼 박스 -->
+          <div class="d-flex justify-content-between border-top mt-2 pt-2">
+            <button
+              class="btn btn-sm btn-outline-secondary"
+              @click="resetCategory"
+            >
+              초기화
+            </button>
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm btn-outline-secondary" @click="">
+                취소
+              </button>
+              <button class="btn btn-sm btn-danger" @click="setCategory">
+                적용
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
       <!-- 금액 필터링 -->
       <div class="dropdown">
@@ -171,7 +286,7 @@
   </div>
 </template>
 <script setup>
-import { reactive, computed } from 'vue';
+import { reactive, computed, toRaw } from 'vue';
 // import { useUserStore } from '@/stores/user.js';
 import { useAuthStore } from '@/stores/auth.js';
 
@@ -180,6 +295,16 @@ const user = authStore.user;
 
 // 자산 선택창 내 확장 여부
 const expanded = reactive({});
+// 분류 선택창 내 확장 여부
+const expandedType = reactive({});
+// 서브 카테고리 확장 여부
+const expandedSubIncome = reactive({});
+const expandedSubExpense = reactive({});
+// 선택된 카테고리
+const selectedSubCategories = reactive({
+  expense: {}, // { [categoryId]: Set(subCategoryId) }
+  income: {},
+});
 
 const states = reactive({
   moneyFilter: '금액',
@@ -189,9 +314,19 @@ const states = reactive({
   assetFilter: '자산',
   assetList: [],
   selectedAsset: null,
+  categoryFilter: '분류',
+  categoryList: [
+    { name: '지출', category: [] },
+    { name: '수입', category: [] },
+  ],
 });
 
-const emit = defineEmits(['update-money', 'update-content', 'update-asset']);
+const emit = defineEmits([
+  'update-money',
+  'update-content',
+  'update-asset',
+  'update-category',
+]);
 
 // 사용자 보유 자산 목록
 const userAssetList = () => {
@@ -257,6 +392,101 @@ const setAssetFilter = () => {
   emit('update-asset', states.selectedAsset);
 };
 
+// 사용자 보유 카테고리
+const userCategory = () => {
+  const category = user.category;
+  states.categoryList[0].category = category.expense;
+
+  states.categoryList[1].category = category.income;
+};
+userCategory();
+
+// 카테고리 토글 클릭 시 호출
+const categoryExpand = (item) => {
+  if (!item.category) return;
+  expandedType[item.name] = !expandedType[item.name];
+};
+
+// 서브 카테고리 토글 함수
+const toggleSubCategory = (type, category) => {
+  if (!category.sub_categories) return;
+  if (type === '수입')
+    expandedSubIncome[category.id] = !expandedSubIncome[category.id];
+  if (type === '지출')
+    expandedSubExpense[category.id] = !expandedSubExpense[category.id];
+};
+
+// 메인 카테고리 체크박스 상태 변경 시 호출
+const toggleMainCategory = (type, ct) => {
+  const selectedSubCategoriesBytype =
+    type === '지출'
+      ? selectedSubCategories.expense
+      : selectedSubCategories.income;
+
+  const selectedSet = selectedSubCategoriesBytype[ct.id] || new Set();
+  const allSelected = selectedSet.size === ct.sub_categories.length;
+
+  selectedSubCategoriesBytype[ct.id] = new Set(
+    allSelected ? [] : ct.sub_categories
+  );
+};
+
+// 서브 카테고리 체크박스 상태 변경 시 호출
+const toggleSubCategoryItem = (type, catId, sub) => {
+  const selectedSubCategoriesBytype =
+    type === '지출'
+      ? selectedSubCategories.expense
+      : selectedSubCategories.income;
+
+  if (!selectedSubCategoriesBytype[catId]) {
+    selectedSubCategoriesBytype[catId] = new Set();
+  }
+  const set = selectedSubCategoriesBytype[catId];
+  set.has(sub) ? set.delete(sub) : set.add(sub);
+};
+
+// 선택된 카테고리에 있으면 해당 서브 checked
+const isSubSelected = (type, catId, sub) => {
+  const selectedSubCategoriesBytype =
+    type === '지출'
+      ? selectedSubCategories.expense
+      : selectedSubCategories.income;
+  return selectedSubCategoriesBytype[catId]?.has(sub);
+};
+
+// 하위 서브 카테고리 모두 선택되면 전체 선택(메인 카테고리) checked
+const isAllSubCategorySelected = (type, ct) => {
+  const selectedSubCategoriesBytype =
+    type === '지출'
+      ? selectedSubCategories.expense
+      : selectedSubCategories.income;
+  return selectedSubCategoriesBytype[ct.id]?.size === ct.sub_categories?.length;
+};
+
+const resetCategory = () => {
+  selectedSubCategories.income = {};
+  selectedSubCategories.expense = {};
+  Object.keys(expandedType).forEach((key) => {
+    expandedType[key] = false;
+  });
+  Object.keys(expandedSubIncome).forEach((key) => {
+    expandedSubIncome[key] = false;
+  });
+  Object.keys(expandedSubExpense).forEach((key) => {
+    expandedSubExpense[key] = false;
+  });
+  emit('update-category', null);
+};
+
+const setCategory = () => {
+  if (
+    Object.keys(selectedSubCategories.expense).length !== 0 ||
+    Object.keys(selectedSubCategories.income).length !== 0
+  ) {
+    emit('update-category', structuredClone(toRaw(selectedSubCategories)));
+  }
+};
+
 // 금액 범위 초기화
 const resetMoneyFilter = () => {
   states.moneyFilter = '금액';
@@ -297,6 +527,7 @@ const inputContent = (content) => {
 const reset = () => {
   resetMoneyFilter();
   resetAssetFilter();
+  resetCategory();
   states.searchText = '';
   emit('update-content', states.searchText);
 };
@@ -316,6 +547,10 @@ const reset = () => {
 }
 .custom-selected {
   font-weight: bold;
+  background-color: #fef1ed;
+}
+.custom-subCategory {
+  font-weight: normal;
   background-color: #fef1ed;
 }
 </style>
