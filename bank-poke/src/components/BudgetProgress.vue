@@ -3,7 +3,7 @@
     <div class="row mb-4">
       <div class="col-12">
         <!-- 카드 스타일의 박스 -->
-        <div class="card shadow-sm p-3">
+        <div class="card shadow-sm p-3 hover-lift">
           <h5 class="mb-3 text-center fs-4 fw-bold">예산 사용률</h5>
 
           <!-- 도넛 차트 영역 -->
